@@ -1,0 +1,30 @@
+{
+    "plugins": [
+        "syntax-dynamic-import",
+        "transform-class-properties",
+        "transform-decorators-legacy",
+        [
+            "transform-runtime", {
+                "polyfill": false,
+                "regenerator": true
+            }
+        ]
+    ],
+    "presets": [
+        "env",
+        "react",
+        "stage-0",
+        "flow"
+    ],
+    "env": {
+        "start": {
+            "presets": [
+                "react-hmre"
+            ]
+        },
+        "test": {
+            "plugins": ["transform-es2015-modules-commonjs"]
+        }
+    }
+}
+

@@ -1,0 +1,75 @@
+import uuid
+import os
+from PIL import Image
+# from django.db.models.signals import post_save
+from django.db import models
+from utils.helpers.tools import Tools
+
+
+def file_destination(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('attach', filename)
+
+class AttachManager(models.Manager):
+    def removeByUUID(self, parent_uuid):
+        listItem = self.filter(parent_uuid=parent_uuid)
+        for item in listItem:
+            item.delete()
+
+# Create your models here.
+class Attach(models.Model):
+    parent_uuid = models.CharField(max_length=36)
+    richtext_image = models.BooleanField(default=True)
+    title = models.CharField(max_length=256)
+    filetype = models.CharField(max_length=32, default='image')
+    attachment = models.FileField(upload_to=file_destination)
+
+    objects = AttachManager()
+
+    def save(self, *args, **kwargs):
+
+        if not self.title:
+            self.title = self.attachment.path.split("/")[-1]
+
+        if not self._state.adding and self.attachment:
+            item = Attach.objects.get(pk=self.pk)
+            if not self.richtext_image:
+                self.richtext_image = item.richtext_image
+            if item.attachment != self.attachment:
+                # Update: remove exist attachment
+                removeThumbnail = False
+                if item.filetype == 'image':
+                    removeThumbnail = True
+                Tools.removeFile(item.attachment.path, removeThumbnail)
+
+        super(Attach, self).save(*args, **kwargs)
+        if self.filetype == 'image':
+            maxWidth = 1200;
+            thumbnailWidth = 300
+            Tools.scaleImage(maxWidth, self.attachment.path)
+            Tools.createThumbnail(thumbnailWidth, self.attachment.path)
+
+
+    def delete(self, *args, **kwargs):
+        removeThumbnail = False
+        if self.filetype == 'image':
+            removeThumbnail = True
+        Tools.removeFile(self.attachment.path, removeThumbnail)
+        super(Attach, self).delete(*args, **kwargs)
+
+    class Meta:
+        db_table = "attaches"
+        ordering = ['-id']
+        permissions = (
+            ("view_attach_list", "Can view attach list"),
+            ("view_attach_detail", "Can view attach detail"),
+        )
+
+'''
+def after_save(sender, instance, **kwargs):
+    instance.mime = Tools.getMime(instance.attachment.path).split('/')[0]
+    instance.save()
+
+post_save.connect(after_save, sender=Attach)
+'''

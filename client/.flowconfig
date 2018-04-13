@@ -1,0 +1,14 @@
+[ignore]
+.*/node_modules/draft-js/.*
+.*/node_modules/rc-editor-core/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+module.name_mapper='^src' ->'<PROJECT_ROOT>/src'
+
+[version]

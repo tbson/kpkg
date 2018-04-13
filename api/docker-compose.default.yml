@@ -1,0 +1,35 @@
+version: '2'
+
+networks:
+    proxy:
+        external:
+            name: common_proxy
+
+services:
+    kpkg_db:
+        container_name: kpkg_db
+        image: "postgres:10.1"
+        environment:
+            - POSTGRES_USER=docker
+            - POSTGRES_PASSWORD=docker
+            - POSTGRES_DB=docker
+        ports:
+            - "5433:5432"
+        volumes:
+            - ./dbdata:/var/lib/postgresql/data/:cached
+        networks:
+            - proxy
+
+    kpkg_api:
+        container_name: kpkg_api
+        build:
+            context: ./
+        command: bash -c "./utils/wait-for-it.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && python manage.py runsslserver 0.0.0.0:8001 --certificate /code/ssl/cer.crt --key /code/ssl/rsa.key"
+        volumes:
+            - .:/code:cached
+        ports:
+            - "8001:8001"
+        depends_on:
+            - "kpkg_db"
+        networks:
+            - proxy

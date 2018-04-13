@@ -1,0 +1,11 @@
+FROM node:carbon
+
+RUN mkdir /code
+
+WORKDIR /code
+
+COPY package.json .
+
+RUN npm install --quiet
+
+COPY . .
