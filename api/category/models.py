@@ -6,6 +6,7 @@ class Category(models.Model):
     uid = models.CharField(max_length=256, unique=True)
     title = models.CharField(max_length=256, unique=True)
     type = models.CharField(max_length=50)
+    image_ratio = models.FloatField(default=1.618)
     single = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):

@@ -10,6 +10,7 @@ type Props = {
     defaultValues: {
         id: ?number,
         title: ?string,
+        image_ratio: ?number,
         type: ?string,
         single: boolean,
     },
@@ -28,6 +29,7 @@ export default class CategoryForm extends React.Component<Props, States> {
         defaultValues: {
             id: null,
             title: null,
+            image_ratio: null,
             type: null,
             single: false,
         },
@@ -74,6 +76,20 @@ export default class CategoryForm extends React.Component<Props, States> {
                         placeholder="Title..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('title')}</div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="image_ratio">Image ratio</label>
+                    <input
+                        defaultValue={this.props.defaultValues.image_ratio}
+                        id="image_ratio"
+                        name="image_ratio"
+                        type="number"
+                        step="0.001"
+                        className={this.setClassName('image_ratio')}
+                        placeholder="Image ratio (width / height). e.g: 1.618"
+                    />
+                    <div className="invalid-feedback">{this.setErrorMessage('image_ratio')}</div>
                 </div>
 
                 <div className="form-group">

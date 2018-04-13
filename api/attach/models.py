@@ -2,6 +2,7 @@ import uuid
 import os
 from PIL import Image
 # from django.db.models.signals import post_save
+from django.conf import settings
 from django.db import models
 from utils.helpers.tools import Tools
 
@@ -45,10 +46,8 @@ class Attach(models.Model):
 
         super(Attach, self).save(*args, **kwargs)
         if self.filetype == 'image':
-            maxWidth = 1200;
-            thumbnailWidth = 300
-            Tools.scaleImage(maxWidth, self.attachment.path)
-            Tools.createThumbnail(thumbnailWidth, self.attachment.path)
+            Tools.scaleImage(settings.IMAGE_RATIO, self.attachment.path)
+            Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.attachment.path)
 
 
     def delete(self, *args, **kwargs):

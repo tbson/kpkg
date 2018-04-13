@@ -46,10 +46,7 @@ export class CategoryTable extends React.Component<Props, States> {
         mainFormErr: {},
     };
 
-    typeList = [
-        {value: 'article', label: 'Article'},
-        {value: 'banner', label: 'Banner'},
-    ];
+    typeList = [{value: 'article', label: 'Article'}, {value: 'banner', label: 'Banner'}];
 
     constructor(props: Props) {
         super(props);
@@ -102,7 +99,8 @@ export class CategoryTable extends React.Component<Props, States> {
         result = await Tools.apiCall(
             (url ? url : apiUrls.crud) + (isQueryString ? '?' + Tools.urlDataEncode(params) : ''),
             'GET',
-            isQueryString ? {} : params);
+            isQueryString ? {} : params,
+        );
         if (result.success) {
             this.setInitData(result.data);
             return result;
@@ -141,6 +139,9 @@ export class CategoryTable extends React.Component<Props, States> {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target), ['single']);
+        if (!params.image_ratio) {
+            delete params.image_ratio;
+        }
         if (!params.id) {
             error = await this.handleAdd(params);
         } else {
@@ -158,7 +159,7 @@ export class CategoryTable extends React.Component<Props, States> {
         }
     }
 
-    async handleAdd(params: {title: string, type: string, single: boolean}) {
+    async handleAdd(params: {title: string, type: string, image_ratio: number, single: boolean}) {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({mainList: [{...result.data, checked: false}, ...this.state.mainList]});
@@ -167,7 +168,14 @@ export class CategoryTable extends React.Component<Props, States> {
         return result.data;
     }
 
-    async handleEdit(params: {id: number, title: string, type: string, single: boolean, checked: boolean}) {
+    async handleEdit(params: {
+        id: number,
+        title: string,
+        type: string,
+        image_ratio: number,
+        single: boolean,
+        checked: boolean,
+    }) {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -244,7 +252,7 @@ export class CategoryTable extends React.Component<Props, States> {
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
         const list = this.state.mainList;
-        const { type } = this.props.match.params;
+        const {type} = this.props.match.params;
         return (
             <div>
                 <SearchInput onSearch={this.handleSearch} />
@@ -259,6 +267,7 @@ export class CategoryTable extends React.Component<Props, States> {
                             </th>
                             <th scope="col">Title</th>
                             <th scope="col">Type</th>
+                            <th scope="col">Image ratio (width / height)</th>
                             <th scope="col">Single</th>
                             <th scope="col" style={{padding: 8}} className="row80">
                                 <button
@@ -320,6 +329,7 @@ type DataType = {
     id: number,
     title: string,
     type: string,
+    image_ratio: number,
     single: boolean,
     checked: ?boolean,
 };
@@ -349,18 +359,17 @@ export class Row extends React.Component<RowPropTypes> {
                     </Link>
                 </td>
                 <td className="type">{data.type}</td>
+                <td className="image_ratio">{data.image_ratio}</td>
                 <td className="single">
                     {data.single ? <span className="oi oi-check green" /> : <span className="oi oi-x red" />}
                 </td>
                 <td className="center">
                     <a onClick={() => this.props.toggleModal('mainModal', data.id)}>
-                        <span className="editBtn oi oi-pencil text-info pointer"/>
+                        <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a onClick={() => this.props.handleRemove(String(data.id))}>
-                        <span
-                            className="removeBtn oi oi-x text-danger pointer" 
-                        />
+                        <span className="removeBtn oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

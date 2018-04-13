@@ -1,6 +1,7 @@
 import uuid
 import os
 from PIL import Image
+from django.conf import settings
 from django.db import models
 from utils.helpers.tools import Tools
 from category.models import Category
@@ -31,10 +32,8 @@ class Banner(models.Model):
                 Tools.removeFile(item.image.path, True)
 
         super(Banner, self).save(*args, **kwargs)
-        width = 1200;
-        thumbnailWidth = 300
-        Tools.scaleImage(width, self.image.path)
-        Tools.createThumbnail(thumbnailWidth, self.image.path)
+        Tools.scaleImage(self.category.image_ratio, self.image.path)
+        Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.image.path)
 
     def delete(self, *args, **kwargs):
         Tools.removeFile(self.image.path, True)

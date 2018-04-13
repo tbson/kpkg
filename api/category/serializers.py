@@ -7,14 +7,11 @@ class CategoryBaseSerializer(ModelSerializer):
 
     class Meta:
         model = Category
-        fields = (
-            'id',
-            'uid',
-            'title',
-            'type',
-            'single',
-        )
-        extra_kwargs = {'uid': {'required': False}}
+        exclude = ()
+        extra_kwargs = {
+            'uid': {'required': False},
+            'image_ratio': {'required': False}
+        }
         read_only_fields = ('id',)
 
     def create(self, validated_data):

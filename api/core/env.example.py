@@ -5,7 +5,10 @@ ALLOWED_HOSTS = [DOMAIN, '127.0.0.1']
 TIME_ZONE = 'Asia/Saigon'
 EMAIL_ENABLE = True
 ENV = 'LOCAL'  # 'LOCAL, PROD'
-
+IMAGE_MAX_WIDTH = 1200
+IMAGE_THUMBNAIL_WIDTH = 300
+IMAGE_RATIO = 1.618
+UPLOAD_MAX_SIZE = 4
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

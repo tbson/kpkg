@@ -39,7 +39,8 @@ class Tools():
         return '.'.join(pathArr)
 
     @staticmethod
-    def scaleImage (maxWidth, path):
+    def scaleImage (ratio, path):
+        maxWidth = settings.IMAGE_MAX_WIDTH
         try:
             image = Image.open(path)
             (originalWidth, originalHeight) = image.size
@@ -47,7 +48,7 @@ class Tools():
             if originalWidth < maxWidth:
                 width = originalWidth
 
-            height = int(width / 1.618)
+            height = int(width / ratio)
             widthFactor = width / originalWidth
             heightFactor = height / originalHeight
 
@@ -61,9 +62,10 @@ class Tools():
                 # Resize to 1 sise fit, 1 side larger than golden rectangle
                 image = image.resize(size, Image.ANTIALIAS)
                 image.save(path)
+                (originalWidth, originalHeight) = image.size
 
             # Crop to golden ratio
-            image = image.crop((0, 0, width, height));
+            image = image.crop((0, (originalHeight - height) / 2, width, height + (originalHeight - height) / 2));
             image.save(path)
         except:
             pass
