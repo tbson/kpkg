@@ -45,8 +45,8 @@ class App extends React.Component<Props> {
                     <Route path="/permission" component={Permission} />
                     <Route path="/category/:type?" component={Category} />
                     <Route path="/banners/:category_id" component={Banner} />
-                    <Route path="/articles/:category_id" component={Article} />
-                    <Route path="/article/:category_id/:id?" component={ArticleEdit} />
+                    <Route path="/articles/:parent_id" component={Article} />
+                    <Route path="/article/:parent/:parent_id/:id?" component={ArticleEdit} />
                 </Switch>
             </div>
         );

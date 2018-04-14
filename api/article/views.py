@@ -25,7 +25,7 @@ class ListView(ListAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleBaseSerializer
     search_fields = ('uid', 'value')
-    filter_fields = ('category',)
+    filter_fields = ('category', 'article', )
 
 
 class DetailView(RetrieveAPIView):

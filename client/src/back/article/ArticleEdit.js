@@ -7,6 +7,7 @@ import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import AttachTable from 'src/back/attach/tables/AttachTable';
 import ArticleForm from './forms/ArticleForm';
+import ArticleTable from './tables/ArticleTable';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
@@ -24,6 +25,7 @@ class ArticleEdit extends React.Component<Props, States> {
     handleSubmit: Function;
     handleAdd: Function;
     handleEdit: Function;
+    renderRelatedArticle: Function;
 
     state = {
         dataLoaded: false,
@@ -37,6 +39,7 @@ class ArticleEdit extends React.Component<Props, States> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.renderRelatedArticle = this.renderRelatedArticle.bind(this);
     }
 
     componentDidMount() {
@@ -63,7 +66,7 @@ class ArticleEdit extends React.Component<Props, States> {
         if (!params.order) {
             params.order = 0;
         }
-        params.category = this.props.match.params.category_id;
+        params[this.props.match.params.parent] = this.props.match.params.parent_id;
         if (!params.id) {
             error = await this.handleAdd(params);
         } else {
@@ -93,7 +96,7 @@ class ArticleEdit extends React.Component<Props, States> {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             // Go back
-            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.category_id]);
+            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
             return null;
         }
         return result.data;
@@ -112,10 +115,17 @@ class ArticleEdit extends React.Component<Props, States> {
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
             // Go back
-            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.category_id]);
+            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
             return null;
         }
         return result.data;
+    }
+
+    renderRelatedArticle () {
+        if (!this.props.match.params.id) return null;
+        return (
+            <ArticleTable search_form={false} parent="article" parent_id={this.props.match.params.id} />
+        );
     }
 
     render() {
@@ -137,7 +147,7 @@ class ArticleEdit extends React.Component<Props, States> {
                     <button
                         type="button"
                         onClick={() => {
-                            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.category_id]);
+                            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
                         }}
                         className="btn btn-warning">
                         <span className="oi oi-x" />&nbsp; Cancel
@@ -145,6 +155,7 @@ class ArticleEdit extends React.Component<Props, States> {
                 </ArticleForm>
                 <hr />
                 <AttachTable parent_uuid={this.state.uuid} />
+                {this.renderRelatedArticle()}
             </NavWrapper>
         );
     }

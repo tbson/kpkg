@@ -2,11 +2,17 @@
 import * as React from 'react';
 
 type SearchInputPropTypes = {
+    show: boolean,
     onSearch: Function,
 };
 
 export class SearchInput extends React.Component<SearchInputPropTypes> {
+    static defaultProps = {
+        show: true,
+    };
+
     render() {
+        if (!this.props.show) return null;
         return (
             <form onSubmit={this.props.onSearch}>
                 <div className="input-group mb-3">

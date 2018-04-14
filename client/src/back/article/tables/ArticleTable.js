@@ -11,7 +11,10 @@ import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
+    search_form: boolean,
     match: Object,
+    parent: string,
+    parent_id: number,
 };
 type States = {
     dataLoaded: boolean,
@@ -34,6 +37,10 @@ export class ArticleTable extends React.Component<Props, States> {
     prevUrl: ?string;
 
     uuid: string;
+
+    static defaultProps = {
+        search_form: true,
+    };
 
     state = {
         dataLoaded: false,
@@ -72,8 +79,9 @@ export class ArticleTable extends React.Component<Props, States> {
 
     async list(outerParams: Object = {}, url: ?string = null) {
         let params = {
-            category: this.props.match.params.category_id
+            [this.props.parent]: this.props.parent_id,
         };
+
         let result = {};
 
         if (!Tools.emptyObj(outerParams)) {
@@ -152,10 +160,11 @@ export class ArticleTable extends React.Component<Props, States> {
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
         const list = this.state.mainList;
-        const categoryId = this.props.match.params.category_id;
+        const parent = this.props.parent;
+        const parentId = this.props.parent_id;
         return (
             <div>
-                <SearchInput onSearch={this.handleSearch} />
+                <SearchInput show={this.props.search_form} onSearch={this.handleSearch} />
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
@@ -165,13 +174,13 @@ export class ArticleTable extends React.Component<Props, States> {
                                     onClick={() => this.handleToggleCheckAll()}
                                 />
                             </th>
-                            <th scope="col">Title</th>
+                            <th scope="col">Article Title</th>
                             <th scope="col">Category</th>
                             <th scope="col">Order</th>
                             <th scope="col" style={{padding: 8}} className="row80">
                                 <Link
                                     className="btn btn-primary btn-sm btn-block add-button"
-                                    to={`/article/${categoryId}/`}>
+                                    to={`/article/${parent}/${parentId}/`}>
                                     <span className="oi oi-plus" />&nbsp; Add
                                 </Link>
                             </th>
@@ -182,7 +191,8 @@ export class ArticleTable extends React.Component<Props, States> {
                         {list.map((data, key) => (
                             <Row
                                 className="table-row"
-                                match={this.props.match}
+                                parent={parent}
+                                parent_id={parentId}
                                 data={data}
                                 key={key}
                                 _key={key}
@@ -224,7 +234,8 @@ type DataType = {
     checked: ?boolean,
 };
 type RowPropTypes = {
-    match: Object,
+    parent: string,
+    parent_id: number,
     data: DataType,
     _key: number,
     handleRemove: Function,
@@ -233,7 +244,8 @@ type RowPropTypes = {
 export class Row extends React.Component<RowPropTypes> {
     render() {
         const data = this.props.data;
-        const categoryId = this.props.match.params.category_id;
+        const parentId = this.props.parent_id;
+        const parent = this.props.parent;
         return (
             <tr key={this.props._key}>
                 <th className="row25">
@@ -245,25 +257,20 @@ export class Row extends React.Component<RowPropTypes> {
                     />
                 </th>
                 <td className="title">
-                    <Link to={`/article/${categoryId}/${data.id}`}>
-                        {data.title}
-                    </Link>
+                    <Link to={`/article/${parent}/${parentId}/${data.id}`}>{data.title}</Link>
                 </td>
                 <td className="category_id">{data.category_title}</td>
                 <td className="order">{data.order}</td>
                 <td className="center">
-                    <Link to={`/article/${categoryId}/${data.id}`}>
-                        <span className="editBtn oi oi-pencil text-info pointer"/>
+                    <Link to={`/article/${parent}/${parentId}/${data.id}`}>
+                        <span className="editBtn oi oi-pencil text-info pointer" />
                     </Link>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a onClick={() => this.props.handleRemove(String(data.id))}>
-                        <span
-                            className="removeBtn oi oi-x text-danger pointer" 
-                        />
+                        <span className="removeBtn oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>
         );
     }
 }
-

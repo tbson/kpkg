@@ -6,7 +6,9 @@ import {actions, apiUrls} from './_data';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import ArticleTable from './tables/ArticleTable';
 
-type Props = {};
+type Props = {
+    match: Object
+};
 type States = {};
 
 class Article extends React.Component<Props, States> {
@@ -19,7 +21,7 @@ class Article extends React.Component<Props, States> {
     render() {
         return (
             <NavWrapper>
-                <ArticleTable />
+                <ArticleTable parent="category" parent_id={this.props.match.params.parent_id}/>
             </NavWrapper>
         );
     }
