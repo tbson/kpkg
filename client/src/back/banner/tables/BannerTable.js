@@ -80,7 +80,7 @@ export class BannerTable extends React.Component<Props, States> {
 
     async list(outerParams: Object = {}, url: ?string = null) {
         let params = {
-            category: this.props.match.params.category_id
+            category: this.props.match.params.category_id,
         };
         let result = {};
 
@@ -129,6 +129,9 @@ export class BannerTable extends React.Component<Props, States> {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
+        if (!params.order) {
+            params.order = 0;
+        }
         params.category = this.props.match.params.category_id;
         if (!params.id) {
             error = await this.handleAdd(params);
@@ -147,7 +150,14 @@ export class BannerTable extends React.Component<Props, States> {
         }
     }
 
-    async handleAdd(params: {uuid: string, category: number, title: string, description: ?string, image: Object}) {
+    async handleAdd(params: {
+        uuid: string,
+        category: number,
+        title: string,
+        description: ?string,
+        image: Object,
+        order: number,
+    }) {
         params.uuid = this.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
@@ -163,6 +173,7 @@ export class BannerTable extends React.Component<Props, States> {
         title: string,
         description: ?string,
         image: Object,
+        order: number,
         checked: boolean,
     }) {
         const id = String(params.id);
@@ -342,13 +353,11 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="category_id">{data.category_title}</td>
                 <td className="center">
                     <a onClick={() => this.props.toggleModal('mainModal', data.id)}>
-                        <span className="editBtn oi oi-pencil text-info pointer"/>
+                        <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a onClick={() => this.props.handleRemove(String(data.id))}>
-                        <span
-                            className="removeBtn oi oi-x text-danger pointer" 
-                        />
+                        <span className="removeBtn oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

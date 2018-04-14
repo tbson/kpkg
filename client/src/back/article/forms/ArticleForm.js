@@ -14,6 +14,7 @@ type Props = {
         description: ?string,
         content: ?string,
         image: ?string,
+        order: ?number,
     },
     errorMessages: Object,
 };
@@ -33,6 +34,7 @@ export default class ArticleForm extends React.Component<Props, States> {
             description: '',
             content: '',
             image: null,
+            order: null,
         },
         errorMessages: {},
     };
@@ -123,6 +125,19 @@ export default class ArticleForm extends React.Component<Props, States> {
                         placeholder="Image..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('image')}</div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="order">Order</label>
+                    <input
+                        defaultValue={this.props.defaultValues.order}
+                        id="order"
+                        name="order"
+                        type="number"
+                        className={this.setClassName('order')}
+                        placeholder="Order..."
+                    />
+                    <div className="invalid-feedback">{this.setErrorMessage('order')}</div>
                 </div>
 
                 <div className="right">

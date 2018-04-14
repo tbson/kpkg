@@ -19,18 +19,20 @@ class Banner(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to=image_destination)
+    order = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
-
-        if not self.id and not self.image:
-            return
 
         if not self._state.adding and self.image:
             item = Banner.objects.get(pk=self.pk)
             if item.image != self.image:
                 # Update: remove exist image
                 Tools.removeFile(item.image.path, True)
-
+        if self.order == 0:
+            if Banner.objects.count() > 0:
+                self.order = Banner.objects.order_by('-order').first().order + 1
+            else:
+                self.order = 1
         super(Banner, self).save(*args, **kwargs)
         Tools.scaleImage(self.category.image_ratio, self.image.path)
         Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.image.path)

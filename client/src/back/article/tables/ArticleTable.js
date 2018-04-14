@@ -167,6 +167,7 @@ export class ArticleTable extends React.Component<Props, States> {
                             </th>
                             <th scope="col">Title</th>
                             <th scope="col">Category</th>
+                            <th scope="col">Order</th>
                             <th scope="col" style={{padding: 8}} className="row80">
                                 <Link
                                     className="btn btn-primary btn-sm btn-block add-button"
@@ -219,6 +220,7 @@ type DataType = {
     id: number,
     category_title: string,
     title: string,
+    order: number,
     checked: ?boolean,
 };
 type RowPropTypes = {
@@ -248,6 +250,7 @@ export class Row extends React.Component<RowPropTypes> {
                     </Link>
                 </td>
                 <td className="category_id">{data.category_title}</td>
+                <td className="order">{data.order}</td>
                 <td className="center">
                     <Link to={`/article/${categoryId}/${data.id}`}>
                         <span className="editBtn oi oi-pencil text-info pointer"/>

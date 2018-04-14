@@ -25,6 +25,7 @@ class Attach(models.Model):
     title = models.CharField(max_length=256)
     filetype = models.CharField(max_length=32, default='image')
     attachment = models.FileField(upload_to=file_destination)
+    order = models.IntegerField(default=1)
 
     objects = AttachManager()
 
@@ -43,7 +44,11 @@ class Attach(models.Model):
                 if item.filetype == 'image':
                     removeThumbnail = True
                 Tools.removeFile(item.attachment.path, removeThumbnail)
-
+        if self.order == 0:
+            if Attach.objects.count() > 0:
+                self.order = Attach.objects.order_by('-order').first().order + 1
+            else:
+                self.order = 1
         super(Attach, self).save(*args, **kwargs)
         if self.filetype == 'image':
             Tools.scaleImage(settings.IMAGE_RATIO, self.attachment.path)

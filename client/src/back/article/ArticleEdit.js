@@ -39,10 +39,10 @@ class ArticleEdit extends React.Component<Props, States> {
         this.handleEdit = this.handleEdit.bind(this);
     }
 
-    componentDidMount () {
+    componentDidMount() {
         const id = this.props.match.params.id;
         if (!id) {
-            this.setState({dataLoaded: true})
+            this.setState({dataLoaded: true});
         } else {
             Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                 if (result.success) {
@@ -60,6 +60,9 @@ class ArticleEdit extends React.Component<Props, States> {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
+        if (!params.order) {
+            params.order = 0;
+        }
         params.category = this.props.match.params.category_id;
         if (!params.id) {
             error = await this.handleAdd(params);
@@ -78,7 +81,14 @@ class ArticleEdit extends React.Component<Props, States> {
         }
     }
 
-    async handleAdd(params: {category: number, uuid: string, title: string, description: ?string, image: Object}) {
+    async handleAdd(params: {
+        category: number,
+        uuid: string,
+        title: string,
+        description: ?string,
+        image: Object,
+        order: number,
+    }) {
         params.uuid = this.state.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
@@ -95,6 +105,7 @@ class ArticleEdit extends React.Component<Props, States> {
         title: string,
         description: ?string,
         image: Object,
+        order: number,
         checked: boolean,
     }) {
         const id = String(params.id);
@@ -108,11 +119,12 @@ class ArticleEdit extends React.Component<Props, States> {
     }
 
     render() {
-        if (!this.state.dataLoaded) return (
-            <NavWrapper>
-                <LoadingLabel />
-            </NavWrapper>
-        );
+        if (!this.state.dataLoaded)
+            return (
+                <NavWrapper>
+                    <LoadingLabel />
+                </NavWrapper>
+            );
         return (
             <NavWrapper>
                 <ArticleForm
@@ -122,14 +134,17 @@ class ArticleEdit extends React.Component<Props, States> {
                     defaultValues={this.state.mainFormData}
                     errorMessages={this.state.mainFormErr}
                     handleSubmit={this.handleSubmit}>
-                    <button type="button" onClick={()=>{
-                        Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.category_id]);
-                    }} className="btn btn-warning">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.category_id]);
+                        }}
+                        className="btn btn-warning">
                         <span className="oi oi-x" />&nbsp; Cancel
                     </button>
                 </ArticleForm>
-                <hr/>
-                <AttachTable parent_uuid={this.state.uuid}/>
+                <hr />
+                <AttachTable parent_uuid={this.state.uuid} />
             </NavWrapper>
         );
     }
