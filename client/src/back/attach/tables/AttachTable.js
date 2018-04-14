@@ -259,6 +259,7 @@ export class AttachTable extends React.Component<Props, States> {
                                 />
                             </th>
                             <th scope="col">Attach Title</th>
+                            <th scope="col">Order</th>
                             <th scope="col" style={{padding: 8}} className="row80">
                                 <button
                                     className="btn btn-primary btn-sm btn-block add-button"
@@ -318,6 +319,7 @@ export default withRouter(AttachTable);
 type DataType = {
     id: number,
     title: string,
+    order: number,
     checked: ?boolean,
 };
 type RowPropTypes = {
@@ -341,6 +343,7 @@ export class Row extends React.Component<RowPropTypes> {
                     />
                 </th>
                 <td className="title">{data.title}</td>
+                <td className="title">{data.order}</td>
                 <td className="center">
                     <a onClick={() => this.props.toggleModal('mainModal', data.id)}>
                         <span className="editBtn oi oi-pencil text-info pointer" />

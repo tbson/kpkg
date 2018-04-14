@@ -31,7 +31,8 @@ export default class AttachForm extends React.Component<Props, States> {
             parent_uuid: null,
             title: null,
             attachment: null,
-            filetype: null
+            filetype: null,
+            order: null,
         },
         errorMessages: {},
     };
@@ -106,6 +107,19 @@ export default class AttachForm extends React.Component<Props, States> {
                         placeholder="Attachment..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('attachment')}</div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="order">Order</label>
+                    <input
+                        defaultValue={this.props.defaultValues.order}
+                        id="order"
+                        name="order"
+                        type="number"
+                        className={this.setClassName('order')}
+                        placeholder="Order..."
+                    />
+                    <div className="invalid-feedback">{this.setErrorMessage('order')}</div>
                 </div>
 
                 <div className="right">

@@ -15,6 +15,7 @@ type Props = {
         content: ?string,
         image: ?string,
         order: ?number,
+        order: ?number,
     },
     errorMessages: Object,
 };
