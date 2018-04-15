@@ -35,15 +35,7 @@ const common = {
                     'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
             },
             {
-                test: /\.png$/,
-                loader: 'file-loader',
-            },
-            {
-                test: /\.jpg$/,
-                loader: 'file-loader',
-            },
-            {
-                test: /\.gif$/,
+                test: /\.png($|\?)|\.jpg($|\?)|\.gif($|\?)|\.webp($|\?)/,
                 loader: 'file-loader',
             },
             {
