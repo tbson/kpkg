@@ -41,7 +41,11 @@ class Article(models.Model):
             else:
                 self.order = 1
         super(Article, self).save(*args, **kwargs)
-        Tools.scaleImage(self.category.image_ratio, self.image.path)
+        if self.category:
+            image_ratio = self.category.image_ratio
+        else:
+            image_ratio = self.article.category.image_ratio
+        Tools.scaleImage(image_ratio, self.image.path)
         Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.image.path)
 
     def delete(self, *args, **kwargs):

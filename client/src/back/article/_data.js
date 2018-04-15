@@ -7,6 +7,12 @@ const rawApiUrls = [
         endpoints: {
             crud: ''
         }
+    },
+    {
+        controller: 'category',
+        endpoints: {
+            crud: ''
+        }
     }
 ];
 

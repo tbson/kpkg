@@ -39,6 +39,7 @@ export class ArticleTable extends React.Component<Props, States> {
     uuid: string;
 
     static defaultProps = {
+        parent: 'category',
         search_form: true,
     };
 

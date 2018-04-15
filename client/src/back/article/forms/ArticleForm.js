@@ -1,31 +1,34 @@
 // @flow
 import * as React from 'react';
 import RichTextInput from 'src/utils/components/RichTextInput';
-
+import Tools from 'src/utils/helpers/Tools';
+export type defaultValues = {
+    id: ?number,
+    title: ?string,
+    description: ?string,
+    content: ?string,
+    image: ?string,
+    order: ?number,
+};
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     parent_uuid: string,
     formId: string,
     submitTitle: string,
-    defaultValues: {
-        id: ?number,
-        title: ?string,
-        description: ?string,
-        content: ?string,
-        image: ?string,
-        order: ?number,
-        order: ?number,
-    },
+    defaultValues: defaultValues,
     errorMessages: Object,
 };
-type States = {};
+type States = {
+    defaultValues: defaultValues,
+};
 
 export default class ArticleForm extends React.Component<Props, States> {
     resetForm: Function;
     setClassName: Function;
     setErrorMessage: Function;
     renderPreview: Function;
+    defaultValues: defaultValues;
 
     static defaultProps = {
         submitTitle: 'Submit',
@@ -40,18 +43,37 @@ export default class ArticleForm extends React.Component<Props, States> {
         errorMessages: {},
     };
 
-    state = {};
+    state = {
+        defaultValues: this.props.defaultValues,
+    };
+
     constructor(props: Props) {
         super(props);
         this.resetForm = this.resetForm.bind(this);
         this.setClassName = this.setClassName.bind(this);
         this.setErrorMessage = this.setErrorMessage.bind(this);
         this.renderPreview = this.renderPreview.bind(this);
+        this.defaultValues = {
+            id: null,
+            title: '',
+            description: '',
+            content: '',
+            image: '',
+            order: 0,
+        };
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (Tools.emptyObj(nextProps.defaultValues)) {
+            this.resetForm();
+        }
     }
 
     resetForm() {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
+        this.setState({defaultValues: this.defaultValues}, () => {
+            window.document.getElementById(this.props.formId).reset();
+            window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
+        });
     }
 
     setClassName(name: string) {
@@ -62,12 +84,12 @@ export default class ArticleForm extends React.Component<Props, States> {
         return this.props.errorMessages[name];
     }
 
-    renderPreview () {
+    renderPreview() {
         if (!this.props.defaultValues.image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={this.props.defaultValues.image} width="100%"/>
+                    <img src={this.props.defaultValues.image} width="100%" />
                 </div>
             </div>
         );
@@ -76,11 +98,11 @@ export default class ArticleForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.defaultValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.defaultValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.props.defaultValues.title}
+                        defaultValue={this.state.defaultValues.title}
                         id="title"
                         name="title"
                         type="text"
@@ -95,13 +117,13 @@ export default class ArticleForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
                     <textarea
-                        defaultValue={this.props.defaultValues.description}
+                        defaultValue={this.state.defaultValues.description}
                         id="description"
                         name="description"
                         type="text"
                         className={this.setClassName('description')}
                         placeholder="Description..."
-                    ></textarea>
+                    />
                     <div className="invalid-feedback">{this.setErrorMessage('description')}</div>
                 </div>
 
@@ -109,7 +131,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <label htmlFor="content">Content</label>
                     <RichTextInput
                         parent_uuid={this.props.parent_uuid}
-                        defaultValue={this.props.defaultValues.content}
+                        defaultValue={this.state.defaultValues.content}
                         name="content"
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('content')}</div>
@@ -117,7 +139,9 @@ export default class ArticleForm extends React.Component<Props, States> {
 
                 <div className="form-group">
                     {this.renderPreview()}
-                    <label htmlFor="image" style={{display: this.props.defaultValues.image?'none':'block'}}>Image</label>
+                    <label htmlFor="image" style={{display: this.state.defaultValues.image ? 'none' : 'block'}}>
+                        Image
+                    </label>
                     <input
                         id="image"
                         name="image"
@@ -131,7 +155,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.props.defaultValues.order}
+                        defaultValue={this.state.defaultValues.order}
                         id="order"
                         name="order"
                         type="number"
@@ -152,4 +176,3 @@ export default class ArticleForm extends React.Component<Props, States> {
         );
     }
 }
-

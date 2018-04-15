@@ -53,7 +53,6 @@ class RichTextInput extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        // this.imageUploadHanlde = this.imageUploadHanlde.bind(this);
         this.onChange = editorState => {
             this.setState({
                 editorState,
@@ -68,6 +67,13 @@ class RichTextInput extends React.Component<Props, States> {
                 },
             },
         ];
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        this.setState({
+            value: '',
+            editorState: createEditorState(convertToRaw(mediumDraftImporter(nextProps.defaultValue))),
+        })
     }
 
     render() {

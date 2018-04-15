@@ -16,7 +16,9 @@ class ArticleBaseSerializer(ModelSerializer):
     category_title = SerializerMethodField()
 
     def get_category_title(self, obj):
-        return obj.category.title
+        if obj.category:
+            return obj.category.title
+        return obj.article.category.title
 
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
@@ -27,10 +29,11 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
         }
 
     def create(self, validated_data):
-        category = validated_data['category']
-        if category.single is True:
-            if Article.objects.filter(category_id=category.id).count() >= 1:
-                raise serializers.ValidationError({'detail': 'Can not add more item.'})
+        if 'category' in validated_data:
+            category = validated_data['category']
+            if category.single is True:
+                if Article.objects.filter(category_id=category.id).count() >= 1:
+                    raise serializers.ValidationError({'detail': 'Can not add more item.'})
         validated_data['uid'] = slugify(validated_data['title'])
         article = Article(**validated_data)
         article.save()

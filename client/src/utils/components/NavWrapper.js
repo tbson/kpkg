@@ -104,7 +104,7 @@ class App extends React.Component<Props, State> {
                                 exact
                                 to="/category/banner"
                                 className={
-                                    Tools.matchPrefix('/banners/', this.props.location.pathname) ? ' active' : ''
+                                    Tools.matchPrefix('/banner', this.props.location.pathname) ? ' active' : ''
                                 }>
                                 <span className="oi oi-image" />&nbsp;&nbsp;
                                 <span>Banner</span>
@@ -115,7 +115,7 @@ class App extends React.Component<Props, State> {
                                 exact
                                 to="/category/article"
                                 className={
-                                    Tools.matchPrefix('/articles/', this.props.location.pathname) ? ' active' : ''
+                                    Tools.matchPrefix('/article', this.props.location.pathname) ? ' active' : ''
                                 }>
                                 <span className="oi oi-document" />&nbsp;&nbsp;
                                 <span>Article</span>

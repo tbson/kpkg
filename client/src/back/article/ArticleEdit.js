@@ -13,12 +13,16 @@ import Tools from 'src/utils/helpers/Tools';
 type Props = {
     history: Object,
     match: Object,
+    parent: string,
+    parent_id: number,
+    category_id: ?number,
 };
 type States = {
     dataLoaded: boolean,
     mainFormData: Object,
     mainFormErr: Object,
     uuid: string,
+    categoryId: ?number,
 };
 
 class ArticleEdit extends React.Component<Props, States> {
@@ -26,12 +30,19 @@ class ArticleEdit extends React.Component<Props, States> {
     handleAdd: Function;
     handleEdit: Function;
     renderRelatedArticle: Function;
+    getItem: Function;
+
+    static defaultProps = {
+        parent: 'category',
+        category_id: null,
+    };
 
     state = {
         dataLoaded: false,
         mainFormData: {},
         mainFormErr: {},
         uuid: Tools.uuid4(),
+        categoryId: null,
     };
 
     constructor(props: Props) {
@@ -40,46 +51,65 @@ class ArticleEdit extends React.Component<Props, States> {
         this.handleAdd = this.handleAdd.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
         this.renderRelatedArticle = this.renderRelatedArticle.bind(this);
+        this.getItem = this.getItem.bind(this);
     }
 
     componentDidMount() {
+        this.getItem();
+    }
+
+    async getItem() {
         const id = this.props.match.params.id;
+        const {parent, parent_id} = this.props;
+        if (parent == 'article') {
+            const parentArticle = await Tools.apiCall(apiUrls.crud + parent_id.toString(), 'GET');
+            this.setState({
+                categoryId: parentArticle.data.category,
+            });
+        }
         if (!id) {
             this.setState({dataLoaded: true});
         } else {
-            Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
-                if (result.success) {
-                    this.setState({
-                        mainFormData: result.data,
-                        uuid: result.data.uuid,
-                        dataLoaded: true,
-                    });
-                }
-            });
+            const result = await Tools.apiCall(apiUrls.crud + id.toString(), 'GET');
+            if (result.success) {
+                this.setState({
+                    mainFormData: result.data,
+                    uuid: result.data.uuid,
+                    dataLoaded: true,
+                });
+            }
         }
     }
 
     async handleSubmit(event: Object): Promise<boolean> {
         event.preventDefault();
-        let error: ?Object = null;
+        let result: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
         if (!params.order) {
             params.order = 0;
         }
-        params[this.props.match.params.parent] = this.props.match.params.parent_id;
+        params[this.props.parent] = this.props.match.params.parent_id;
         if (!params.id) {
-            error = await this.handleAdd(params);
+            result = await this.handleAdd(params);
         } else {
-            error = await this.handleEdit(params);
+            result = await this.handleEdit(params);
         }
 
-        if (!error) {
-            // No error -> close current modal
-            // this.toggleModal('mainModal');
+        if (result.success) {
+            if (this.props.parent == 'category') {
+                // Back to parent list
+                Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
+            } else {
+                // Back to parent item
+                Tools.navigateTo(this.props.history, '/article/category', [
+                    this.state.categoryId,
+                    this.props.match.params.parent_id,
+                ]);
+            }
             return true;
         } else {
             // Have error -> update err object
-            this.setState({mainFormErr: error});
+            this.setState({mainFormErr: result});
             return false;
         }
     }
@@ -94,12 +124,7 @@ class ArticleEdit extends React.Component<Props, States> {
     }) {
         params.uuid = this.state.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
-        if (result.success) {
-            // Go back
-            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
-            return null;
-        }
-        return result.data;
+        return result;
     }
 
     async handleEdit(params: {
@@ -113,19 +138,12 @@ class ArticleEdit extends React.Component<Props, States> {
     }) {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
-        if (result.success) {
-            // Go back
-            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
-            return null;
-        }
-        return result.data;
+        return result;
     }
 
-    renderRelatedArticle () {
-        if (!this.props.match.params.id) return null;
-        return (
-            <ArticleTable search_form={false} parent="article" parent_id={this.props.match.params.id} />
-        );
+    renderRelatedArticle() {
+        if (!this.props.match.params.id || this.props.parent != 'category') return null;
+        return <ArticleTable search_form={false} parent="article" parent_id={this.props.match.params.id} />;
     }
 
     render() {
@@ -147,7 +165,14 @@ class ArticleEdit extends React.Component<Props, States> {
                     <button
                         type="button"
                         onClick={() => {
-                            Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
+                            if (!this.state.categoryId) {
+                                Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
+                            } else {
+                                Tools.navigateTo(this.props.history, '/article/category', [
+                                    this.state.categoryId,
+                                    this.props.match.params.parent_id,
+                                ]);
+                            }
                         }}
                         className="btn btn-warning">
                         <span className="oi oi-x" />&nbsp; Cancel
