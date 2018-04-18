@@ -9,10 +9,9 @@ import 'open-iconic/font/css/open-iconic-bootstrap.min.css';
 // $FlowFixMe: do not complain about importing node_modules
 import {ToastContainer} from 'react-toastify';
 
-import 'src/utils/styles/main.css';
+import 'src/utils/styles/main-back.css';
 import Spinner from 'src/utils/components/Spinner';
 import Tools from 'src/utils/helpers/Tools';
-import NavWrapper from 'src/utils/components/NavWrapper';
 import PrivateRoute from 'src/utils/components/PrivateRoute';
 import Login from './auth/Login';
 import Profile from './auth/Profile';
@@ -27,10 +26,18 @@ import Article from './article/Article';
 import ArticleEdit from './article/ArticleEdit';
 import ArticleEditRelated from './article/ArticleEditRelated';
 
-
 type Props = {};
 
 class App extends React.Component<Props> {
+    constructor(props: Props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        const body = window.document.body;
+        body.style.backgroundImage = 'none';
+    }
+
     render() {
         return (
             <div>

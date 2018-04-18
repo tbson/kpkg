@@ -73,11 +73,15 @@ class RichTextInput extends React.Component<Props, States> {
         this.setState({
             value: '',
             editorState: createEditorState(convertToRaw(mediumDraftImporter(nextProps.defaultValue))),
-        })
+        });
     }
 
     render() {
         const {editorState} = this.state;
+        const toolbarConfig = {
+            block: ['ordered-list-item', 'unordered-list-item', 'blockquote', 'header-three', 'todo'],
+            inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink', 'HIGHLIGHT'],
+        };
         return (
             <div style={{position: 'relative'}}>
                 <input type="hidden" name={this.props.name} defaultValue={this.state.value} />

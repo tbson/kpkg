@@ -203,7 +203,7 @@ export class ConfigTable extends React.Component<Props, States> {
         const decide = confirm(message);
         if (!decide) return;
         const result = await Tools.apiCall(
-            apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 
+            apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id),
             'DELETE'
         );
         if (result.success) {
@@ -332,7 +332,7 @@ export class Row extends React.Component<RowPropTypes> {
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a onClick={() => this.props.handleRemove(String(data.id))}>
                         <span
-                            className="removeBtn oi oi-x text-danger pointer" 
+                            className="removeBtn oi oi-x text-danger pointer"
                         />
                     </a>
                 </td>

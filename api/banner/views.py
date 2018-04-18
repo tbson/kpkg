@@ -8,6 +8,7 @@ from rest_framework.generics import (
     DestroyAPIView,
 )
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from .models import Banner
 from .serializers import (
@@ -20,8 +21,10 @@ from utils.common_classes.base_manage_view import BaseManageView
 
 
 class ListView(ListAPIView):
-    permissions = ['view_banner_list']
-    permission_classes = [CustomPermission]
+    # permissions = ['view_banner_list']
+    # permission_classes = [CustomPermission]
+    # permission_classes = [CustomPermission]
+    permission_classes = (AllowAny, )
     queryset = Banner.objects.all()
     serializer_class = BannerBaseSerializer
     search_fields = ('uid', 'value')
