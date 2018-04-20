@@ -36,11 +36,29 @@ export default class Banner extends React.Component<Props, State> {
     render() {
         if (!this.state.dataLoaded) return null;
         return (
-            <div>
+            <div style={{position: "relative"}}>
                 <img src={this.state.banner.image} width="100%"/>
+                <div style={styles.titleBackground}>{this.state.banner.title}</div>
             </div>
         );
     }
 }
 
-const styles = {};
+const styles = {
+    titleBackground: {
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+        color: "white",
+        fontSize: 55,
+        fontWeight: "bold",
+        fontFamily: "Times New Roman",
+        textAlign: "center",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    }
+};

@@ -1,5 +1,8 @@
 // @flow
 import * as React from 'react';
+import Banner from './Banner';
+import MainMenu from './MainMenu';
+import Footer from './Footer';
 
 type Props = {
     children?: React.Node,
@@ -19,7 +22,10 @@ export default class Wrapper extends React.Component<Props, State> {
                 <div className="row">
                     <div className="col-xl-2 col-lg-1" />
                     <div className="col-xl-8 col-lg-10" style={styles.wrapperStyle}>
+                        <Banner />
+                        <MainMenu />
                         {this.props.children}
+                        <Footer />
                     </div>
                 </div>
             </div>
