@@ -1,0 +1,55 @@
+#menu-checkbox {
+    display: none;
+}
+.menu-item {
+    text-align: center;
+    background-color: rgb(38, 38, 38);
+    color: white;
+    padding: 5px 0;
+    cursor: pointer;
+}
+.menu-item:not(:last-child) {
+    border-right: 1px white solid;
+}
+.menu-item:hover {
+    background-color: rgba(38, 38, 38, 0.5);
+}
+.menu-item.active {
+    background-color: rgba(38, 38, 38, 0.7);
+}
+
+.toggle {
+    display: none;
+}
+
+.toggle {
+    cursor: pointer;
+}
+.toggle span {
+    font-size: 25px;
+}
+
+@media screen and (max-width: 1200px) {
+    .toggle {
+        display: block;
+        text-align: center;
+        background-color: rgb(38, 38, 38);
+        color: white;
+    }
+
+    #main-menu {
+        display: none;
+    }
+
+    #menu-checkbox:checked + div {
+        display: block;
+    }
+
+    .menu-item:not(:last-child) {
+        border-right: none;
+    }
+
+    .menu-item {
+        border-bottom: 1px white solid;
+    }
+}

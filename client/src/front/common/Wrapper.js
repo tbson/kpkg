@@ -17,8 +17,8 @@ export default class Wrapper extends React.Component<Props, State> {
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-lg-2" />
-                    <div className="col-lg-8" style={styles.wrapperStyle}>
+                    <div className="col-xl-2 col-lg-1" />
+                    <div className="col-xl-8 col-lg-10" style={styles.wrapperStyle}>
                         {this.props.children}
                     </div>
                 </div>
@@ -29,7 +29,8 @@ export default class Wrapper extends React.Component<Props, State> {
 
 const styles = {
     wrapperStyle: {
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        padding: 10,
         margin: '30px 0',
     },
 };
