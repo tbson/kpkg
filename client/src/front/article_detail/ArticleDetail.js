@@ -18,6 +18,7 @@ type State = { article: Object,
 class ArticleDetail extends React.Component<Props, State> {
     getArticleFromId: Function;
     getArticleFromCategoryUid: Function;
+    setInitData: Function;
 
     static defaultProps = {};
     state: State = {
@@ -32,25 +33,33 @@ class ArticleDetail extends React.Component<Props, State> {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(prevState.pathname);
-        console.log(nextProps.location.pathname);
+        if (nextProps.location.pathname !== prevState.pathname) {
+            return {pathname: nextProps.location.pathname};
+        }
         return null;
     }
 
     componentDidUpdate (prevProps, prevState) {
         const {pathname} = this.props.location;
+        if (prevProps.location.pathname != pathname) {
+            this.setInitData();
+        }
     }
 
     async componentDidMount() {
-        /*
-        const gioiThieu = Tools.getGlobalState('gioiThieu');
-        if (gioiThieu) {
+        this.setInitData();
+    }
+
+    setInitData () {
+        const {pathname} = this.props.location;
+        const article = Tools.getGlobalState(pathname);
+        if (article) {
             return this.setState({
-                article: gioiThieu,
+                article,
                 dataLoaded: true
             });
         }
-        */
+
         const {id, uid} = this.props.match.params;
         if (typeof id != 'undefined' && typeof uid != 'undefined') {
             this.getArticleFromId(id);
@@ -60,17 +69,19 @@ class ArticleDetail extends React.Component<Props, State> {
     }
 
     async getArticleFromId(id: number) {
+        const {pathname} = this.props.location;
         const result = await Tools.apiCall(apiUrls.article + id.toString(), 'GET', {}, false, false);
         if (result.success) {
             this.setState({
                 article: result.data,
                 dataLoaded: true,
             });
-            Tools.setGlobalState('gioiThieu', result.data);
+            Tools.setGlobalState(pathname, result.data);
         }
     }
 
     async getArticleFromCategoryUid(uid: string) {
+        const {pathname} = this.props.location;
         const params = {
             category__uid: uid,
         };
@@ -80,7 +91,7 @@ class ArticleDetail extends React.Component<Props, State> {
                 article: result.data.items[0],
                 dataLoaded: true,
             });
-            Tools.setGlobalState('gioiThieu', result.data.items[0]);
+            Tools.setGlobalState(pathname, result.data.items[0]);
         }
     }
 
