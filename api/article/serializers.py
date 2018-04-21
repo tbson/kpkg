@@ -12,7 +12,7 @@ class ArticleBaseSerializer(ModelSerializer):
 
     class Meta:
         model = Article
-        exclude = ()
+        exclude = ('content', )
         read_only_fields = ('id',)
 
     category_title = SerializerMethodField()
@@ -22,10 +22,14 @@ class ArticleBaseSerializer(ModelSerializer):
             return obj.category.title
         return obj.article.category.title
 
+class ArticleRetrieveSerializer(ArticleBaseSerializer):
+    class Meta(ArticleBaseSerializer.Meta):
+        exclude = ()
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
 
     class Meta(ArticleBaseSerializer.Meta):
+        exclude = ()
         extra_kwargs = {
             'uid': {'required': False},
         }
@@ -60,4 +64,8 @@ class ArticleLandingSerializer(ArticleBaseSerializer):
     def get_attaches(self, obj):
         result = Attach.objects.filter(parent_uuid=obj.uuid, richtext_image=False)
         return AttachBaseSerializer(result, many=True).data
+
+class ArticleLandingRetrieveSerializer(ArticleLandingSerializer):
+    class Meta(ArticleBaseSerializer.Meta):
+        exclude = ()
 

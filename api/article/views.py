@@ -12,6 +12,7 @@ from rest_framework import status
 from .models import Article
 from .serializers import (
     ArticleBaseSerializer,
+    ArticleRetrieveSerializer,
     ArticleCreateSerializer,
     ArticleUpdateSerializer,
 )
@@ -32,7 +33,7 @@ class DetailView(RetrieveAPIView):
     permissions = ['view_article_detail']
     permission_classes = [CustomPermission]
     queryset = Article.objects.all()
-    serializer_class = ArticleBaseSerializer
+    serializer_class = ArticleRetrieveSerializer
 
 
 class CreateView(CreateAPIView):

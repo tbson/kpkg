@@ -11,7 +11,7 @@ from banner.models import Banner
 from banner.serializers import BannerBaseSerializer
 
 from article.models import Article
-from article.serializers import ArticleLandingSerializer
+from article.serializers import ArticleLandingSerializer, ArticleLandingRetrieveSerializer
 
 
 class BannerListView(ListAPIView):
@@ -29,4 +29,4 @@ class ArticleListView(ListAPIView):
 class ArticleRetrieveView(RetrieveAPIView):
     permission_classes = (AllowAny, )
     queryset = Article.objects.all()
-    serializer_class = ArticleLandingSerializer
+    serializer_class = ArticleLandingRetrieveSerializer
