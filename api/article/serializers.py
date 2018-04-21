@@ -49,3 +49,7 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
         }
         exclude = ('uuid',)
 
+
+class ArticleLandingSerializer(ArticleBaseSerializer):
+    related_articles = ArticleBaseSerializer(many=True, read_only=True)
+

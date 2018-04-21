@@ -77,6 +77,20 @@ export default class Tools {
         return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
 
+    static setGlobalState(key: string, value: any): void {
+        if (typeof window.globalState == 'undefined') {
+            window.globalState = {};
+        }
+        window.globalState[key] = value;
+    }
+
+    static getGlobalState(key: string): any {
+        if (typeof window.globalState == 'undefined') {
+            window.globalState = {};
+        }
+        return window.globalState[key];
+    }
+
     static setStorage(key: string, value: any): void {
         try {
             let newValue = value;

@@ -16,7 +16,7 @@ def image_destination(instance, filename):
 # Create your models here.
 class Article(models.Model):
     category = models.ForeignKey(Category, related_name="articles", null=True, on_delete=models.CASCADE)
-    article = models.ForeignKey('self', related_name="relatedArticles", null=True, on_delete=models.CASCADE)
+    article = models.ForeignKey('self', related_name="related_articles", null=True, on_delete=models.CASCADE)
     uuid = models.CharField(max_length=36, blank=True)
     uid = models.CharField(max_length=256)
     title = models.CharField(max_length=256)

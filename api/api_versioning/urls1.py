@@ -36,5 +36,9 @@ urlpatterns = [
         'attach/',
         include('attach.urls', namespace='attach'),
     ),
+    path(
+        'landing/',
+        include('landing_api.urls', namespace='landing_api'),
+    ),
 ]
 

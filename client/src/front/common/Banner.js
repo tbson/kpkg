@@ -20,16 +20,24 @@ export default class Banner extends React.Component<Props, State> {
     }
 
     async componentDidMount() {
+        const mainBanner = Tools.getGlobalState('mainBanner');
+        if (mainBanner) {
+            return this.setState({
+                banner: mainBanner,
+                dataLoaded: true
+            });
+        }
+
         const params = {
             category__uid: 'main-banner',
         };
-        const result = await Tools.apiCall(apiUrls.crud, 'GET', params);
-        console.log(result);
+        const result = await Tools.apiCall(apiUrls.banner, 'GET', params, false, false);
         if (result.success) {
             this.setState({
                 banner: result.data.items[0],
                 dataLoaded: true
             });
+            Tools.setGlobalState('mainBanner', result.data.items[0]);
         }
     }
 

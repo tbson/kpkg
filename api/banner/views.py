@@ -21,10 +21,8 @@ from utils.common_classes.base_manage_view import BaseManageView
 
 
 class ListView(ListAPIView):
-    # permissions = ['view_banner_list']
-    # permission_classes = [CustomPermission]
-    # permission_classes = [CustomPermission]
-    permission_classes = (AllowAny, )
+    permissions = ['view_banner_list']
+    permission_classes = [CustomPermission]
     queryset = Banner.objects.all()
     serializer_class = BannerBaseSerializer
     search_fields = ('uid', 'value')

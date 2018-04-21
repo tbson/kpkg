@@ -3,11 +3,12 @@ import {FIELD_TYPE, APP} from 'src/constants';
 
 const rawApiUrls = [
     {
-        controller: 'banner',
+        controller: 'landing',
         endpoints: {
-            crud: ''
-        }
-    }
+            banner: 'banner',
+            article: 'article',
+        },
+    },
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
