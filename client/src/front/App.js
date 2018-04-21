@@ -15,6 +15,7 @@ import mainBg from 'src/assets/images/main-bg.jpg'
 import Spinner from 'src/utils/components/Spinner';
 
 import Home from './home/Home';
+import Contact from './contact/Contact';
 import ArticleDetail from './article/ArticleDetail';
 import ArticleList from './article/ArticleList';
 
@@ -38,6 +39,7 @@ class App extends React.Component<Props> {
                 <ToastContainer autoClose={5000} />
                 <Switch>
                     <Route exact path="/" component={Home} />
+                    <Route exact path="/lien-he" component={Contact} />
                     <Route exact path="/bai-viet/:uid" component={ArticleDetail} />
                     <Route exact path="/bai-viet/:id/:uid" component={ArticleDetail} />
                     <Route exact path="/danh-sach-bai-viet/:uid" component={ArticleList} />

@@ -20,8 +20,8 @@ export default class Wrapper extends React.Component<Props, State> {
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-xl-2 col-lg-1" />
-                    <div className="col-xl-8 col-lg-10" style={styles.wrapperStyle}>
+                    <div className="col-xl-1" />
+                    <div className="col-xl-10 col-lg-12" style={styles.wrapperStyle}>
                         <Banner />
                         <MainMenu />
                         {this.props.children}

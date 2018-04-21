@@ -43,7 +43,9 @@ export default class MainMenu extends React.Component<Props, State> {
                         <NavLink exact className="menu-item col-xl-1" to="/danh-sach-bai-viet/kien-thuc">
                             Kiến thức
                         </NavLink>
-                        <div className="menu-item col-xl-1">Liên hệ</div>
+                        <NavLink exact className="menu-item col-xl-1" to="/lien-he">
+                            Liên hệ
+                        </NavLink>
                     </div>
                 </div>
                 <label className="toggle" htmlFor="menu-checkbox">
