@@ -113,6 +113,17 @@ class App extends React.Component<Props, State> {
                         <li>
                             <NavLink
                                 exact
+                                to="/category/gallery"
+                                className={
+                                    Tools.matchPrefix('/banner', this.props.location.pathname) ? ' active' : ''
+                                }>
+                                <span className="oi oi-aperture"></span>&nbsp;&nbsp;
+                                <span>Gallery</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                exact
                                 to="/category/article"
                                 className={
                                     Tools.matchPrefix('/article', this.props.location.pathname) ? ' active' : ''

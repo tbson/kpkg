@@ -34,7 +34,6 @@ export class CategoryTable extends React.Component<Props, States> {
     handleSearch: Function;
     typeList: Array<Object>;
 
-    filterTimeout: ?TimeoutID = null;
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -46,7 +45,11 @@ export class CategoryTable extends React.Component<Props, States> {
         mainFormErr: {},
     };
 
-    typeList = [{value: 'article', label: 'Article'}, {value: 'banner', label: 'Banner'}];
+    typeList = [
+        {value: 'article', label: 'Article'},
+        {value: 'banner', label: 'Banner'},
+        {value: 'gallery', label: 'Gallery'}
+    ];
 
     constructor(props: Props) {
         super(props);
