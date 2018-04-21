@@ -4,6 +4,8 @@ from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
 from .models import Article
 from category.models import Category
+from attach.models import Attach
+from attach.serializers import AttachBaseSerializer
 
 
 class ArticleBaseSerializer(ModelSerializer):
@@ -52,4 +54,10 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
 
 class ArticleLandingSerializer(ArticleBaseSerializer):
     related_articles = ArticleBaseSerializer(many=True, read_only=True)
+
+    attaches = SerializerMethodField()
+
+    def get_attaches(self, obj):
+        result = Attach.objects.filter(parent_uuid=obj.uuid, richtext_image=False)
+        return AttachBaseSerializer(result, many=True).data
 

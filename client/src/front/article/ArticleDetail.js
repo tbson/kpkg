@@ -2,6 +2,13 @@
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter, Link} from 'react-router-dom';
+// $FlowFixMe: do not complain about importing node_modules
+import 'slick-carousel/slick/slick.css';
+// $FlowFixMe: do not complain about importing node_modules
+import 'slick-carousel/slick/slick-theme.css';
+// $FlowFixMe: do not complain about importing node_modules
+import Slider from 'react-slick';
+
 import {apiUrls} from '../common/_data';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
@@ -10,15 +17,17 @@ type Props = {
     match: Object,
     location: Object,
 };
-type State = { article: Object,
+type State = {
+    article: Object,
     dataLoaded: boolean,
-    pathname: ?string
+    pathname: ?string,
 };
 
 class ArticleDetail extends React.Component<Props, State> {
     getArticleFromId: Function;
     getArticleFromCategoryUid: Function;
     setInitData: Function;
+    renderBanner: Function;
 
     static defaultProps = {};
     state: State = {
@@ -30,6 +39,7 @@ class ArticleDetail extends React.Component<Props, State> {
         super(props);
         this.getArticleFromId = this.getArticleFromId.bind(this);
         this.getArticleFromCategoryUid = this.getArticleFromCategoryUid.bind(this);
+        this.renderBanner = this.renderBanner.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -39,7 +49,7 @@ class ArticleDetail extends React.Component<Props, State> {
         return null;
     }
 
-    componentDidUpdate (prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         const {pathname} = this.props.location;
         if (prevProps.location.pathname != pathname) {
             this.setInitData();
@@ -50,13 +60,13 @@ class ArticleDetail extends React.Component<Props, State> {
         this.setInitData();
     }
 
-    setInitData () {
+    setInitData() {
         const {pathname} = this.props.location;
         const article = Tools.getGlobalState(pathname);
         if (article) {
             return this.setState({
                 article,
-                dataLoaded: true
+                dataLoaded: true,
             });
         }
 
@@ -95,6 +105,29 @@ class ArticleDetail extends React.Component<Props, State> {
         }
     }
 
+    renderBanner(article: Object) {
+        const {attaches} = article;
+        if (article.use_slide && attaches.length) {
+            const settings = {
+                infinite: true,
+                speed: 500,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            };
+            return (
+                <Slider {...settings}>
+                    {attaches.map(item => (
+                        <div key={item.id}>
+                            <img src={item.attachment} width="100%"/>
+                        </div>
+                    ))}
+                </Slider>
+            );
+        } else {
+            return <img src={article.image} className="img-thumbnail" width="100%" />;
+        }
+    }
+
     render() {
         const {article} = this.state;
         return (
@@ -102,7 +135,7 @@ class ArticleDetail extends React.Component<Props, State> {
                 <div className="content-container">
                     <h1>{article.title}</h1>
                     <hr />
-                    <img src={article.image} className="img-thumbnail" width="100%" />
+                    {this.renderBanner(article)}
                     <div dangerouslySetInnerHTML={{__html: article.content}} />
                 </div>
                 <div className="row">
@@ -111,9 +144,7 @@ class ArticleDetail extends React.Component<Props, State> {
                             <div className="col-xl-6" key={item.id}>
                                 <div className="content-container">
                                     <h2>
-                                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>
-                                            {item.title}
-                                        </Link>
+                                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
                                     </h2>
                                     <hr />
                                     <div className="row">

@@ -28,11 +28,21 @@ export default class MainMenu extends React.Component<Props, State> {
                         <NavLink exact className="menu-item col-xl-1" to="/bai-viet/gioi-thieu">
                             Giới thiệu
                         </NavLink>
-                        <div className="menu-item col-xl-2">Đài thiên văn</div>
-                        <div className="menu-item col-xl-2">Nhà chiếu hình</div>
-                        <div className="menu-item col-xl-3">Chương trình tham quan</div>
-                        <div className="menu-item col-xl-1">Tin tức</div>
-                        <div className="menu-item col-xl-1">Kiến thức</div>
+                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/ai-thien-van">
+                            Đài thiên văn
+                        </NavLink>
+                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/nha-chieu-hinh">
+                            Nhà chiếu hình
+                        </NavLink>
+                        <NavLink exact className="menu-item col-xl-3" to="/bai-viet/chuong-trinh-tham-quan">
+                            Chương trình tham quan
+                        </NavLink>
+                        <NavLink exact className="menu-item col-xl-1" to="/danh-sach-bai-viet/tin-tuc">
+                            Tin tức
+                        </NavLink>
+                        <NavLink exact className="menu-item col-xl-1" to="/danh-sach-bai-viet/kien-thuc">
+                            Kiến thức
+                        </NavLink>
                         <div className="menu-item col-xl-1">Liên hệ</div>
                     </div>
                 </div>

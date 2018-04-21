@@ -8,6 +8,7 @@ export type defaultValues = {
     description: ?string,
     content: ?string,
     image: ?string,
+    use_slide: boolean,
     order: ?number,
 };
 type Props = {
@@ -59,6 +60,7 @@ export default class ArticleForm extends React.Component<Props, States> {
             description: '',
             content: '',
             image: '',
+            use_slide: false,
             order: 0,
         };
     }
@@ -150,6 +152,19 @@ export default class ArticleForm extends React.Component<Props, States> {
                         placeholder="Image..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('image')}</div>
+                </div>
+
+                <div className="form-check">
+                    <input
+                        id="use_slide"
+                        name="use_slide"
+                        type="checkbox"
+                        defaultChecked={this.props.defaultValues.use_slide}
+                        className="form-check-input"
+                    />
+                    <label className="form-check-label" htmlFor="use_slide">
+                        Use slide
+                    </label>
                 </div>
 
                 <div className="form-group">

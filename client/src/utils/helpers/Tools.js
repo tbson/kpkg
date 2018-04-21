@@ -383,4 +383,10 @@ export default class Tools {
             (c ^ (cryptoObj.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
         );
     }
+
+    static dateFormat (input: string): string {
+        // $FlowFixMe: do not complain about importing node_modules
+        var locale = new Intl.DateTimeFormat("fr-FR");
+        return locale.format(new Date(input))
+    }
 }

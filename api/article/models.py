@@ -1,6 +1,7 @@
 import uuid
 import os
 from PIL import Image
+from django.utils.timezone import now
 from django.conf import settings
 from django.db import models
 from utils.helpers.tools import Tools
@@ -23,7 +24,10 @@ class Article(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to=image_destination)
     content = models.TextField(blank=True)
+    use_slide = models.BooleanField(default=False)
     order = models.IntegerField(default=1)
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
 

@@ -15,7 +15,8 @@ import mainBg from 'src/assets/images/main-bg.jpg'
 import Spinner from 'src/utils/components/Spinner';
 
 import Home from './home/Home';
-import ArticleDetail from './article_detail/ArticleDetail';
+import ArticleDetail from './article/ArticleDetail';
+import ArticleList from './article/ArticleList';
 
 type Props = {};
 
@@ -39,6 +40,7 @@ class App extends React.Component<Props> {
                     <Route exact path="/" component={Home} />
                     <Route exact path="/bai-viet/:uid" component={ArticleDetail} />
                     <Route exact path="/bai-viet/:id/:uid" component={ArticleDetail} />
+                    <Route exact path="/danh-sach-bai-viet/:uid" component={ArticleList} />
                 </Switch>
             </div>
         );
