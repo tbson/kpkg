@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -8,6 +9,11 @@ class Category(models.Model):
     type = models.CharField(max_length=50)
     image_ratio = models.FloatField(default=1.618)
     single = models.BooleanField(default=False)
+
+
+    def save(self, *args, **kwargs):
+        self.uid = slugify(self.title);
+        super(Category, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         for banner in self.banners.all():
