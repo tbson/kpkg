@@ -16,6 +16,10 @@ class Config extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Config manager';
+    }
+
     render() {
         return (
             <NavWrapper>

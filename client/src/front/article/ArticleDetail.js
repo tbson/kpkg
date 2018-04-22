@@ -28,6 +28,7 @@ class ArticleDetail extends React.Component<Props, State> {
     getArticleFromCategoryUid: Function;
     setInitData: Function;
     renderBanner: Function;
+    setTitle: Function;
 
     static defaultProps = {};
     state: State = {
@@ -60,17 +61,42 @@ class ArticleDetail extends React.Component<Props, State> {
         this.setInitData();
     }
 
+    setTitle (uid) {
+        switch (uid) {
+            case 'gioi-thieu':
+                document.title = 'Giới thiệu'
+                break;
+            case 'ai-thien-van':
+                document.title = 'Đài thiên văn'
+                break;
+            case 'nha-chieu-hinh':
+                document.title = 'Nhà chiếu hình'
+                break;
+            case 'chuong-trinh-tham-quan':
+                document.title = 'Chương trình tham quan'
+                break;
+            default:
+                document.title = uid
+        }
+    }
+
     setInitData() {
+        const {id, uid} = this.props.match.params;
         const {pathname} = this.props.location;
         const article = Tools.getGlobalState(pathname);
+        if (typeof id == 'undefined') {
+            this.setTitle(uid);
+        }
         if (article) {
+            if (typeof id != 'undefined') {
+                this.setTitle(article.title);
+            }
             return this.setState({
                 article,
                 dataLoaded: true,
             });
         }
 
-        const {id, uid} = this.props.match.params;
         if (typeof id != 'undefined' && typeof uid != 'undefined') {
             this.getArticleFromId(id);
         } else {
@@ -82,6 +108,7 @@ class ArticleDetail extends React.Component<Props, State> {
         const {pathname} = this.props.location;
         const result = await Tools.apiCall(apiUrls.article + id.toString(), 'GET', {}, false, false);
         if (result.success) {
+            this.setTitle(result.data.title);
             this.setState({
                 article: result.data,
                 dataLoaded: true,

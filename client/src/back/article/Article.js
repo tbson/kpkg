@@ -18,6 +18,10 @@ class Article extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Article manager';
+    }
+
     render() {
         return (
             <NavWrapper>

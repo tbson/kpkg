@@ -16,6 +16,10 @@ class Category extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Category manager';
+    }
+
     render() {
         return (
             <NavWrapper>

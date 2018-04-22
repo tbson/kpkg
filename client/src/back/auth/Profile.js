@@ -45,6 +45,7 @@ class Profile extends React.Component<Props, States> {
     }
 
     componentDidMount() {
+        document.title = 'Profile';
         Tools.apiCall(apiUrls.profile, 'GET').then(result => {
             // console.log(result);
         });

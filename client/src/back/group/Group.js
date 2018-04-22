@@ -16,6 +16,10 @@ class Group extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Group manager';
+    }
+
     render() {
         return (
             <NavWrapper>

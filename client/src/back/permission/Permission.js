@@ -16,6 +16,10 @@ class Permission extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Permission manager';
+    }
+
     render() {
         return (
             <NavWrapper>

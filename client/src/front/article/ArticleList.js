@@ -58,9 +58,24 @@ class ArticleList extends React.Component<Props, State> {
         this.setInitData();
     }
 
+    setTitle (uid) {
+        switch (uid) {
+            case 'tin-tuc':
+                document.title = 'Tin tức'
+                break;
+            case 'kien-thuc':
+                document.title = 'Kiến thức'
+                break;
+        }
+    }
+
     async setInitData() {
+        const {uid} = this.props.match.params;
         const {pathname} = this.props.location;
         const listItem = Tools.getGlobalState(pathname);
+
+        this.setTitle(uid);
+
         if (listItem) {
             return this.setState({
                 listItem,
@@ -69,7 +84,7 @@ class ArticleList extends React.Component<Props, State> {
         }
 
         const params = {
-            category__uid: this.props.match.params.uid
+            category__uid: uid
         };
         const result = await Tools.apiCall(apiUrls.article, 'GET', params, false, false);
         if (result.success) {

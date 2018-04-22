@@ -16,6 +16,10 @@ class Administrator extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Administrator manager';
+    }
+
     render() {
         return (
             <NavWrapper>

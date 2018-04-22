@@ -14,6 +14,10 @@ export default class Contact extends React.Component<Props, State> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Liên hệ';
+    }
+
     render() {
         return (
             <Wrapper>

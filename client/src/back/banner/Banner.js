@@ -16,6 +16,10 @@ class Banner extends React.Component<Props, States> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Banner/Gallery manager';
+    }
+
     render() {
         return (
             <NavWrapper>

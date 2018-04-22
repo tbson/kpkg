@@ -15,6 +15,10 @@ export default class Home extends React.Component<Props, State> {
         super(props);
     }
 
+    componentDidMount () {
+        document.title = 'Trang chủ';
+    }
+
     render() {
         return (
             <Wrapper>
