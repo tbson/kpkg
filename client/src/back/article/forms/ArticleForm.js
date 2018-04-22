@@ -118,13 +118,10 @@ export default class ArticleForm extends React.Component<Props, States> {
 
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <textarea
+                    <RichTextInput
+                        parent_uuid={this.props.parent_uuid}
                         defaultValue={this.state.defaultValues.description}
-                        id="description"
                         name="description"
-                        type="text"
-                        className={this.setClassName('description')}
-                        placeholder="Description..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('description')}</div>
                 </div>

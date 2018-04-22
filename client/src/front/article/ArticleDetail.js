@@ -179,7 +179,7 @@ class ArticleDetail extends React.Component<Props, State> {
                                             <img src={item.image} className="img-thumbnail" width="100%" />
                                         </div>
                                         <div className="col-md-8 article-description">
-                                            <p>{item.description}</p>
+                                            <p>{Tools.getText(item.description)}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -152,7 +152,8 @@ export default class Tools {
                     // $FlowFixMe: Still have no idea why it happen
                     parseInt(index) === 0 ? key : camelCase(apiUrl.controller) + this.cap(key)
                     // $FlowFixMe: Still have no idea why it happen
-                ] = API_BASE_URL + kebabCase(apiUrl.controller) + '/' + url + (url ? '/' : '');
+                ] =
+                    API_BASE_URL + kebabCase(apiUrl.controller) + '/' + url + (url ? '/' : '');
             });
         });
         return result;
@@ -284,7 +285,7 @@ export default class Tools {
                 credentials: 'same-origin',
             };
             if (this.getToken()) {
-                requestConfig.headers.Authorization = 'JWT ' + this.getToken()
+                requestConfig.headers.Authorization = 'JWT ' + this.getToken();
             }
             if (['POST', 'PUT'].indexOf(method) !== -1) {
                 // Have payload
@@ -384,9 +385,15 @@ export default class Tools {
         );
     }
 
-    static dateFormat (input: string): string {
+    static dateFormat(input: string): string {
         // $FlowFixMe: do not complain about importing node_modules
-        var locale = new Intl.DateTimeFormat("fr-FR");
-        return locale.format(new Date(input))
+        var locale = new Intl.DateTimeFormat('fr-FR');
+        return locale.format(new Date(input));
+    }
+
+    static getText(html: string): string {
+        let tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText;
     }
 }

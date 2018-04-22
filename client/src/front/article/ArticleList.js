@@ -108,7 +108,7 @@ class ArticleList extends React.Component<Props, State> {
                         <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
                         <div className="row">
                             <div className="col-md-12 article-description">
-                                <p>{item.description}</p>
+                                <p>{Tools.getText(item.description)}</p>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@ class ArticleList extends React.Component<Props, State> {
                                     <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
                                 </h2>
                                 <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
-                                <p>{item.description}</p>
+                                <p>{Tools.getText(item.description)}</p>
                             </div>
                         </div>
                     </div>
