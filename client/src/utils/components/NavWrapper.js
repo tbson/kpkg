@@ -115,7 +115,7 @@ class App extends React.Component<Props, State> {
                                 exact
                                 to="/category/gallery"
                                 className={
-                                    Tools.matchPrefix('/banner', this.props.location.pathname) ? ' active' : ''
+                                    Tools.matchPrefix('/gallery', this.props.location.pathname) ? ' active' : ''
                                 }>
                                 <span className="oi oi-aperture"></span>&nbsp;&nbsp;
                                 <span>Gallery</span>
