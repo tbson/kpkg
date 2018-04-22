@@ -64,7 +64,7 @@ export default class Gallery extends React.Component<Props, State> {
                 gallery: galleryDict,
                 dataLoaded: true,
             });
-            Tools.setGlobalState('gallery', result.data.items[0]);
+            Tools.setGlobalState('gallery', galleryDict);
         }
     }
 
