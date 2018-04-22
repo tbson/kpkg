@@ -1,16 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+import * as React from 'react';
+// $FlowFixMe: do not complain about importing node_modules
 import Modal from 'react-modal';
 
-class CustomModal extends React.Component {
-    static propTypes = {
-        size: PropTypes.string,
-    };
+type Props = {
+    size: string,
+    open: boolean,
+    close: Function,
+    title: string,
+    backgroundColor: string,
+    children: React.Node,
+};
+type State = {};
+
+class CustomModal extends React.Component<Props, State> {
     static defaultProps = {
         size: 'full',
+        backgroundColor: 'rgb(255, 255, 255)'
     };
 
-    constructor(props) {
+    state: State = {};
+
+    constructor(props: Props) {
         super(props);
     }
 
@@ -21,6 +32,7 @@ class CustomModal extends React.Component {
                 overflowY: 'scroll',
             },
             content: {
+                backgroundColor: this.props.backgroundColor,
                 top: '5%',
                 left: '30%',
                 right: '30%',
@@ -47,6 +59,7 @@ class CustomModal extends React.Component {
                 customStyles.content.right = '0%';
                 customStyles.content.top = '0%';
                 customStyles.content.bottom = '0%';
+                // $FlowFixMe: do not complain subkey
                 customStyles.content.borderWidth = 0;
                 break;
             default:
@@ -56,8 +69,8 @@ class CustomModal extends React.Component {
 
         const closeButtonStyle = {
             position: 'absolute',
-            top: 5,
-            right: 5,
+            top: 20,
+            right: 20,
             cursor: 'pointer',
         };
         const headingStyle = {
@@ -71,7 +84,7 @@ class CustomModal extends React.Component {
                 contentLabel="Modal"
                 onRequestClose={this.props.close}
                 ariaHideApp={false}>
-                <span style={closeButtonStyle} className="fa fa-times non-printable" onClick={this.props.close} />
+                <span style={closeButtonStyle} className="oi oi-x non-printable" onClick={this.props.close} />
                 <h4 className="non-printable" style={headingStyle}>
                     {this.props.title}
                 </h4>

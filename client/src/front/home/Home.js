@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Wrapper from '../common/Wrapper';
+import Gallery from '../common/Gallery';
 
 
 type Props = {
@@ -22,7 +23,7 @@ export default class Home extends React.Component<Props, State> {
     render() {
         return (
             <Wrapper>
-                Home page
+                <Gallery/>
             </Wrapper>
         );
     }

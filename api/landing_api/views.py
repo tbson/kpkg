@@ -18,7 +18,7 @@ class BannerListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = Banner.objects.all()
     serializer_class = BannerBaseSerializer
-    filter_fields = ('category__uid', )
+    filter_fields = ('category__uid', 'category__type', )
 
 class ArticleListView(ListAPIView):
     permission_classes = (AllowAny, )

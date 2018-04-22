@@ -4,6 +4,19 @@
     margin: 10px 0;
 }
 
+.gallery-thumbnail {
+    background-color: white;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.gallery-thumbnail .caption {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .img-thumbnail {
     margin: 10px 0;
 }
