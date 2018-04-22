@@ -122,7 +122,7 @@ class ArticleDetail extends React.Component<Props, State> {
         const params = {
             category__uid: uid,
         };
-        const result = await Tools.apiCall(apiUrls.article, 'GET', params, false, false);
+        const result = await Tools.apiCall(apiUrls.articleSingle, 'GET', params, false, false);
         if (result.success) {
             this.setState({
                 article: result.data.items[0],

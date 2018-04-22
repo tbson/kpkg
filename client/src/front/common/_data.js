@@ -7,6 +7,7 @@ const rawApiUrls = [
         endpoints: {
             banner: 'banner',
             article: 'article',
+            articleSingle: 'article-single',
         },
     },
 ];

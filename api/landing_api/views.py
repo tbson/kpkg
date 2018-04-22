@@ -26,6 +26,12 @@ class ArticleListView(ListAPIView):
     serializer_class = ArticleLandingSerializer
     filter_fields = ('category__uid', )
 
+class ArticleRetrieveSingleView(ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = Article.objects.all()
+    serializer_class = ArticleLandingRetrieveSerializer
+    filter_fields = ('category__uid', )
+
 class ArticleRetrieveView(RetrieveAPIView):
     permission_classes = (AllowAny, )
     queryset = Article.objects.all()
