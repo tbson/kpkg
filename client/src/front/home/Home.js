@@ -3,6 +3,7 @@ import * as React from 'react';
 import Wrapper from '../common/Wrapper';
 import Gallery from '../common/Gallery';
 import Program from './Program';
+import News from './News';
 
 
 type Props = {
@@ -25,6 +26,7 @@ export default class Home extends React.Component<Props, State> {
         return (
             <Wrapper>
                 <Program/>
+                <News/>
                 <Gallery/>
             </Wrapper>
         );

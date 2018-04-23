@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.generics import (
@@ -25,6 +26,11 @@ class ArticleListView(ListAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleLandingSerializer
     filter_fields = ('category__uid', )
+
+class ArticleNewsListView(ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = Article.objects.filter(Q(category__uid='tin-tuc') | Q(category__uid='kien-thuc'))
+    serializer_class = ArticleLandingSerializer
 
 class ArticleRetrieveSingleView(ListAPIView):
     permission_classes = (AllowAny, )

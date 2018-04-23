@@ -8,6 +8,7 @@ const rawApiUrls = [
             banner: 'banner',
             article: 'article',
             articleSingle: 'article-single',
+            articleNews: 'article-news',
         },
     },
 ];
