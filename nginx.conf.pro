@@ -1,5 +1,6 @@
 server {
-    listen 443;
+    # listen 443;
+    listen 443 ssl http2 default_server
     server_name my.domain;
     charset utf-8;
     root /resource/public/kpkg;

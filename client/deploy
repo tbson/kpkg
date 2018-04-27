@@ -1,0 +1,2 @@
+# ./exec yarn build-front
+scp -r build/* root@docker_server:/home/tbson/code/kpkg/api/public/clients/front/
