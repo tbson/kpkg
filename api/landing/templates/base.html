@@ -27,7 +27,7 @@
         <title>{{ meta.title }}</title>
         <style>
             body {
-                background-image: url(/public/clients/front/main-bg.webp);
+                background-image: url({{ CLIENT_URL }}main-bg.webp);
                 background-attachment: fixed;
                 background-size: cover;
             }
@@ -38,6 +38,6 @@
         <script type="text/javascript">
             // Init data here
         </script>
-        <script async src="/public/clients/front/app.js?v=1"></script>
+        <script async src="{{ CLIENT_URL }}app.js?v=1"></script>
     </body>
 </html>

@@ -175,7 +175,7 @@ MEDIA_ROOT = BASE_DIR + '/public/media/'
 STATIC_URL = BASE_URL + 'public/static/'
 STATIC_IMG_URL = BASE_URL + 'public/static/images/'
 MEDIA_URL = BASE_URL + 'public/media/'
-
+CLIENT_URL = BASE_URL + '/public/clients/front/'
 # User defined constants
 
 ALLOW_CHARS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789'

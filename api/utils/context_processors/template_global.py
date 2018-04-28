@@ -8,7 +8,7 @@ def vars(request):
         'PROTOCOL': settings.PROTOCOL,
         'BASE_URL': settings.BASE_URL,
         'BASE_URL_TRIM': settings.BASE_URL_TRIM,
-        # 'CLIENT_URL': settings.CLIENT_URL,
+        'CLIENT_URL': settings.CLIENT_URL,
         'STATIC_URL': settings.STATIC_URL,
         'STATIC_IMG_URL': settings.STATIC_IMG_URL,
         'MEDIA_URL': settings.MEDIA_URL,
