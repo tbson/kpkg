@@ -10,7 +10,8 @@ import 'open-iconic/font/css/open-iconic-bootstrap.min.css';
 import {ToastContainer} from 'react-toastify';
 
 import 'src/utils/styles/main-front.css';
-import mainBg from 'src/assets/images/main-bg.jpg'
+// $FlowFixMe: webp import
+import mainBg from 'src/assets/images/main-bg.webp';
 
 import Spinner from 'src/utils/components/Spinner';
 

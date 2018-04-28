@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import LazyLoad from 'react-lazyload';
 import {apiUrls} from './_data';
 import CustomModal from 'src/utils/components/CustomModal';
 import Carousel from 'src/utils/components/Carousel';
@@ -101,7 +102,9 @@ export default class Gallery extends React.Component<Props, State> {
                 {this.renderPreview()}
                 <div className="row">
                     {Object.values(gallery).map(item => (
-                        <GalleryItem item={item} togglePreview={this.togglePreview} key={item.id} />
+                        <LazyLoad height={200} key={item.id}>
+                            <GalleryItem item={item} togglePreview={this.togglePreview}/>
+                        </LazyLoad>
                     ))}
                 </div>
             </div>

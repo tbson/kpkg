@@ -2,6 +2,7 @@
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {Link} from 'react-router-dom';
+import LazyLoad from 'react-lazyload';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
 import {apiUrls} from '../common/_data';
@@ -72,24 +73,26 @@ export default class News extends React.Component<Props, State> {
 
     renderOtherItem (item: Object) {
         return (
-            <div className="content-container" key={item.id}>
-                <div className="col-xl-12" key={item.id}>
-                    <div className="content-container">
-                        <div className="row">
-                            <div className="col-md-4">
-                                <img src={item.image} className="img-thumbnail" width="100%" />
-                            </div>
-                            <div className="col-md-8 article-description">
-                                <h2>
-                                    <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
-                                </h2>
-                                <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
-                                <p>{Tools.getText(item.description)}</p>
+            <LazyLoad height={200}  key={item.id}>
+                <div className="content-container">
+                    <div className="col-xl-12">
+                        <div className="content-container">
+                            <div className="row">
+                                <div className="col-md-4">
+                                    <img src={item.image} className="img-thumbnail" width="100%" />
+                                </div>
+                                <div className="col-md-8 article-description">
+                                    <h2>
+                                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                                    </h2>
+                                    <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
+                                    <p>{Tools.getText(item.description)}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </LazyLoad>
         );
     }
 

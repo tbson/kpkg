@@ -36,7 +36,7 @@ const common = {
             },
             {
                 test: /\.png($|\?)|\.jpg($|\?)|\.gif($|\?)|\.webp($|\?)/,
-                loader: 'file-loader',
+                loader: ['file-loader', 'webp-loader'],
             },
             {
                 test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)|\.otf($|\?)/,

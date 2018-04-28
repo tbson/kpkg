@@ -25,16 +25,32 @@ server {
         rewrite ^/public(/.*)$ $1 break;
         add_header Access-Control-Allow-Origin *;
     }
+
+    location /public/media {
+        try_files $uri $uri/ /index.html;
+        rewrite ^/public(/.*)$ $1 break;
+        add_header Access-Control-Allow-Origin *;
+
+        expires 7d;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+
     location / {
-        root /resource/public/kpkg/clients;
+        root /resource/public/kpkg/clients/front;
         try_files $uri $uri/ /index.html =404;
         add_header Access-Control-Allow-Origin *;
+
+        # expires 7d;
+        # add_header Cache-Control "public";
     }
+
     location /admin {
         root /resource/public/kpkg/clients;
         try_files $uri $uri/ /admin/index.html =404;
         add_header Access-Control-Allow-Origin *;
     }
+
     location /user {
         root /resource/public/kpkg/clients;
         try_files $uri $uri/ /user/index.html =404;
