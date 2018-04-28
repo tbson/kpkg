@@ -29,6 +29,7 @@ class ArticleDetail extends React.Component<Props, State> {
     setInitData: Function;
     renderBanner: Function;
     setTitle: Function;
+    setMeta: Function;
 
     static defaultProps = {};
     state: State = {
@@ -80,6 +81,18 @@ class ArticleDetail extends React.Component<Props, State> {
         }
     }
 
+    setMeta (item: Object) {
+        const description = Tools.getText(item.description);
+        const title = Tools.getText(item.title);
+        const url = window.location.href;
+        const image = item.image;
+        document.querySelector('meta[property="og:title"]').setAttribute("content", title);
+        document.querySelector('meta[name="description"]').setAttribute("content", description);
+        document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+        document.querySelector('meta[property="og:url"]').setAttribute("content", url);
+        document.querySelector('meta[property="og:image"]').setAttribute("content", image);
+    }
+
     setInitData() {
         const {id, uid} = this.props.match.params;
         const {pathname} = this.props.location;
@@ -108,6 +121,7 @@ class ArticleDetail extends React.Component<Props, State> {
         const {pathname} = this.props.location;
         const result = await Tools.apiCall(apiUrls.article + id.toString(), 'GET', {}, false, false);
         if (result.success) {
+            this.setMeta(result.data);
             this.setTitle(result.data.title);
             this.setState({
                 article: result.data,
@@ -124,6 +138,7 @@ class ArticleDetail extends React.Component<Props, State> {
         };
         const result = await Tools.apiCall(apiUrls.articleSingle, 'GET', params, false, false);
         if (result.success) {
+            this.setMeta(result.data.items[0]);
             this.setState({
                 article: result.data.items[0],
                 dataLoaded: true,
