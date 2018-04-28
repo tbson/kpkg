@@ -14,8 +14,8 @@
         <meta property="og:title" content="{{ meta.title }}" />
         <meta property="og:description" content="{{ meta.description|striptags }}" />
 
-        <meta property="og:url" content="{{ request.get_full_path }}" />
-        <meta property="og:image" content="{{ meta.image }}" />
+        <meta property="og:url" content="{{ BASE_URL_TRIM }}{{ request.get_full_path }}" />
+        <meta property="og:image" content="{{ MEDIA_URL }}{{ meta.image }}" />
 
         <meta property="og:type" content="website" />
         <meta property="og:article:author" content="Khám Phá Không Gian" />
