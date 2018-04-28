@@ -61,12 +61,12 @@ class Tools():
             if originalWidth > maxWidth:
                 # Resize to 1 sise fit, 1 side larger than golden rectangle
                 image = image.resize(size, Image.ANTIALIAS)
-                image.save(path)
+                image.save(path, 'WEBP')
                 (originalWidth, originalHeight) = image.size
 
             # Crop to golden ratio
             image = image.crop((0, (originalHeight - height) / 2, width, height + (originalHeight - height) / 2));
-            image.save(path)
+            image.save(path, 'WEBP')
         except:
             pass
 
@@ -76,7 +76,7 @@ class Tools():
             size = (width, width)
             image = Image.open(path)
             image.thumbnail(size, Image.ANTIALIAS)
-            image.save(Tools.getThumbnail(path))
+            image.save(Tools.getThumbnail(path), 'WEBP')
         except:
             pass
 
