@@ -43,10 +43,11 @@ export default class Banner extends React.Component<Props, State> {
 
     render() {
         if (!this.state.dataLoaded) return null;
+        const {banner} = this.state;
         return (
             <div style={{position: "relative"}} className="d-none d-lg-block">
-                <img src={this.state.banner.image} width="100%"/>
-                <div style={styles.titleBackground}>{this.state.banner.title}</div>
+                <img src={banner.image} width="100%" alt={banner.title} title={banner.title}/>
+                <div style={styles.titleBackground}>{banner.title}</div>
             </div>
         );
     }

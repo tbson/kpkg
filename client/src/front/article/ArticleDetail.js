@@ -62,35 +62,35 @@ class ArticleDetail extends React.Component<Props, State> {
         this.setInitData();
     }
 
-    setTitle (uid) {
+    setTitle(uid) {
         switch (uid) {
             case 'gioi-thieu':
-                document.title = 'Giới thiệu'
+                document.title = 'Giới thiệu';
                 break;
             case 'ai-thien-van':
-                document.title = 'Đài thiên văn'
+                document.title = 'Đài thiên văn';
                 break;
             case 'nha-chieu-hinh':
-                document.title = 'Nhà chiếu hình'
+                document.title = 'Nhà chiếu hình';
                 break;
             case 'chuong-trinh-tham-quan':
-                document.title = 'Chương trình tham quan'
+                document.title = 'Chương trình tham quan';
                 break;
             default:
-                document.title = uid
+                document.title = uid;
         }
     }
 
-    setMeta (item: Object) {
+    setMeta(item: Object) {
         const description = Tools.getText(item.description);
         const title = Tools.getText(item.title);
         const url = window.location.href;
         const image = item.image;
-        document.querySelector('meta[property="og:title"]').setAttribute("content", title);
-        document.querySelector('meta[name="description"]').setAttribute("content", description);
-        document.querySelector('meta[property="og:description"]').setAttribute("content", description);
-        document.querySelector('meta[property="og:url"]').setAttribute("content", url);
-        document.querySelector('meta[property="og:image"]').setAttribute("content", image);
+        document.querySelector('meta[property="og:title"]').setAttribute('content', title);
+        document.querySelector('meta[name="description"]').setAttribute('content', description);
+        document.querySelector('meta[property="og:description"]').setAttribute('content', description);
+        document.querySelector('meta[property="og:url"]').setAttribute('content', url);
+        document.querySelector('meta[property="og:image"]').setAttribute('content', image);
     }
 
     setInitData() {
@@ -160,13 +160,21 @@ class ArticleDetail extends React.Component<Props, State> {
                 <Slider {...settings}>
                     {attaches.map(item => (
                         <div key={item.id}>
-                            <img src={item.attachment} width="100%"/>
+                            <img src={item.attachment} width="100%" title={article.title} alt={article.title} />
                         </div>
                     ))}
                 </Slider>
             );
         } else {
-            return <img src={article.image} className="img-thumbnail" width="100%" />;
+            return (
+                <img
+                    src={article.image}
+                    className="img-thumbnail"
+                    width="100%"
+                    title={article.title}
+                    alt={article.title}
+                />
+            );
         }
     }
 
@@ -178,7 +186,7 @@ class ArticleDetail extends React.Component<Props, State> {
                     <h1>{article.title}</h1>
                     <hr />
                     {this.renderBanner(article)}
-                    <div dangerouslySetInnerHTML={{__html: article.content}} />
+                    <div dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
                 </div>
                 <div className="row">
                     {article.related_articles &&

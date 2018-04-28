@@ -59,7 +59,7 @@ export default class Program extends React.Component<Props, State> {
             <div className="content-container">
                 <div className="row">
                     <div className="col-lg-6">
-                        <img src={item.image} width="100%" className="img-thumbnail"/>
+                        <img src={item.image} width="100%" className="img-thumbnail" title={item.title} alt={item.title}/>
                     </div>
                     <div className="col-lg-6">
                         <h1>{item.title}</h1>

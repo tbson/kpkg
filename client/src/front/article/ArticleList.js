@@ -58,13 +58,13 @@ class ArticleList extends React.Component<Props, State> {
         this.setInitData();
     }
 
-    setTitle (uid) {
+    setTitle(uid) {
         switch (uid) {
             case 'tin-tuc':
-                document.title = 'Tin tức'
+                document.title = 'Tin tức';
                 break;
             case 'kien-thuc':
-                document.title = 'Kiến thức'
+                document.title = 'Kiến thức';
                 break;
         }
     }
@@ -84,7 +84,7 @@ class ArticleList extends React.Component<Props, State> {
         }
 
         const params = {
-            category__uid: uid
+            category__uid: uid,
         };
         const result = await Tools.apiCall(apiUrls.article, 'GET', params, false, false);
         if (result.success) {
@@ -96,16 +96,24 @@ class ArticleList extends React.Component<Props, State> {
         }
     }
 
-    renderFirstItem (item: Object) {
+    renderFirstItem(item: Object) {
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
                     <div className="content-container">
-                        <img src={item.image} className="img-thumbnail" width="100%" />
+                        <img
+                            src={item.image}
+                            className="img-thumbnail"
+                            width="100%"
+                            title={item.title}
+                            alt={item.title}
+                        />
                         <h2>
                             <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
                         </h2>
-                        <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
+                        <div className="date-time">
+                            <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
+                        </div>
                         <div className="row">
                             <div className="col-md-12 article-description">
                                 <p>{Tools.getText(item.description)}</p>
@@ -117,20 +125,28 @@ class ArticleList extends React.Component<Props, State> {
         );
     }
 
-    renderOtherItem (item: Object) {
+    renderOtherItem(item: Object) {
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
                     <div className="content-container">
                         <div className="row">
                             <div className="col-md-4">
-                                <img src={item.image} className="img-thumbnail" width="100%" />
+                                <img
+                                    src={item.image}
+                                    className="img-thumbnail"
+                                    width="100%"
+                                    title={item.title}
+                                    alt={item.title}
+                                />
                             </div>
                             <div className="col-md-8 article-description">
                                 <h2>
                                     <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
                                 </h2>
-                                <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
+                                <div className="date-time">
+                                    <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
+                                </div>
                                 <p>{Tools.getText(item.description)}</p>
                             </div>
                         </div>

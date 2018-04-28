@@ -55,7 +55,7 @@ export default class News extends React.Component<Props, State> {
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
                     <div className="content-container">
-                        <img src={item.image} className="img-thumbnail" width="100%" />
+                        <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title}/>
                         <h2>
                             <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
                         </h2>
@@ -79,7 +79,7 @@ export default class News extends React.Component<Props, State> {
                         <div className="content-container">
                             <div className="row">
                                 <div className="col-md-4">
-                                    <img src={item.image} className="img-thumbnail" width="100%" />
+                                    <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title}/>
                                 </div>
                                 <div className="col-md-8 article-description">
                                     <h2>

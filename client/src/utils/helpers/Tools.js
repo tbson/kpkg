@@ -414,4 +414,10 @@ export default class Tools {
         // $FlowFixMe:
         return tmp.textContent || tmp.innerText;
     }
+
+    static addAlt(html: string, alt: string): string {
+        if (!html) return '';
+        html = html.replace(/<img /g, `<img alt="${alt}" title="${alt}" `);
+        return html;
+    }
 }

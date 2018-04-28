@@ -133,7 +133,7 @@ class GalleryItem extends React.Component<ItemProps, ItemState> {
                 <div
                     className="thumbnail gallery-thumbnail"
                     onClick={() => this.props.togglePreview(true, item.items)}>
-                    <img src={item.image} width="100%" />
+                    <img src={item.image} width="100%" title={item.title} alt={item.title}/>
                     <div className="caption">{item.title}</div>
                 </div>
             </div>
