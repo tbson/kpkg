@@ -35,6 +35,8 @@ class Article(models.Model):
             item = Article.objects.get(pk=self.pk)
             if self.content == "":
                 self.content = item.content
+            if self.description == "":
+                self.description = item.description
             if self.image:
                 if item.image != self.image:
                     # Update: remove exist image

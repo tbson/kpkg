@@ -32,7 +32,6 @@ export class ArticleTable extends React.Component<Props, States> {
     handleRemove: Function;
     handleSearch: Function;
 
-    filterTimeout: ?TimeoutID = null;
     nextUrl: ?string;
     prevUrl: ?string;
 
