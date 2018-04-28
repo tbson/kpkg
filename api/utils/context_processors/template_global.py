@@ -13,4 +13,9 @@ def vars(request):
         'STATIC_IMG_URL': settings.STATIC_IMG_URL,
         'MEDIA_URL': settings.MEDIA_URL,
         'DEFAULT_IMG': settings.STATIC_URL + 'images/default-thumbnail.jpg',
+        'META': {
+            'title': 'Khám Phá Không Gian',
+            'description': 'Khám Phá Không Gian',
+            'image': settings.CLIENT_URL + 'default-thumbnail.webp'
+        }
     }
