@@ -12,6 +12,7 @@ import Slider from 'react-slick';
 import {apiUrls} from '../common/_data';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
+import {Pagination} from 'src/utils/components/TableUtils';
 
 type Props = {
     match: Object,
@@ -27,6 +28,10 @@ class ArticleList extends React.Component<Props, State> {
     setInitData: Function;
     renderFirstItem: Function;
     renderOtherItem: Function;
+    list: Function;
+
+    nextUrl: ?string;
+    prevUrl: ?string;
 
     static defaultProps = {};
     state: State = {
@@ -38,6 +43,7 @@ class ArticleList extends React.Component<Props, State> {
         super(props);
         this.renderFirstItem = this.renderFirstItem.bind(this);
         this.renderOtherItem = this.renderOtherItem.bind(this);
+        this.list = this.list.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -50,12 +56,12 @@ class ArticleList extends React.Component<Props, State> {
     componentDidUpdate(prevProps, prevState) {
         const {pathname} = this.props.location;
         if (prevProps.location.pathname != pathname) {
-            this.setInitData();
+            this.list();
         }
     }
 
     async componentDidMount() {
-        this.setInitData();
+        this.list();
     }
 
     setTitle(uid) {
@@ -69,31 +75,48 @@ class ArticleList extends React.Component<Props, State> {
         }
     }
 
-    async setInitData() {
-        const {uid} = this.props.match.params;
+    async setInitData(initData, uid) {
+        this.nextUrl = initData.links.next;
+        this.prevUrl = initData.links.previous;
+
         const {pathname} = this.props.location;
-        const listItem = Tools.getGlobalState(pathname);
+        const listItemCached = Tools.getGlobalState(pathname);
 
         this.setTitle(uid);
 
-        if (listItem) {
+        if (listItemCached) {
             return this.setState({
-                listItem,
+                listItem: listItemCached,
                 dataLoaded: true,
             });
         }
 
-        const params = {
+        this.setState({
+            listItem: initData.items,
+            dataLoaded: true,
+        });
+        Tools.setGlobalState(pathname, initData.items);
+    }
+
+    async list(outerParams: Object = {}, url: ?string = null) {
+        const {pathname} = this.props.location;
+        const {uid} = this.props.match.params;
+        let params = {
             category__uid: uid,
         };
-        const result = await Tools.apiCall(apiUrls.article, 'GET', params, false, false);
-        if (result.success) {
-            this.setState({
-                listItem: result.data.items,
-                dataLoaded: true,
-            });
-            Tools.setGlobalState(pathname, result.data.items);
+        let result = {};
+
+        if (!Tools.emptyObj(outerParams)) {
+            params = {...params, ...outerParams};
         }
+
+        result = await Tools.apiCall(url ? url : apiUrls.article, 'GET', params);
+        if (result.success) {
+            Tools.setGlobalState(pathname, null);
+            this.setInitData(result.data, uid);
+            return result;
+        }
+        return result;
     }
 
     renderFirstItem(item: Object) {
@@ -164,6 +187,16 @@ class ArticleList extends React.Component<Props, State> {
                     if (!index) return this.renderFirstItem(item);
                     return this.renderOtherItem(item);
                 })}
+                <div className="right">
+                    {/*
+                    <span className="oi oi-chevron-bottom"></span>
+                    */}
+                    <Pagination
+                        next={this.nextUrl}
+                        prev={this.prevUrl}
+                        onNavigate={url => this.list({}, url)}
+                    />
+                </div>
             </Wrapper>
         );
     }
