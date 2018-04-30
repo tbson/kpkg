@@ -65,12 +65,6 @@ export default class ArticleForm extends React.Component<Props, States> {
         };
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (Tools.emptyObj(nextProps.defaultValues)) {
-            this.resetForm();
-        }
-    }
-
     resetForm() {
         this.setState({defaultValues: this.defaultValues}, () => {
             window.document.getElementById(this.props.formId).reset();
@@ -83,7 +77,8 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     setErrorMessage(name: string) {
-        return this.props.errorMessages[name];
+        const result = this.props.errorMessages[name];
+        return result;
     }
 
     renderPreview() {

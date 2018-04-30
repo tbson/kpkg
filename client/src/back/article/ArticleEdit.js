@@ -109,7 +109,7 @@ class ArticleEdit extends React.Component<Props, States> {
             return true;
         } else {
             // Have error -> update err object
-            this.setState({mainFormErr: result});
+            this.setState({mainFormErr: result.data ? result.data : result});
             return false;
         }
     }

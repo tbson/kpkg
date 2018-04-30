@@ -75,7 +75,6 @@ export class CategoryTable extends React.Component<Props, States> {
         if (prevProps.match.params.type != type) {
             this.list({type}, null, true);
         }
-        return null;
     }
 
     setInitData(initData: Object) {
