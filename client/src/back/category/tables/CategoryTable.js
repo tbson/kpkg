@@ -255,6 +255,7 @@ export class CategoryTable extends React.Component<Props, States> {
         if (!this.state.dataLoaded) return <LoadingLabel />;
         const list = this.state.mainList;
         const {type} = this.props.match.params;
+        const mainFormData = this.state.mainFormData;
         return (
             <div>
                 <SearchInput onSearch={this.handleSearch} />
@@ -270,6 +271,7 @@ export class CategoryTable extends React.Component<Props, States> {
                             <th scope="col">Title</th>
                             <th scope="col">Type</th>
                             <th scope="col">Image ratio (width / height)</th>
+                            <th scope="col">Width ratio</th>
                             <th scope="col">Single</th>
                             <th scope="col" style={{padding: 8}} className="row80">
                                 <button
@@ -315,7 +317,7 @@ export class CategoryTable extends React.Component<Props, States> {
                 </table>
                 <CategoryModal
                     open={this.state.mainModal}
-                    defaultValues={this.state.mainFormData}
+                    defaultValues={Object.keys(mainFormData).length ? mainFormData : undefined}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
                     handleSubmit={this.handleSubmit}
@@ -332,6 +334,7 @@ type DataType = {
     title: string,
     type: string,
     image_ratio: number,
+    width_ratio: number,
     single: boolean,
     checked: ?boolean,
 };
@@ -362,6 +365,7 @@ export class Row extends React.Component<RowPropTypes> {
                 </td>
                 <td className="type">{data.type}</td>
                 <td className="image_ratio">{data.image_ratio}</td>
+                <td className="image_ratio">{data.width_ratio}%</td>
                 <td className="single">
                     {data.single ? <span className="oi oi-check green" /> : <span className="oi oi-x red" />}
                 </td>

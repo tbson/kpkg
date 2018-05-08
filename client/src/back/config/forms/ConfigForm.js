@@ -1,19 +1,24 @@
 // @flow
 import * as React from 'react';
+import Tools from 'src/utils/helpers/Tools';
 
+
+type formData = {
+    id: ?number,
+    uid: ?string,
+    value: ?string,
+};
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    defaultValues: {
-        id: ?number,
-        uid: ?string,
-        value: ?string,
-    },
+    formData: formData,
     errorMessages: Object,
 };
-type States = {};
+type States = {
+    formData: formData
+};
 
 export default class ConfigForm extends React.Component<Props, States> {
     resetForm: Function;
@@ -22,20 +27,26 @@ export default class ConfigForm extends React.Component<Props, States> {
 
     static defaultProps = {
         submitTitle: 'Submit',
-        defaultValues: {
-            id: null,
-            uid: null,
-            value: null,
-        },
-        errorMessages: {},
     };
 
-    state = {};
+    state = {
+        formData: this.props.formData
+    };
+
     constructor(props: Props) {
         super(props);
         this.resetForm = this.resetForm.bind(this);
         this.setClassName = this.setClassName.bind(this);
         this.setErrorMessage = this.setErrorMessage.bind(this);
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const defaultFormData: formData = {
+            id: null,
+            uid: null,
+            value: null,
+        };
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : defaultFormData};
     }
 
     resetForm() {
@@ -54,11 +65,11 @@ export default class ConfigForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.defaultValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="uid">Key</label>
                     <input
-                        defaultValue={this.props.defaultValues.uid}
+                        defaultValue={this.state.formData.uid}
                         id="uid"
                         name="uid"
                         type="text"
@@ -73,7 +84,7 @@ export default class ConfigForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="value">Value</label>
                     <input
-                        defaultValue={this.props.defaultValues.value}
+                        defaultValue={this.state.formData.value}
                         id="value"
                         name="value"
                         type="text"

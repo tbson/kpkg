@@ -10,7 +10,8 @@ class CategoryBaseSerializer(ModelSerializer):
         exclude = ()
         extra_kwargs = {
             'uid': {'required': False},
-            'image_ratio': {'required': False}
+            'image_ratio': {'required': False},
+            'width_ratio': {'required': False}
         }
         read_only_fields = ('id',)
 

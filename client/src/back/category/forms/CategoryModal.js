@@ -7,7 +7,7 @@ type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    defaultValues: Object,
+    defaultValues?: Object,
     errorMessages: Object,
     typeList: Array<Object>,
 };

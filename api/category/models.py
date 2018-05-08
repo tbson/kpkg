@@ -8,6 +8,7 @@ class Category(models.Model):
     title = models.CharField(max_length=256, unique=True)
     type = models.CharField(max_length=50)
     image_ratio = models.FloatField(default=1.618)
+    width_ratio = models.IntegerField(default=100)
     single = models.BooleanField(default=False)
 
 

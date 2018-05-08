@@ -33,7 +33,6 @@ export class AdministratorTable extends React.Component<Props, States> {
     handleRemove: Function;
     handleSearch: Function;
 
-    filterTimeout: ?TimeoutID = null;
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -247,6 +246,7 @@ export class AdministratorTable extends React.Component<Props, States> {
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
         const list = this.state.mainList;
+        const mainFormData = this.state.mainFormData;
         return (
             <div>
                 <SearchInput onSearch={this.handleSearch} />
@@ -306,7 +306,7 @@ export class AdministratorTable extends React.Component<Props, States> {
                 </table>
                 <AdministratorModal
                     open={this.state.mainModal}
-                    defaultValues={this.state.mainFormData}
+                    defaultValues={Object.keys(mainFormData).length ? mainFormData : undefined}
                     groupList={this.state.groupList}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}

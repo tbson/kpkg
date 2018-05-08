@@ -159,7 +159,7 @@ class ArticleEdit extends React.Component<Props, States> {
                     parent_uuid={this.state.uuid}
                     formId="articleForm"
                     submitTitle="Update"
-                    defaultValues={this.state.mainFormData}
+                    formData={this.state.mainFormData}
                     errorMessages={this.state.mainFormErr}
                     handleSubmit={this.handleSubmit}>
                     <button

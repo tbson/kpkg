@@ -285,7 +285,7 @@ export class ConfigTable extends React.Component<Props, States> {
                 </table>
                 <ConfigModal
                     open={this.state.mainModal}
-                    defaultValues={this.state.mainFormData}
+                    formData={this.state.mainFormData}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
                     handleSubmit={this.handleSubmit}
