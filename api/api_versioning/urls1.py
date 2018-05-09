@@ -37,6 +37,10 @@ urlpatterns = [
         include('attach.urls', namespace='attach'),
     ),
     path(
+        'ccalendar/',
+        include('ccalendar.urls', namespace='ccalendar'),
+    ),
+    path(
         'landing/',
         include('landing_api.urls', namespace='landing_api'),
     ),

@@ -20,6 +20,7 @@ import ResetPassword from './auth/ResetPassword';
 import Config from './config/Config';
 import Group from './group/Group';
 import Permission from './permission/Permission';
+import CCalendar from './ccalendar/CCalendar';
 import Category from './category/Category';
 import Banner from './banner/Banner';
 import Article from './article/Article';
@@ -51,6 +52,7 @@ class App extends React.Component<Props> {
                     <Route path="/config" component={Config} />
                     <Route path="/group" component={Group} />
                     <Route path="/permission" component={Permission} />
+                    <Route path="/ccalendar" component={CCalendar} />
                     <Route path="/category/:type?" component={Category} />
                     <Route path="/banners/:category_id" component={Banner} />
                     <Route path="/gallerys/:category_id" component={Banner} />

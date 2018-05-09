@@ -100,6 +100,12 @@ class App extends React.Component<Props, State> {
                             </NavLink>
                         </li>
                         <li>
+                            <NavLink exact to="/ccalendar/">
+                                <span className="oi oi-calendar" />&nbsp;&nbsp;
+                                <span>Calendar</span>
+                            </NavLink>
+                        </li>
+                        <li>
                             <NavLink
                                 exact
                                 to="/category/banner"

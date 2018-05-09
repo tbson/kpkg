@@ -6,6 +6,7 @@ const rawApiUrls = [
         controller: 'landing',
         endpoints: {
             banner: 'banner',
+            ccalendar: 'ccalendar',
             article: 'article',
             articleSingle: 'article-single',
             articleNews: 'article-news',

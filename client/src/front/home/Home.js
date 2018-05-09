@@ -6,6 +6,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import BigCalendar from 'react-big-calendar';
 // $FlowFixMe: do not complain about importing node_modules
 import moment from 'moment';
+import Tools from 'src/utils/helpers/Tools';
+import {apiUrls} from '../common/_data';
 import Wrapper from '../common/Wrapper';
 import Gallery from '../common/Gallery';
 import Program from './Program';
@@ -14,12 +16,17 @@ import News from './News';
 type Props = {
     children?: React.Node,
 };
-type State = {};
+type State = {
+    events: Array<Object>
+};
 
 export default class Home extends React.Component<Props, State> {
     selectDateHandle: Function;
+    getCalendar: Function;
     static defaultProps = {};
-    state: State = {};
+    state: State = {
+        events: []
+    }
     constructor(props: Props) {
         super(props);
         this.selectDateHandle = this.selectDateHandle.bind(this);
@@ -27,30 +34,33 @@ export default class Home extends React.Component<Props, State> {
 
     componentDidMount() {
         document.title = 'Trang chủ';
+
+        const events = Tools.getGlobalState('events');
+
+        if (events) {
+            return this.setState({
+                events
+            });
+        }
+        this.getCalendar();
+    }
+
+    async getCalendar(uid: string) {
+        const result = await Tools.apiCall(apiUrls.ccalendar, 'GET', {}, false, false);
+        if (result.success) {
+            this.setState({
+                events: result.data.items,
+            });
+            Tools.setGlobalState('events', result.data.items);
+        }
     }
 
     selectDateHandle(event: Object) {
+        if (!event.url) return;
         window.open(event.url, '_blank');
     }
 
     render() {
-        const events = [
-            {
-                id: 0,
-                title: 'All Day Event very long title',
-                allDay: true,
-                start: new Date(2018, 4, 1),
-                end: new Date(2018, 4, 1),
-                url: 'https://google.com',
-            },
-            {
-                id: 1,
-                title: 'Long Event',
-                start: new Date(2018, 4, 3),
-                end: new Date(2018, 4, 5),
-                url: 'https://google.com.vn',
-            },
-        ];
         BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
         return (
             <Wrapper>
@@ -66,7 +76,7 @@ export default class Home extends React.Component<Props, State> {
                                 selectable
                                 toolbar={true}
                                 defaultView="month"
-                                events={events}
+                                events={this.state.events}
                                 onSelectEvent={this.selectDateHandle}
                             />
                         </div>
