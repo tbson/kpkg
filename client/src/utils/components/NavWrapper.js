@@ -106,6 +106,12 @@ class App extends React.Component<Props, State> {
                             </NavLink>
                         </li>
                         <li>
+                            <NavLink exact to="/tag/">
+                                <span className="oi oi-tag" />&nbsp;&nbsp;
+                                <span>Tag</span>
+                            </NavLink>
+                        </li>
+                        <li>
                             <NavLink
                                 exact
                                 to="/category/banner"

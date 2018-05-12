@@ -56,6 +56,10 @@ class ArticleDetail extends React.Component<Props, State> {
         if (prevProps.location.pathname != pathname) {
             this.setInitData();
         }
+        const {article} = this.state;
+        const widthRatio = article.category ? article.category.width_ratio : 100;
+        document.querySelector('.content-container figure').className += " center";
+        document.querySelector('.content-container figure img').style.width = widthRatio + '%';
     }
 
     async componentDidMount() {
@@ -183,11 +187,6 @@ class ArticleDetail extends React.Component<Props, State> {
 
     render() {
         const {article} = this.state;
-        const widthRatio = article.category ? article.category.width_ratio : 100;
-        setTimeout(() => {
-            document.querySelector('.content-container figure').className += " center";
-            document.querySelector('.content-container figure img').style.width = widthRatio + '%';
-        }, 1000);
         return (
             <Wrapper>
                 <div className="content-container">
