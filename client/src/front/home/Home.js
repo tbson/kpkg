@@ -74,7 +74,7 @@ export default class Home extends React.Component<Props, State> {
                         <div style={{height: 400}}>
                             <BigCalendar
                                 selectable
-                                toolbar={true}
+                                toolbar={false}
                                 defaultView="month"
                                 events={this.state.events}
                                 onSelectEvent={this.selectDateHandle}

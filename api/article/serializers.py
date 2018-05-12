@@ -6,6 +6,7 @@ from .models import Article
 from category.models import Category
 from attach.models import Attach
 from attach.serializers import AttachBaseSerializer
+from category.serializers import CategoryBaseSerializer
 
 
 class ArticleBaseSerializer(ModelSerializer):
@@ -25,6 +26,7 @@ class ArticleBaseSerializer(ModelSerializer):
 class ArticleRetrieveSerializer(ArticleBaseSerializer):
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
+    category = CategoryBaseSerializer()
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
 
@@ -68,4 +70,5 @@ class ArticleLandingSerializer(ArticleBaseSerializer):
 class ArticleLandingRetrieveSerializer(ArticleLandingSerializer):
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
+    category = CategoryBaseSerializer()
 

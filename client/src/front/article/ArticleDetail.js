@@ -149,6 +149,7 @@ class ArticleDetail extends React.Component<Props, State> {
 
     renderBanner(article: Object) {
         const {attaches} = article;
+        const widthRatio = article.category ? article.category.width_ratio : 100;
         if (article.use_slide && attaches.length) {
             const settings = {
                 infinite: true,
@@ -167,19 +168,26 @@ class ArticleDetail extends React.Component<Props, State> {
             );
         } else {
             return (
-                <img
-                    src={article.image}
-                    className="img-thumbnail"
-                    width="100%"
-                    title={article.title}
-                    alt={article.title}
-                />
+                <div className="center">
+                    <img
+                        src={article.image}
+                        className={"img-thumbnail"}
+                        width={widthRatio + "%"}
+                        title={article.title}
+                        alt={article.title}
+                    />
+                </div>
             );
         }
     }
 
     render() {
         const {article} = this.state;
+        const widthRatio = article.category ? article.category.width_ratio : 100;
+        setTimeout(() => {
+            document.querySelector('.content-container figure').className += " center";
+            document.querySelector('.content-container figure img').style.width = widthRatio + '%';
+        }, 1000);
         return (
             <Wrapper>
                 <div className="content-container">

@@ -13,6 +13,7 @@ from rest_framework import status
 from .models import Banner
 from .serializers import (
     BannerBaseSerializer,
+    BannerRetrieveSerializer,
     BannerCreateSerializer,
     BannerUpdateSerializer,
 )
@@ -33,7 +34,7 @@ class DetailView(RetrieveAPIView):
     permissions = ['view_banner_detail']
     permission_classes = [CustomPermission]
     queryset = Banner.objects.all()
-    serializer_class = BannerBaseSerializer
+    serializer_class = BannerRetrieveSerializer
 
 
 class CreateView(CreateAPIView):

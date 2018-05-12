@@ -4,6 +4,7 @@ from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
 from .models import Banner
 from category.models import Category
+from category.serializers import CategoryBaseSerializer
 
 
 class BannerBaseSerializer(ModelSerializer):
@@ -17,6 +18,12 @@ class BannerBaseSerializer(ModelSerializer):
 
     def get_category_title(self, obj):
         return obj.category.title
+
+
+class BannerRetrieveSerializer(BannerBaseSerializer):
+    class Meta(BannerBaseSerializer.Meta):
+        exclude = ()
+    category = CategoryBaseSerializer()
 
 
 class BannerCreateSerializer(BannerBaseSerializer):
