@@ -32,3 +32,7 @@ class TagBaseSerializer(ModelSerializer):
         instance.save()
         return instance
 
+
+class TagConsumeSerializer(TagBaseSerializer):
+    class Meta(TagBaseSerializer.Meta):
+        exclude = ('created_at', 'updated_at', 'uid')

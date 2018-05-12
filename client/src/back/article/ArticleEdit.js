@@ -23,6 +23,7 @@ type States = {
     mainFormErr: Object,
     uuid: string,
     categoryId: ?number,
+    tagSource: Array<Object>,
 };
 
 class ArticleEdit extends React.Component<Props, States> {
@@ -43,6 +44,7 @@ class ArticleEdit extends React.Component<Props, States> {
         mainFormErr: {},
         uuid: Tools.uuid4(),
         categoryId: null,
+        tagSource: [],
     };
 
     constructor(props: Props) {
@@ -71,10 +73,13 @@ class ArticleEdit extends React.Component<Props, States> {
             this.setState({dataLoaded: true});
         } else {
             const result = await Tools.apiCall(apiUrls.crud + id.toString(), 'GET');
+            const tagSource = result.data.tag_source.map(item => ({value: item.id, label: item.title}));
+            delete result.data.tag_source;
             if (result.success) {
                 this.setState({
                     mainFormData: result.data,
                     uuid: result.data.uuid,
+                    tagSource,
                     dataLoaded: true,
                 });
             }
@@ -160,6 +165,7 @@ class ArticleEdit extends React.Component<Props, States> {
                     formId="articleForm"
                     submitTitle="Update"
                     formData={this.state.mainFormData}
+                    tagSource={this.state.tagSource}
                     errorMessages={this.state.mainFormErr}
                     handleSubmit={this.handleSubmit}>
                     <button

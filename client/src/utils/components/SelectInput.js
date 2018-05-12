@@ -4,9 +4,12 @@ import * as React from 'react';
 import Select from 'react-select';
 // $FlowFixMe: do not complain about importing node_modules
 import 'react-select/dist/react-select.css';
-
+type item = {
+    value: any,
+    label: any
+};
 type Props = {
-    options: Array<?Object>,
+    options: Array<item>,
     multi: boolean,
     delimiter: string,
     name: string,

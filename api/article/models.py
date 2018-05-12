@@ -8,6 +8,7 @@ from utils.helpers.tools import Tools
 from category.models import Category
 from banner.models import Banner
 from attach.models import Attach
+from tag.models import Tag
 
 def image_destination(instance, filename):
     # ext = filename.split('.')[-1]
@@ -24,6 +25,7 @@ class Article(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to=image_destination)
     content = models.TextField(blank=True)
+    tags = models.ManyToManyField(Tag)
     use_slide = models.BooleanField(default=False)
     order = models.IntegerField(default=1)
     created_at = models.DateTimeField(default=now)

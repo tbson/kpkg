@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import RichTextInput from 'src/utils/components/RichTextInput';
+import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
 export type formData = {
     id: ?number,
@@ -10,6 +11,7 @@ export type formData = {
     image: string,
     use_slide: boolean,
     order: ?number,
+    tags: ?string,
 };
 type Props = {
     handleSubmit: Function,
@@ -18,6 +20,7 @@ type Props = {
     formId: string,
     submitTitle: string,
     formData: formData,
+    tagSource: Array<Object>,
     errorMessages: Object,
 };
 type States = {
@@ -29,6 +32,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     setClassName: Function;
     setErrorMessage: Function;
     renderPreview: Function;
+    renderTagInput: Function;
     defaultFormData: formData;
 
     static defaultProps = {
@@ -41,6 +45,7 @@ export default class ArticleForm extends React.Component<Props, States> {
         this.setClassName = this.setClassName.bind(this);
         this.setErrorMessage = this.setErrorMessage.bind(this);
         this.renderPreview = this.renderPreview.bind(this);
+        this.renderTagInput = this.renderTagInput.bind(this);
         this.defaultFormData = {
             id: null,
             title: '',
@@ -78,6 +83,22 @@ export default class ArticleForm extends React.Component<Props, States> {
                 <div className="col col-lg-4">
                     <img src={this.state.formData.image} width="100%" />
                 </div>
+            </div>
+        );
+    }
+
+    renderTagInput() {
+        if (!this.props.tagSource.length) return null;
+        return (
+            <div className="form-group">
+                <label htmlFor="groups">Tags</label>
+                <SelectInput
+                    multi={true}
+                    name="tags"
+                    options={this.props.tagSource}
+                    defaultValue={this.props.formData.tags}
+                />
+                <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
             </div>
         );
     }
@@ -136,19 +157,6 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('image')}</div>
                 </div>
 
-                <div className="form-check">
-                    <input
-                        id="use_slide"
-                        name="use_slide"
-                        type="checkbox"
-                        defaultChecked={this.state.formData.use_slide}
-                        className="form-check-input"
-                    />
-                    <label className="form-check-label" htmlFor="use_slide">
-                        Use slide
-                    </label>
-                </div>
-
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
@@ -160,6 +168,21 @@ export default class ArticleForm extends React.Component<Props, States> {
                         placeholder="Order..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('order')}</div>
+                </div>
+
+                {this.renderTagInput()}
+
+                <div className="form-check">
+                    <input
+                        id="use_slide"
+                        name="use_slide"
+                        type="checkbox"
+                        defaultChecked={this.state.formData.use_slide}
+                        className="form-check-input"
+                    />
+                    <label className="form-check-label" htmlFor="use_slide">
+                        Use slide
+                    </label>
                 </div>
 
                 <div className="right">

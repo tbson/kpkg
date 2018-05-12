@@ -5,8 +5,10 @@ from django.utils.text import slugify
 from .models import Article
 from category.models import Category
 from attach.models import Attach
+from tag.models import Tag
 from attach.serializers import AttachBaseSerializer
 from category.serializers import CategoryBaseSerializer
+from tag.serializers import TagConsumeSerializer
 
 
 class ArticleBaseSerializer(ModelSerializer):
@@ -14,7 +16,7 @@ class ArticleBaseSerializer(ModelSerializer):
     class Meta:
         model = Article
         exclude = ('content', )
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'tags')
 
     category_title = SerializerMethodField()
 
@@ -27,6 +29,10 @@ class ArticleRetrieveSerializer(ArticleBaseSerializer):
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
     category = CategoryBaseSerializer()
+    tag_source = SerializerMethodField()
+
+    def get_tag_source(self, obj):
+        return TagConsumeSerializer(Tag.objects.all(), many=True).data
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
 
@@ -45,6 +51,7 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
         validated_data['uid'] = slugify(validated_data['title'])
         article = Article(**validated_data)
         article.save()
+
         return article
 
 
@@ -56,6 +63,15 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
             'image': {'required': False},
         }
         exclude = ('uuid',)
+
+    def update(self, instance, validated_data):
+        instance.tags.clear();
+        for tag in self.initial_data['tags'].split(','):
+            if tag.isdigit():
+                instance.tags.add(tag)
+        instance.__dict__.update(validated_data)
+        instance.save()
+        return instance
 
 
 class ArticleLandingSerializer(ArticleBaseSerializer):
