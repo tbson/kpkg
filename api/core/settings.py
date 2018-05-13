@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'attach',
     'ccalendar',
     'tag',
+    'staff',
     'landing',
 ]
 

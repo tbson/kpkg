@@ -45,6 +45,10 @@ urlpatterns = [
         include('tag.urls', namespace='tag'),
     ),
     path(
+        'staff/',
+        include('staff.urls', namespace='staff'),
+    ),
+    path(
         'landing/',
         include('landing_api.urls', namespace='landing_api'),
     ),
