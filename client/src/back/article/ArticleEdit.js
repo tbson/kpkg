@@ -32,6 +32,7 @@ class ArticleEdit extends React.Component<Props, States> {
     handleEdit: Function;
     renderRelatedArticle: Function;
     getItem: Function;
+    getTags: Function;
 
     static defaultProps = {
         parent: 'category',
@@ -54,10 +55,12 @@ class ArticleEdit extends React.Component<Props, States> {
         this.handleEdit = this.handleEdit.bind(this);
         this.renderRelatedArticle = this.renderRelatedArticle.bind(this);
         this.getItem = this.getItem.bind(this);
+        this.getTags = this.getTags.bind(this);
     }
 
     componentDidMount() {
         this.getItem();
+        this.getTags();
     }
 
     async getItem() {
@@ -73,16 +76,21 @@ class ArticleEdit extends React.Component<Props, States> {
             this.setState({dataLoaded: true});
         } else {
             const result = await Tools.apiCall(apiUrls.crud + id.toString(), 'GET');
-            const tagSource = result.data.tag_source.map(item => ({value: item.id, label: item.title}));
             delete result.data.tag_source;
             if (result.success) {
                 this.setState({
                     mainFormData: result.data,
                     uuid: result.data.uuid,
-                    tagSource,
                     dataLoaded: true,
                 });
             }
+        }
+    }
+
+    async getTags () {
+        const result = await Tools.apiCall(apiUrls.tagCrud + '?limit=20', 'GET');
+        if (result.success) {
+            this.setState({tagSource: result.data.items.map(item => ({value: item.id, label: item.title}))});
         }
     }
 

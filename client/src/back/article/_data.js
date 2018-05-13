@@ -13,6 +13,12 @@ const rawApiUrls = [
         endpoints: {
             crud: ''
         }
+    },
+    {
+        controller: 'tag',
+        endpoints: {
+            crud: ''
+        }
     }
 ];
 

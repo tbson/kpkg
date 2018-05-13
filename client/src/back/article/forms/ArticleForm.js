@@ -32,7 +32,6 @@ export default class ArticleForm extends React.Component<Props, States> {
     setClassName: Function;
     setErrorMessage: Function;
     renderPreview: Function;
-    renderTagInput: Function;
     defaultFormData: formData;
 
     static defaultProps = {
@@ -45,7 +44,6 @@ export default class ArticleForm extends React.Component<Props, States> {
         this.setClassName = this.setClassName.bind(this);
         this.setErrorMessage = this.setErrorMessage.bind(this);
         this.renderPreview = this.renderPreview.bind(this);
-        this.renderTagInput = this.renderTagInput.bind(this);
         this.defaultFormData = {
             id: null,
             title: '',
@@ -83,22 +81,6 @@ export default class ArticleForm extends React.Component<Props, States> {
                 <div className="col col-lg-4">
                     <img src={this.state.formData.image} width="100%" />
                 </div>
-            </div>
-        );
-    }
-
-    renderTagInput() {
-        if (!this.props.tagSource.length) return null;
-        return (
-            <div className="form-group">
-                <label htmlFor="groups">Tags</label>
-                <SelectInput
-                    multi={true}
-                    name="tags"
-                    options={this.props.tagSource}
-                    defaultValue={this.props.formData.tags}
-                />
-                <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
             </div>
         );
     }
@@ -170,7 +152,16 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('order')}</div>
                 </div>
 
-                {this.renderTagInput()}
+                <div className="form-group">
+                    <label htmlFor="groups">Tags</label>
+                    <SelectInput
+                        multi={true}
+                        name="tags"
+                        options={this.props.tagSource}
+                        defaultValue={this.props.formData.tags}
+                    />
+                    <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
+                </div>
 
                 <div className="form-check">
                     <input

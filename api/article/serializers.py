@@ -29,10 +29,10 @@ class ArticleRetrieveSerializer(ArticleBaseSerializer):
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
     category = CategoryBaseSerializer()
-    tag_source = SerializerMethodField()
+    # tag_source = SerializerMethodField()
 
-    def get_tag_source(self, obj):
-        return TagConsumeSerializer(Tag.objects.all(), many=True).data
+    # def get_tag_source(self, obj):
+    #    return TagConsumeSerializer(Tag.objects.all(), many=True).data
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
 
@@ -51,6 +51,10 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
         validated_data['uid'] = slugify(validated_data['title'])
         article = Article(**validated_data)
         article.save()
+
+        for tag in self.initial_data['tags'].split(','):
+            if tag.isdigit():
+                article.tags.add(tag)
 
         return article
 
