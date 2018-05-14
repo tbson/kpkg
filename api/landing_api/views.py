@@ -17,6 +17,9 @@ from article.serializers import ArticleLandingSerializer, ArticleLandingRetrieve
 from ccalendar.models import CCalendar
 from ccalendar.serializers import CCalendarBaseSerializer
 
+from staff.models import Staff
+from staff.serializers import StaffBaseSerializer
+
 
 class BannerListView(ListAPIView):
     permission_classes = (AllowAny, )
@@ -50,4 +53,10 @@ class CCalendarListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = CCalendar.objects.all()
     serializer_class = CCalendarBaseSerializer
+    pagination_class = None
+
+class StaffListView(ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = Staff.objects.all()
+    serializer_class = StaffBaseSerializer
     pagination_class = None

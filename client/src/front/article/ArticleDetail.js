@@ -2,15 +2,10 @@
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter, Link} from 'react-router-dom';
-// $FlowFixMe: do not complain about importing node_modules
-import 'slick-carousel/slick/slick.css';
-// $FlowFixMe: do not complain about importing node_modules
-import 'slick-carousel/slick/slick-theme.css';
-// $FlowFixMe: do not complain about importing node_modules
-import Slider from 'react-slick';
 
 import {apiUrls} from '../common/_data';
 import Wrapper from '../common/Wrapper';
+import Carousel from 'src/utils/components/Carousel';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
@@ -21,6 +16,7 @@ type State = {
     article: Object,
     dataLoaded: boolean,
     pathname: ?string,
+    listStaff: Array<Object>,
 };
 
 class ArticleDetail extends React.Component<Props, State> {
@@ -28,20 +24,24 @@ class ArticleDetail extends React.Component<Props, State> {
     getArticleFromCategoryUid: Function;
     setInitData: Function;
     renderBanner: Function;
+    renderStaff: Function;
+    getListStaff: Function;
     setTitle: Function;
-    setMeta: Function;
 
     static defaultProps = {};
     state: State = {
         pathname: null,
         article: {},
         dataLoaded: false,
+        listStaff: [],
     };
     constructor(props: Props) {
         super(props);
         this.getArticleFromId = this.getArticleFromId.bind(this);
         this.getArticleFromCategoryUid = this.getArticleFromCategoryUid.bind(this);
         this.renderBanner = this.renderBanner.bind(this);
+        this.renderStaff = this.renderStaff.bind(this);
+        this.getListStaff = this.getListStaff.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -58,12 +58,21 @@ class ArticleDetail extends React.Component<Props, State> {
         }
         const {article} = this.state;
         const widthRatio = article.category ? article.category.width_ratio : 100;
-        document.querySelector('.content-container figure').className += " center";
-        document.querySelector('.content-container figure img').style.width = widthRatio + '%';
+        const figures = document.querySelector('.content-container figure');
+        const imgs = document.querySelector('.content-container figure img');
+        if (figures) {
+            figures.className += ' center';
+        }
+        if (imgs) {
+            imgs.style.width = widthRatio + '%';
+        }
     }
 
     async componentDidMount() {
         this.setInitData();
+        if (this.props.match.url == '/bai-viet/ai-thien-van') {
+            this.getListStaff();
+        }
     }
 
     setTitle(uid) {
@@ -83,18 +92,6 @@ class ArticleDetail extends React.Component<Props, State> {
             default:
                 document.title = uid;
         }
-    }
-
-    setMeta(item: Object) {
-        const description = Tools.getText(item.description);
-        const title = Tools.getText(item.title);
-        const url = window.location.href;
-        const image = item.image;
-        document.querySelector('meta[property="og:title"]').setAttribute('content', title);
-        document.querySelector('meta[name="description"]').setAttribute('content', description);
-        document.querySelector('meta[property="og:description"]').setAttribute('content', description);
-        document.querySelector('meta[property="og:url"]').setAttribute('content', url);
-        document.querySelector('meta[property="og:image"]').setAttribute('content', image);
     }
 
     setInitData() {
@@ -125,7 +122,6 @@ class ArticleDetail extends React.Component<Props, State> {
         const {pathname} = this.props.location;
         const result = await Tools.apiCall(apiUrls.article + id.toString(), 'GET', {}, false, false);
         if (result.success) {
-            this.setMeta(result.data);
             this.setTitle(result.data.title);
             this.setState({
                 article: result.data,
@@ -142,7 +138,6 @@ class ArticleDetail extends React.Component<Props, State> {
         };
         const result = await Tools.apiCall(apiUrls.articleSingle, 'GET', params, false, false);
         if (result.success) {
-            this.setMeta(result.data.items[0]);
             this.setState({
                 article: result.data.items[0],
                 dataLoaded: true,
@@ -151,38 +146,61 @@ class ArticleDetail extends React.Component<Props, State> {
         }
     }
 
+    async getListStaff(uid: string) {
+        const params = {};
+        const result = await Tools.apiCall(apiUrls.staff, 'GET', params, false, false);
+        if (result.success) {
+            this.setState({
+                listStaff: result.data.items,
+            });
+            Tools.setGlobalState('listStaff', result.data.items);
+        }
+    }
+
     renderBanner(article: Object) {
         const {attaches} = article;
         const widthRatio = article.category ? article.category.width_ratio : 100;
         if (article.use_slide && attaches.length) {
-            const settings = {
-                infinite: true,
-                speed: 500,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-            };
             return (
-                <Slider {...settings}>
-                    {attaches.map(item => (
-                        <div key={item.id}>
-                            <img src={item.attachment} width="100%" title={article.title} alt={article.title} />
-                        </div>
-                    ))}
-                </Slider>
+                <div>
+                    <Carousel listItem={attaches} imageKey="attachment"></Carousel><br/>
+                </div>
             );
         } else {
             return (
                 <div className="center">
                     <img
                         src={article.image}
-                        className={"img-thumbnail"}
-                        width={widthRatio + "%"}
+                        className={'img-thumbnail'}
+                        width={widthRatio + '%'}
                         title={article.title}
                         alt={article.title}
                     />
                 </div>
             );
         }
+    }
+
+    renderStaff() {
+        if (this.props.match.url != '/bai-viet/ai-thien-van') return null;
+        return (
+            <div className="row">
+                {this.state.listStaff.map(staff => (
+                    <div className="col-lg-6" key={staff.id}>
+                        <div className="row">
+                            <div className="col-lg-4">
+                                <img src={staff.image} width="100%"/>
+                            </div>
+                            <div className="col-lg-8">
+                                <p><strong>{staff.title} {staff.fullname}</strong></p>
+                                <div>{staff.description}</div>
+                                <div><a href={'email:' + staff.email}>{staff.email}</a></div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
     }
 
     render() {
@@ -216,6 +234,7 @@ class ArticleDetail extends React.Component<Props, State> {
                             </div>
                         ))}
                 </div>
+                {this.renderStaff()}
             </Wrapper>
         );
     }

@@ -27,7 +27,11 @@ export default class Carousel extends React.Component<Props, State> {
         if (!this.props.listItem.length) return null;
 
         const settings = {
+            dots: true,
+            arrows: true,
             infinite: true,
+            autoplay: true,
+            autoplaySpeed: 5000,
             speed: 500,
             slidesToShow: 1,
             slidesToScroll: 1,
@@ -36,7 +40,7 @@ export default class Carousel extends React.Component<Props, State> {
             <Slider {...settings}>
                 {this.props.listItem.map(item => (
                     <div key={item.id}>
-                        <img src={item[this.props.imageKey]} width="100%"/>
+                        <img src={item[this.props.imageKey]} width="100%" title={item.title} alt={item.title}/>
                     </div>
                 ))}
             </Slider>
