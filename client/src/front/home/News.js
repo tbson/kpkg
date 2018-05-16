@@ -2,6 +2,7 @@
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {Link} from 'react-router-dom';
+// $FlowFixMe: do not complain about importing node_modules
 import LazyLoad from 'react-lazyload';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
@@ -40,7 +41,7 @@ export default class News extends React.Component<Props, State> {
     }
 
     async getNews() {
-        const result = await Tools.apiCall(apiUrls.articleNews, 'GET', {}, false, false);
+        const result = await Tools.apiCall(apiUrls.homeArticle + '?limit=4', 'GET', {}, false, false);
         if (result.success) {
             this.setState({
                 homeNews: result.data.items,

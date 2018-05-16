@@ -9,6 +9,7 @@ const rawApiUrls = [
             ccalendar: 'ccalendar',
             article: 'article',
             articleSingle: 'article-single',
+            homeArticle: 'home-article',
             articleNews: 'article-news',
             staff: 'staff',
         },

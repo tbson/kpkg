@@ -7,6 +7,7 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from utils.common_classes.custom_pagination import CustomLimitOffsetPagination
 
 from banner.models import Banner
 from banner.serializers import BannerBaseSerializer
@@ -26,6 +27,13 @@ class BannerListView(ListAPIView):
     queryset = Banner.objects.all()
     serializer_class = BannerBaseSerializer
     filter_fields = ('category__uid', 'category__type', )
+
+class HomeArticleListView(ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = Article.objects.all()
+    serializer_class = ArticleLandingSerializer
+    filter_fields = ('category__uid', )
+    pagination_class = CustomLimitOffsetPagination
 
 class ArticleListView(ListAPIView):
     permission_classes = (AllowAny, )
