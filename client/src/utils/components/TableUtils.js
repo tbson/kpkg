@@ -64,3 +64,50 @@ export class Pagination extends React.Component<PaginationPropTypes> {
         );
     }
 }
+
+type FrontPaginationPropTypes = {
+    next: ?string,
+    prev: ?string,
+    onNavigate: Function,
+};
+export class FrontPagination extends React.Component<FrontPaginationPropTypes> {
+    renderPrev(prev: ?string) {
+        if (!prev) return null;
+        return (
+            <a className="pointer" onClick={() => this.props.onNavigate(prev)}>
+                <span className="oi oi-chevron-top pointer" />
+            </a>
+        );
+    }
+
+    renderNext(next: ?string) {
+        if (!next) return null;
+        return [
+            <a className="pointer" onClick={() => this.props.onNavigate(next)}>
+                <span className="oi oi-chevron-bottom" />
+            </a>,
+        ];
+    }
+
+    render() {
+        return (
+            <div className="container-fluid">
+                <div className="row" style={styles.footer}>
+                    <div className="col-xl-12">
+                        {this.renderPrev(this.props.prev)}
+                        {this.renderNext(this.props.next)}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+const styles = {
+    footer: {
+        backgroundColor: 'rgb(38, 38, 38)',
+        padding: '5px 0',
+        color: 'white',
+        textAlign: 'center',
+    },
+};

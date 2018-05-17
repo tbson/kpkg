@@ -12,7 +12,7 @@ import Slider from 'react-slick';
 import {apiUrls} from '../common/_data';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
-import {Pagination} from 'src/utils/components/TableUtils';
+import {FrontPagination} from 'src/utils/components/TableUtils';
 
 type Props = {
     match: Object,
@@ -187,16 +187,15 @@ class ArticleList extends React.Component<Props, State> {
                     if (!index) return this.renderFirstItem(item);
                     return this.renderOtherItem(item);
                 })}
-                <div className="right">
                     {/*
                     <span className="oi oi-chevron-bottom"></span>
                     */}
-                    <Pagination
-                        next={this.nextUrl}
-                        prev={this.prevUrl}
-                        onNavigate={url => this.list({}, url)}
-                    />
-                </div>
+                <FrontPagination
+                    next={this.nextUrl}
+                    prev={this.prevUrl}
+                    onNavigate={url => this.list({}, url)}
+                />
+                <br/>
             </Wrapper>
         );
     }
