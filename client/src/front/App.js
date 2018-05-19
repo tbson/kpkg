@@ -29,12 +29,10 @@ class App extends React.Component<Props> {
     }
 
     componentDidMount() {
-        /*
         const body = window.document.body;
         body.style.backgroundImage = `url('${mainBg}')`;
         body.style.backgroundAttachment = "fixed";
         body.style.backgroundSize = "cover";
-        */
     }
     render() {
         return (

@@ -1,0 +1,3 @@
+./exec yarn build-back
+scp -r build/* ../api/public/clients/source/
+scp -r build/* root@docker_server:/home/tbson/code/kpkg/api/public/clients/source/

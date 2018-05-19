@@ -55,16 +55,14 @@ export default class News extends React.Component<Props, State> {
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
-                    <div className="content-container">
-                        <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title}/>
-                        <h2>
-                            <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
-                        </h2>
-                        <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
-                        <div className="row">
-                            <div className="col-md-12 article-description">
-                                <p>{Tools.getText(item.description)}</p>
-                            </div>
+                    <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title}/>
+                    <h2>
+                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                    </h2>
+                    <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
+                    <div className="row">
+                        <div className="col-md-12 article-description">
+                            <p>{Tools.getText(item.description)}</p>
                         </div>
                     </div>
                 </div>
@@ -77,18 +75,16 @@ export default class News extends React.Component<Props, State> {
             <LazyLoad height={200}  key={item.id}>
                 <div className="content-container">
                     <div className="col-xl-12">
-                        <div className="content-container">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title}/>
-                                </div>
-                                <div className="col-md-8 article-description">
-                                    <h2>
-                                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
-                                    </h2>
-                                    <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
-                                    <p>{Tools.getText(item.description)}</p>
-                                </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title}/>
+                            </div>
+                            <div className="col-md-8 article-description">
+                                <h2>
+                                    <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                                </h2>
+                                <div className="date-time"><em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em></div>
+                                <p>{Tools.getText(item.description)}</p>
                             </div>
                         </div>
                     </div>
