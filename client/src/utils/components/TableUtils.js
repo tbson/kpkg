@@ -90,6 +90,7 @@ export class FrontPagination extends React.Component<FrontPaginationPropTypes> {
     }
 
     render() {
+        if (!this.props.prev && !this.props.next) return null;
         return (
             <div className="container-fluid">
                 <div className="row" style={styles.footer}>

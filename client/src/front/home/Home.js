@@ -71,7 +71,8 @@ export default class Home extends React.Component<Props, State> {
                         <Gallery />
                     </div>
                     <div className="col-lg-5">
-                        <div style={{height: 400}}>
+                        <div className="content-container"><h1>Lịch Thiên Văn</h1></div>
+                        <div style={{height: 400, paddingTop: 15}}>
                             <BigCalendar
                                 selectable
                                 toolbar={false}

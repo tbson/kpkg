@@ -30,7 +30,7 @@ export default class Footer extends React.Component<Props, State> {
 const styles = {
     footer: {
         backgroundColor: 'rgb(38, 38, 38)',
-        padding: '5px 0',
+        padding: '30px 0',
         color: 'white'
     },
 };

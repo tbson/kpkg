@@ -15,6 +15,9 @@ import Tools from 'src/utils/helpers/Tools';
 import {FrontPagination} from 'src/utils/components/TableUtils';
 
 type Props = {
+    alwaysFirst: boolean,
+    resourceUrl: string,
+    resourceParams: Object,
     match: Object,
     location: Object,
 };
@@ -33,7 +36,9 @@ class ArticleList extends React.Component<Props, State> {
     nextUrl: ?string;
     prevUrl: ?string;
 
-    static defaultProps = {};
+    static defaultProps = {
+        alwaysFirst: false
+    };
     state: State = {
         pathname: null,
         listItem: [],
@@ -110,7 +115,7 @@ class ArticleList extends React.Component<Props, State> {
             params = {...params, ...outerParams};
         }
 
-        result = await Tools.apiCall(url ? url : apiUrls.article, 'GET', params);
+        result = await Tools.apiCall(url ? url : this.props.resourceUrl, 'GET', this.props.resourceParams);
         if (result.success) {
             Tools.setGlobalState(pathname, null);
             this.setInitData(result.data, uid);
@@ -124,6 +129,9 @@ class ArticleList extends React.Component<Props, State> {
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
                     <div className="content-container">
+                        <h2>
+                            <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                        </h2>
                         <img
                             src={item.image}
                             className="img-thumbnail"
@@ -131,9 +139,6 @@ class ArticleList extends React.Component<Props, State> {
                             title={item.title}
                             alt={item.title}
                         />
-                        <h2>
-                            <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
-                        </h2>
                         <div className="date-time">
                             <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
                         </div>
@@ -149,6 +154,7 @@ class ArticleList extends React.Component<Props, State> {
     }
 
     renderOtherItem(item: Object) {
+        if (this.props.alwaysFirst) return this.renderFirstItem(item);
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
@@ -182,21 +188,14 @@ class ArticleList extends React.Component<Props, State> {
     render() {
         const {listItem} = this.state;
         return (
-            <Wrapper>
+            <div>
                 {this.state.listItem.map((item, index) => {
                     if (!index) return this.renderFirstItem(item);
                     return this.renderOtherItem(item);
                 })}
-                    {/*
-                    <span className="oi oi-chevron-bottom"></span>
-                    */}
-                <FrontPagination
-                    next={this.nextUrl}
-                    prev={this.prevUrl}
-                    onNavigate={url => this.list({}, url)}
-                />
-                <br/>
-            </Wrapper>
+                <FrontPagination next={this.nextUrl} prev={this.prevUrl} onNavigate={url => this.list({}, url)} />
+                <br />
+            </div>
         );
     }
 }

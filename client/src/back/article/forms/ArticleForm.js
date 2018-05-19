@@ -10,8 +10,9 @@ export type formData = {
     content: string,
     image: string,
     use_slide: boolean,
+    pin: boolean,
     order: ?number,
-    tags: ?string,
+    tags?: ?string,
 };
 type Props = {
     handleSubmit: Function,
@@ -51,6 +52,7 @@ export default class ArticleForm extends React.Component<Props, States> {
             content: '',
             image: '',
             use_slide: false,
+            pin: false,
             order: 0,
         };
         this.state = {
@@ -173,6 +175,19 @@ export default class ArticleForm extends React.Component<Props, States> {
                     />
                     <label className="form-check-label" htmlFor="use_slide">
                         Use slide
+                    </label>
+                </div>
+
+                <div className="form-check">
+                    <input
+                        id="pin"
+                        name="pin"
+                        type="checkbox"
+                        defaultChecked={this.state.formData.pin}
+                        className="form-check-input"
+                    />
+                    <label className="form-check-label" htmlFor="pin">
+                        Pin
                     </label>
                 </div>
 
