@@ -2,13 +2,13 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import AdministratorForm from './AdministratorForm';
-import type {FormData} from '../_data';
+import type {FormValues} from '../_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formData?: FormData,
+    formData?: FormValues,
     groupList: Array<Object>,
     errorMessages: Object,
 };

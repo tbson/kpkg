@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import {apiUrls} from './_data';
-import type {FormData, FormDataEdit} from './_data';
+import type {FormValues, FormValuesEdit} from './_data';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import AttachTable from 'src/back/attach/tables/AttachTable';
@@ -20,7 +20,7 @@ type Props = {
 };
 type States = {
     dataLoaded: boolean,
-    mainFormData: Object,
+    mainFormValues: Object,
     mainFormErr: Object,
     uuid: string,
     categoryId: ?number,
@@ -42,7 +42,7 @@ class ArticleEdit extends React.Component<Props, States> {
 
     state = {
         dataLoaded: false,
-        mainFormData: {},
+        mainFormValues: {},
         mainFormErr: {},
         uuid: Tools.uuid4(),
         categoryId: null,
@@ -74,7 +74,7 @@ class ArticleEdit extends React.Component<Props, States> {
             delete result.data.tag_source;
             if (result.success) {
                 this.setState({
-                    mainFormData: result.data,
+                    mainFormValues: result.data,
                     uuid: result.data.uuid,
                     dataLoaded: true,
                 });
@@ -92,7 +92,7 @@ class ArticleEdit extends React.Component<Props, States> {
     handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let result: ?Object = null;
-        const params = Tools.formDataToObj(new FormData(event.target));
+        const params = Tools.formDataToObj(new FormValues(event.target));
         if (!params.order) {
             params.order = 0;
         }
@@ -122,13 +122,13 @@ class ArticleEdit extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: FormData) => {
+    handleAdd = async (params: FormValues) => {
         params.uuid = this.state.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         return result;
     };
 
-    handleEdit = async (params: FormDataEdit) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         return result;
@@ -152,7 +152,7 @@ class ArticleEdit extends React.Component<Props, States> {
                     parent_uuid={this.state.uuid}
                     formId="articleForm"
                     submitTitle="Update"
-                    formData={this.state.mainFormData}
+                    formData={this.state.mainFormValues}
                     tagSource={this.state.tagSource}
                     errorMessages={this.state.mainFormErr}
                     handleSubmit={this.handleSubmit}>

@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
-import type {FormData, FormDataEdit} from '../_data';
+import type {FormValues, FormValuesEdit} from '../_data';
 import AdministratorForm from '../forms/AdministratorForm';
 import AdministratorModal from '../forms/AdministratorModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -17,7 +17,7 @@ type States = {
     mainModal: boolean,
     mainList: Array<Object>,
     groupList: Array<Object>,
-    mainFormData: FormData,
+    mainFormValues: FormValues,
     mainFormErr: Object,
 };
 
@@ -41,7 +41,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         mainModal: false,
         mainList: [],
         groupList: [],
-        mainFormData: {},
+        mainFormValues: {},
         mainFormErr: {},
     };
 
@@ -100,7 +100,7 @@ export class AdministratorTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            mainFormData: {},
+            mainFormValues: {},
             mainFormErr: {},
         };
 
@@ -109,7 +109,7 @@ export class AdministratorTable extends React.Component<Props, States> {
                 case 'mainModal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.mainFormData = result.data;
+                            state.mainFormValues = result.data;
                         }
                         this.setState(state);
                     });
@@ -124,7 +124,7 @@ export class AdministratorTable extends React.Component<Props, States> {
     handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let error: ?Object = null;
-        const params = Tools.formDataToObj(new FormData(event.target));
+        const params = Tools.formDataToObj(new FormValues(event.target));
         if (!params.id) {
             error = await this.handleAdd(params);
         } else {
@@ -142,7 +142,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: FormData) => {
+    handleAdd = async (params: FormValues) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({mainList: [{...result.data, checked: false}, ...this.state.mainList]});
@@ -151,7 +151,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: FormDataEdit) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -217,7 +217,7 @@ export class AdministratorTable extends React.Component<Props, States> {
 
     handleSearch = (event: Object) => {
         event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
+        const {searchStr} = Tools.formDataToObj(new FormValues(event.target));
         if (searchStr.length > 2) {
             this.list({search: searchStr});
         } else if (!searchStr.length) {
@@ -228,7 +228,7 @@ export class AdministratorTable extends React.Component<Props, States> {
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
         const list = this.state.mainList;
-        const mainFormData = this.state.mainFormData;
+        const mainFormValues = this.state.mainFormValues;
         return (
             <div>
                 <SearchInput onSearch={this.handleSearch} />
@@ -288,7 +288,7 @@ export class AdministratorTable extends React.Component<Props, States> {
                 </table>
                 <AdministratorModal
                     open={this.state.mainModal}
-                    formData={mainFormData}
+                    formData={mainFormValues}
                     groupList={this.state.groupList}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
@@ -301,7 +301,7 @@ export class AdministratorTable extends React.Component<Props, States> {
 export default withRouter(AdministratorTable);
 
 type RowPropTypes = {
-    data: FormDataEdit,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

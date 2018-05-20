@@ -2,7 +2,7 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
-import 'src/__mocks__/FormData';
+import 'src/__mocks__/FormValues';
 import {Row, ConfigTable} from '../tables/ConfigTable';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import Tools from 'src/utils/helpers/Tools';

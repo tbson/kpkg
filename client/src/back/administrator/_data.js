@@ -18,7 +18,7 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export type FormData = {
+export type FormValues = {
     id: number,
     email: string,
     username: string,
@@ -27,6 +27,6 @@ export type FormData = {
     groups?: string,
 };
 
-export type FormDataEdit = FormData & {
+export type FormValuesEdit = FormValues & {
     checked: boolean,
 };

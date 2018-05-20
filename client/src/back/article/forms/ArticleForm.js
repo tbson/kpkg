@@ -3,7 +3,7 @@ import * as React from 'react';
 import RichTextInput from 'src/utils/components/RichTextInput';
 import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
-import type {FormData} from '../_data';
+import type {FormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -11,15 +11,15 @@ type Props = {
     parent_uuid?: string,
     formId: string,
     submitTitle: string,
-    formData: FormData,
+    formData: FormValues,
     tagSource?: Array<Object>,
     errorMessages: Object,
 };
 type States = {
-    formData: FormData,
+    formData: FormValues,
 };
 
-const _defaultFormData: FormData = {
+const _defaultFormValues: FormValues = {
     id: null,
     title: '',
     description: '',
@@ -35,7 +35,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     setClassName: Function;
     setErrorMessage: Function;
     renderPreview: Function;
-    defaultFormData: FormData;
+    defaultFormValues: FormValues;
 
      
 
@@ -44,7 +44,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormData,
+        formData: _defaultFormValues,
     };
 
     constructor(props: Props) {
@@ -52,11 +52,11 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormData};
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
     }
 
     resetForm = () => {
-        this.setState({formData: this.defaultFormData}, () => {
+        this.setState({formData: this.defaultFormValues}, () => {
             window.document.getElementById(this.props.formId).reset();
             window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
         });

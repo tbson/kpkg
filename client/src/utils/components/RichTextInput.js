@@ -1,15 +1,16 @@
 // @flow
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
-import {convertToRaw} from 'draft-js';
+import {EditorState, convertToRaw, ContentState} from 'draft-js';
 // $FlowFixMe: do not complain about importing node_modules
-import {Editor, createEditorState, addNewBlock, Block, ImageSideButton} from 'medium-draft';
+import {Editor} from 'react-draft-wysiwyg';
 // $FlowFixMe: do not complain about importing node_modules
-import mediumDraftExporter from 'medium-draft/lib/exporter';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 // $FlowFixMe: do not complain about importing node_modules
-import mediumDraftImporter from 'medium-draft/lib/importer';
+import draftToHtml from 'draftjs-to-html';
 // $FlowFixMe: do not complain about importing node_modules
-import 'medium-draft/lib/index.css';
+import htmlToDraft from 'html-to-draftjs';
+
 import Tools from '../helpers/Tools';
 
 const rawApiUrls: Array<Object> = [
@@ -24,9 +25,9 @@ const rawApiUrls: Array<Object> = [
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 type Props = {
-    parent_uuid: string,
+    parent_uuid?: string,
     name: string,
-    defaultValue: any,
+    defaultValue: string,
 };
 
 type States = {
@@ -35,78 +36,35 @@ type States = {
 };
 
 class RichTextInput extends React.Component<Props, States> {
-    onChange: Function;
-    sideButtons: Array<Object>;
-
-    state = {
-        value: '',
-        editorState: createEditorState(convertToRaw(mediumDraftImporter(this.props.defaultValue))),
-    };
-    static defaultProps = {
-        options: [],
-        multi: false,
-        delimiter: ',',
-        defaultValue: '',
-        parent_uuid: '',
-        parent: null,
-    };
-
     constructor(props: Props) {
         super(props);
-        this.onChange = editorState => {
-            this.setState({
-                editorState,
-                value: mediumDraftExporter(editorState.getCurrentContent()),
-            });
-        };
-        this.sideButtons = [
-            {
-                title: 'Image',
-                component: props => {
-                    return <CustomImageSideButton {...props} {...this.props} />;
-                },
-            },
-        ];
-    }
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.setState({
+        const blocksFromHtml = htmlToDraft(this.props.defaultValue);
+        const {contentBlocks, entityMap} = blocksFromHtml;
+        const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+        const editorState = EditorState.createWithContent(contentState);
+
+        this.state = {
             value: '',
-            editorState: createEditorState(convertToRaw(mediumDraftImporter(nextProps.defaultValue))),
-        });
-    }
-
-    render() {
-        const {editorState} = this.state;
-        const toolbarConfig = {
-            block: ['ordered-list-item', 'unordered-list-item', 'blockquote', 'header-three', 'todo'],
-            inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink', 'HIGHLIGHT'],
+            editorState,
         };
-        return (
-            <div style={{position: 'relative'}}>
-                <input type="hidden" name={this.props.name} defaultValue={this.state.value} />
-                <Editor
-                    ref="editor"
-                    placeholder="Content..."
-                    editorState={editorState}
-                    onChange={this.onChange}
-                    sideButtons={this.sideButtons}
-                />
-            </div>
-        );
-    }
-}
-
-const styles = {};
-export default RichTextInput;
-
-class CustomImageSideButton extends ImageSideButton {
-    constructor(props) {
-        super(props);
     }
 
-    async onChange(e) {
-        const file = e.target.files[0];
+    onChange = (editorState: Object) => {
+        const rawContentState = convertToRaw(editorState.getCurrentContent());
+        const value = draftToHtml(rawContentState);
+        this.setState({
+            editorState,
+            value,
+        });
+    };
+
+    uploadImageCallBack = async (file: Blob): Promise<*> => {
+        const response = {
+            data: {
+                link: '',
+            },
+        };
         if (file.type.indexOf('image/') === 0) {
             const params = {
                 attachment: file,
@@ -115,31 +73,34 @@ class CustomImageSideButton extends ImageSideButton {
             };
             const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
             if (result.success) {
-                this.props.setEditorState(
-                    addNewBlock(this.props.getEditorState(), Block.IMAGE, {
-                        className: 'full-width',
-                        src: result.data.attachment,
-                    }),
-                );
+                response.data.link = result.data.attachment;
+                return new Promise((resolve, reject) => resolve(response));
             }
+            return new Promise((resolve, reject) => reject(''));
         }
-        this.props.close();
-    }
+        return new Promise((resolve, reject) => reject(''));
+    };
 
     render() {
         return (
-            <button className="md-sb-button md-sb-img-button" type="button" onClick={this.onClick} title="Add an Image">
-                <span className="oi oi-image" style={{fontSize: 15}}></span>
-                <input
-                    type="file"
-                    accept="image/*"
-                    ref={c => {
-                        this.input = c;
+            <div style={{position: 'relative'}}>
+                <input type="hidden" name={this.props.name} defaultValue={this.state.value} />
+                <Editor
+                    editorState={this.state.editorState}
+                    onEditorStateChange={this.onChange}
+                    toolbar={{
+                        image: {
+                            previewImage: true,
+                            inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,image/webp',
+                            uploadCallback: this.uploadImageCallBack,
+                            alt: {present: true, mandatory: false},
+                        },
                     }}
-                    onChange={this.onChange}
-                    style={{display: 'none'}}
                 />
-            </button>
+            </div>
         );
     }
 }
+
+const styles = {};
+export default RichTextInput;

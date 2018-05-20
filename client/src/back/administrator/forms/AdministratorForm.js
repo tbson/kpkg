@@ -2,22 +2,22 @@
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
 import SelectInput from 'src/utils/components/SelectInput';
-import type {FormData} from '../_data';
+import type {FormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formData: FormData,
+    formData: FormValues,
     groupList: Array<Object>,
     errorMessages: Object,
 };
 type States = {
-    formData: FormData,
+    formData: FormValues,
 };
 
-const _defaultFormData: FormData = {
+const _defaultFormValues: FormValues = {
     id: null,
     email: null,
     username: null,
@@ -37,14 +37,14 @@ export default class AdministratorForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormData,
+        formData: _defaultFormValues,
     };
     constructor(props: Props) {
         super(props);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormData};
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
     }
 
     resetForm = () => {

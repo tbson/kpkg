@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
-import type {FormDataEdit} from '../_data';
+import type {FormValuesEdit} from '../_data';
 import ArticleForm from '../forms/ArticleForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
@@ -20,7 +20,7 @@ type States = {
     dataLoaded: boolean,
     mainModal: boolean,
     mainList: Array<Object>,
-    mainFormData: Object,
+    mainFormValues: Object,
     mainFormErr: Object,
 };
 
@@ -46,7 +46,7 @@ export class ArticleTable extends React.Component<Props, States> {
         dataLoaded: false,
         mainModal: false,
         mainList: [],
-        mainFormData: {},
+        mainFormValues: {},
         mainFormErr: {},
     };
 
@@ -143,7 +143,7 @@ export class ArticleTable extends React.Component<Props, States> {
 
     handleSearch = (event: Object) => {
         event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
+        const {searchStr} = Tools.formDataToObj(new FormValues(event.target));
         if (searchStr.length > 2) {
             this.list({search: searchStr});
         } else if (!searchStr.length) {
@@ -225,7 +225,7 @@ export default withRouter(ArticleTable);
 type RowPropTypes = {
     parent: string,
     parent_id: number,
-    data: FormDataEdit,
+    data: FormValuesEdit,
     _key: number,
     handleRemove: Function,
     onCheck: Function,

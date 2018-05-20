@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
-import type {FormData} from '../_data';
+import type {FormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -9,15 +9,15 @@ type Props = {
     uuid: string,
     formId: string,
     submitTitle: string,
-    formData: FormData,
+    formData: FormValues,
     errorMessages: Object,
 };
 type States = {
-    formData: FormData,
+    formData: FormValues,
 };
 
 
-const _defaultFormData: FormData = {}
+const _defaultFormValues: FormValues = {}
 
 export default class AttachForm extends React.Component<Props, States> {
     resetForm: Function;
@@ -30,14 +30,14 @@ export default class AttachForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormData,
+        formData: _defaultFormValues,
     };
     constructor(props: Props) {
         super(props);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormData};
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
     }
 
     resetForm = () => {

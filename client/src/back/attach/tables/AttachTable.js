@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
-import type {FormData, FormDataEdit} from '../_data';
+import type {FormValues, FormValuesEdit} from '../_data';
 import AttachForm from '../forms/AttachForm';
 import AttachModal from '../forms/AttachModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -19,7 +19,7 @@ type States = {
     dataLoaded: boolean,
     mainModal: boolean,
     mainList: Array<Object>,
-    mainFormData: FormData,
+    mainFormValues: FormValues,
     mainFormErr: Object,
 };
 
@@ -44,7 +44,7 @@ export class AttachTable extends React.Component<Props, States> {
         dataLoaded: false,
         mainModal: false,
         mainList: [],
-        mainFormData: {},
+        mainFormValues: {},
         mainFormErr: {},
     };
 
@@ -94,7 +94,7 @@ export class AttachTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            mainFormData: {},
+            mainFormValues: {},
             mainFormErr: {},
         };
 
@@ -103,7 +103,7 @@ export class AttachTable extends React.Component<Props, States> {
                 case 'mainModal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.mainFormData = result.data;
+                            state.mainFormValues = result.data;
                         }
                         this.uuid = result.data.uuid;
                         this.setState(state);
@@ -120,7 +120,7 @@ export class AttachTable extends React.Component<Props, States> {
     handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let error: ?Object = null;
-        const params = Tools.formDataToObj(new FormData(event.target));
+        const params = Tools.formDataToObj(new FormValues(event.target));
         if (!params.order) {
             params.order = 0;
         }
@@ -142,7 +142,7 @@ export class AttachTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: FormData) => {
+    handleAdd = async (params: FormValues) => {
         params.parent_uuid = this.props.parent_uuid;
         params.richtext_image = false;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
@@ -153,7 +153,7 @@ export class AttachTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: FormDataEdit) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -219,7 +219,7 @@ export class AttachTable extends React.Component<Props, States> {
 
     handleSearch = (event: Object) => {
         event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
+        const {searchStr} = Tools.formDataToObj(new FormValues(event.target));
         if (searchStr.length > 2) {
             this.list({search: searchStr});
         } else if (!searchStr.length) {
@@ -289,7 +289,7 @@ export class AttachTable extends React.Component<Props, States> {
                 <AttachModal
                     uuid={this.uuid}
                     open={this.state.mainModal}
-                    formData={this.state.mainFormData}
+                    formData={this.state.mainFormValues}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
                     handleSubmit={this.handleSubmit}
@@ -301,7 +301,7 @@ export class AttachTable extends React.Component<Props, States> {
 export default withRouter(AttachTable);
 
 type RowPropTypes = {
-    data: FormDataEdit,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

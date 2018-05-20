@@ -2,14 +2,14 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import AttachForm from './AttachForm';
-import type {FormData} from '../_data';
+import type {FormValues} from '../_data';
 
 type PropTypes = {
     uuid: string,
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formData: FormData,
+    formData: FormValues,
     errorMessages: Object,
 };
 export default class AttachModal extends React.Component<PropTypes> {
