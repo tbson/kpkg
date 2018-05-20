@@ -12,7 +12,7 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export type MainFormData = {
+export type FormData = {
     id?: number,
     parent_uuid: string,
     title: string,
@@ -21,6 +21,6 @@ export type MainFormData = {
     order: ?number,
 };
 
-export type MainFormDataEdit = MainFormData & {
+export type FormDataEdit = FormData & {
     checked: boolean,
 };

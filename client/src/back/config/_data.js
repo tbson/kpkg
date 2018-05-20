@@ -12,12 +12,12 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export type MainFormData = {
+export type FormData = {
     id?: number,
     uid: string,
     value: string,
 };
 
-export type MainFormDataEdit = MainFormData & {
+export type FormDataEdit = FormData & {
     checked: boolean,
 };

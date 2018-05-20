@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
-import type {MainFormData} from '../_data';
+import type {FormData} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -9,15 +9,15 @@ type Props = {
     uuid: string,
     formId: string,
     submitTitle: string,
-    formData: MainFormData,
+    formData: FormData,
     errorMessages: Object,
 };
 type States = {
-    formData: MainFormData,
+    formData: FormData,
 };
 
 
-const _defaultFormData: MainFormData = {}
+const _defaultFormData: FormData = {}
 
 export default class AttachForm extends React.Component<Props, States> {
     resetForm: Function;

@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
-import type {MainFormData, MainFormDataEdit} from '../_data';
+import type {FormData, FormDataEdit} from '../_data';
 import AttachForm from '../forms/AttachForm';
 import AttachModal from '../forms/AttachModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -19,7 +19,7 @@ type States = {
     dataLoaded: boolean,
     mainModal: boolean,
     mainList: Array<Object>,
-    mainFormData: MainFormData,
+    mainFormData: FormData,
     mainFormErr: Object,
 };
 
@@ -142,7 +142,7 @@ export class AttachTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: MainFormData) => {
+    handleAdd = async (params: FormData) => {
         params.parent_uuid = this.props.parent_uuid;
         params.richtext_image = false;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
@@ -153,7 +153,7 @@ export class AttachTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: MainFormDataEdit) => {
+    handleEdit = async (params: FormDataEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -301,7 +301,7 @@ export class AttachTable extends React.Component<Props, States> {
 export default withRouter(AttachTable);
 
 type RowPropTypes = {
-    data: MainFormDataEdit,
+    data: FormDataEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,
