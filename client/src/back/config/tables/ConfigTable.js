@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {MainFormData, MainFormDataRow} from '../_data';
 import ConfigForm from '../forms/ConfigForm';
 import ConfigModal from '../forms/ConfigModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -15,7 +16,7 @@ type States = {
     dataLoaded: boolean,
     mainModal: boolean,
     mainList: Array<Object>,
-    mainFormData: Object,
+    mainFormData: MainFormData,
     mainFormErr: Object,
 };
 
@@ -282,14 +283,8 @@ export class ConfigTable extends React.Component<Props, States> {
 }
 export default withRouter(ConfigTable);
 
-type DataType = {
-    id: number,
-    uid: string,
-    value: string,
-    checked: ?boolean,
-};
 type RowPropTypes = {
-    data: DataType,
+    data: MainFormDataRow,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

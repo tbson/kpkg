@@ -1,22 +1,18 @@
 // @flow
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
+import type {MainFormData} from '../_data';
 
-type formData = {
-    id: ?number,
-    uid: ?string,
-    value: ?string,
-};
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formData: formData,
+    formData: MainFormData,
     errorMessages: Object,
 };
 type States = {
-    formData: formData,
+    formData: MainFormData,
 };
 
 export default class ConfigForm extends React.Component<Props, States> {
@@ -37,11 +33,7 @@ export default class ConfigForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const defaultFormData: formData = {
-            id: null,
-            uid: null,
-            value: null,
-        };
+        const defaultFormData: MainFormData = {};
         return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : defaultFormData};
     }
 

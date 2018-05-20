@@ -5,9 +5,19 @@ const rawApiUrls = [
     {
         controller: 'config',
         endpoints: {
-            crud: ''
-        }
-    }
+            crud: '',
+        },
+    },
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
+
+export type MainFormData = {
+    id?: number,
+    uid: string,
+    value: string,
+};
+
+export type MainFormDataRow = MainFormData & {
+    checked: boolean,
+};

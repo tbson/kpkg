@@ -23,12 +23,12 @@ import {
 } from 'src/constants';
 let fingerprint = null;
 
-type rawApiUrlsType = [
-    {
-        controller: string,
-        endpoints: {},
-    },
-];
+type ApiUrl = {
+    controller: string,
+    endpoints: Object,
+};
+
+type RawApiUrls = Array<ApiUrl>;
 
 export default class Tools {
     static emitter = new EventEmitter();
@@ -141,21 +141,19 @@ export default class Tools {
         return PROTOCOL + DOMAIN + API_PREFIX;
     }
 
-    static getApiUrls(rawApiUrls: Array<Object>): Object {
+    static getApiUrls(rawApiUrls: RawApiUrls): Object {
         let result = {};
         const API_BASE_URL = this.getApiBaseUrl();
-        Object.entries(rawApiUrls).forEach(([index, apiUrl]) => {
-            // $FlowFixMe: Still have no idea why it happen
-            Object.entries(apiUrl.endpoints).forEach(([key, url]) => {
-                url = kebabCase(url);
+        for (let index = 0; index < rawApiUrls.length; index++) {
+            const apiUrl = rawApiUrls[index];
+            for (let key in apiUrl.endpoints) {
+                const url = kebabCase(apiUrl.endpoints[key]);
                 result[
-                    // $FlowFixMe: Still have no idea why it happen
                     parseInt(index) === 0 ? key : camelCase(apiUrl.controller) + this.cap(key)
-                    // $FlowFixMe: Still have no idea why it happen
                 ] =
                     API_BASE_URL + kebabCase(apiUrl.controller) + '/' + url + (url ? '/' : '');
-            });
-        });
+            }
+        }
         return result;
     }
 
@@ -172,10 +170,10 @@ export default class Tools {
         try {
             if (Object.values(data).filter(item => item instanceof Blob).length) {
                 let formData = new FormData();
-                Object.entries(data).forEach(([key, value]) => {
-                    // $FlowFixMe: Still have no idea why it happen
+                for (let key in data) {
+                    const value = data[key];
                     formData.set(key, value);
-                });
+                }
                 return {
                     data: formData,
                     contentType: null,
@@ -367,7 +365,6 @@ export default class Tools {
 
     static activeWhen(prefix: string): string {
         const url = window.location.href;
-        console.log(url);
         if (!prefix || !url) {
             return '';
         }
@@ -384,26 +381,19 @@ export default class Tools {
             (c ^ (cryptoObj.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
         );
     }
-    /*
-    static dateFormat(input: string): string {
-        // $FlowFixMe: do not complain about importing node_modules
-        var locale = new Intl.DateTimeFormat('fr-FR');
-        return locale.format(new Date(input));
-    }
-    */
-    static dateFormat(date:any, locale:string ="FR-FR"): string{
-        try{
-            if(typeof date === 'string'){
-                try{
+
+    static dateFormat(date: any, locale: string = 'FR-FR'): string {
+        try {
+            if (typeof date === 'string') {
+                try {
                     date = new Date(date);
-                }catch(error){
+                } catch (error) {
                     date = new Date();
                 }
             }
-            // $FlowFixMe:
             var formater = new Intl.DateTimeFormat(locale);
             return formater.format(date);
-        }catch(error){
+        } catch (error) {
             return String(date);
         }
     }
@@ -411,8 +401,7 @@ export default class Tools {
     static getText(html: string): string {
         let tmp = document.createElement('div');
         tmp.innerHTML = html;
-        // $FlowFixMe:
-        return tmp.textContent || tmp.innerText;
+        return tmp.textContent || (tmp.innerText || '');
     }
 
     static addAlt(html: string, alt: string): string {
