@@ -36,6 +36,6 @@ export type MainFormData = {
     tags?: ?string,
 };
 
-export type MainFormDataRow = MainFormData & {
+export type MainFormDataEdit = MainFormData & {
     checked: boolean,
 };

@@ -3,6 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import {apiUrls} from './_data';
+import type {MainFormData, MainFormDataEdit} from './_data';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import AttachTable from 'src/back/attach/tables/AttachTable';
@@ -121,28 +122,13 @@ class ArticleEdit extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {
-        category: number,
-        uuid: string,
-        title: string,
-        description: ?string,
-        image: Object,
-        order: number,
-    }) => {
+    handleAdd = async (params: MainFormData) => {
         params.uuid = this.state.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         return result;
     };
 
-    handleEdit = async (params: {
-        id: number,
-        category: number,
-        title: string,
-        description: ?string,
-        image: Object,
-        order: number,
-        checked: boolean,
-    }) => {
+    handleEdit = async (params: MainFormDataEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         return result;

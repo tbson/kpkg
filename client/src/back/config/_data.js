@@ -18,6 +18,6 @@ export type MainFormData = {
     value: string,
 };
 
-export type MainFormDataRow = MainFormData & {
+export type MainFormDataEdit = MainFormData & {
     checked: boolean,
 };

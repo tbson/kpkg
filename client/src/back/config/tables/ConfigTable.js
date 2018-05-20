@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
-import type {MainFormData, MainFormDataRow} from '../_data';
+import type {MainFormData, MainFormDataEdit} from '../_data';
 import ConfigForm from '../forms/ConfigForm';
 import ConfigModal from '../forms/ConfigModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -128,7 +128,7 @@ export class ConfigTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {uid: string, value: string}) => {
+    handleAdd = async (params: MainFormData) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({mainList: [{...result.data, checked: false}, ...this.state.mainList]});
@@ -137,7 +137,7 @@ export class ConfigTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {id: number, uid: string, value: string, checked: boolean}) => {
+    handleEdit = async (params: MainFormDataEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -284,7 +284,7 @@ export class ConfigTable extends React.Component<Props, States> {
 export default withRouter(ConfigTable);
 
 type RowPropTypes = {
-    data: MainFormDataRow,
+    data: MainFormDataEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,
