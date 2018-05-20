@@ -23,3 +23,19 @@ const rawApiUrls = [
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
+
+export type MainFormData = {
+    id: ?number,
+    title: string,
+    description: string,
+    content: string,
+    image: string,
+    use_slide: boolean,
+    pin: boolean,
+    order: ?number,
+    tags?: ?string,
+};
+
+export type MainFormDataRow = MainFormData & {
+    checked: boolean,
+};

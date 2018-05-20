@@ -3,29 +3,31 @@ import * as React from 'react';
 import RichTextInput from 'src/utils/components/RichTextInput';
 import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
-export type formData = {
-    id: ?number,
-    title: string,
-    description: string,
-    content: string,
-    image: string,
-    use_slide: boolean,
-    pin: boolean,
-    order: ?number,
-    tags?: ?string,
-};
+import type {MainFormData} from '../_data';
+
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     parent_uuid?: string,
     formId: string,
     submitTitle: string,
-    formData: formData,
+    formData: MainFormData,
     tagSource?: Array<Object>,
     errorMessages: Object,
 };
 type States = {
-    formData: formData,
+    formData: MainFormData,
+};
+
+const _defaultFormData: MainFormData = {
+    id: null,
+    title: '',
+    description: '',
+    content: '',
+    image: '',
+    use_slide: false,
+    pin: false,
+    order: 0,
 };
 
 export default class ArticleForm extends React.Component<Props, States> {
@@ -33,27 +35,24 @@ export default class ArticleForm extends React.Component<Props, States> {
     setClassName: Function;
     setErrorMessage: Function;
     renderPreview: Function;
-    defaultFormData: formData;
+    defaultFormData: MainFormData;
+
+     
 
     static defaultProps = {
         submitTitle: 'Submit',
     };
 
+    state = {
+        formData: _defaultFormData,
+    };
+
     constructor(props: Props) {
         super(props);
-        this.defaultFormData = {
-            id: null,
-            title: '',
-            description: '',
-            content: '',
-            image: '',
-            use_slide: false,
-            pin: false,
-            order: 0,
-        };
-        this.state = {
-            formData: !Tools.emptyObj(this.props.formData) ? this.props.formData : this.defaultFormData,
-        };
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormData};
     }
 
     resetForm = () => {
@@ -156,7 +155,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                         multi={true}
                         name="tags"
                         options={this.props.tagSource}
-                        defaultValue={this.props.formData.tags}
+                        defaultValue={this.state.formData.tags}
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
                 </div>

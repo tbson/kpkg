@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {MainFormDataRow} from '../_data';
 import ArticleForm from '../forms/ArticleForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
@@ -221,19 +222,10 @@ export class ArticleTable extends React.Component<Props, States> {
 }
 export default withRouter(ArticleTable);
 
-type DataType = {
-    id: number,
-    category_title: string,
-    title: string,
-    use_slide: boolean,
-    pin: boolean,
-    order: number,
-    checked: ?boolean,
-};
 type RowPropTypes = {
     parent: string,
     parent_id: number,
-    data: DataType,
+    data: MainFormDataRow,
     _key: number,
     handleRemove: Function,
     onCheck: Function,

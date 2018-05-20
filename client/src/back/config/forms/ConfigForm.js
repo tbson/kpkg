@@ -15,6 +15,8 @@ type States = {
     formData: MainFormData,
 };
 
+const _defaultFormData: MainFormData = {}
+
 export default class ConfigForm extends React.Component<Props, States> {
     resetForm: Function;
     setClassName: Function;
@@ -25,7 +27,7 @@ export default class ConfigForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: this.props.formData,
+        formData: _defaultFormData,
     };
 
     constructor(props: Props) {
@@ -33,8 +35,7 @@ export default class ConfigForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const defaultFormData: MainFormData = {};
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : defaultFormData};
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormData};
     }
 
     resetForm = () => {
