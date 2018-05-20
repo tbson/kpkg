@@ -4,7 +4,6 @@ import CustomModal from 'src/utils/components/CustomModal';
 import StaffForm from './StaffForm';
 
 type PropTypes = {
-    uuid: string,
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
@@ -24,7 +23,6 @@ export default class StaffModal extends React.Component<PropTypes> {
                     <StaffForm
                         formId="staffForm"
                         submitTitle="Update"
-                        uuid={this.props.uuid}
                         defaultValues={this.props.defaultValues}
                         errorMessages={this.props.errorMessages}
                         handleSubmit={this.props.handleSubmit}>

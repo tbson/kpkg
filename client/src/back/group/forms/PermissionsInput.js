@@ -81,8 +81,42 @@ class PermissionsInput extends React.Component<Props, States> {
         }
         result = resultArr.join(',');
         this.setState({
-            value: result
+            value: result,
         });
+        return result;
+    };
+
+    renderContent = (options: Object) => {
+        const result = [];
+        for (let key in options) {
+            const permissions = options[key];
+            result.push(
+                <div key={key}>
+                    <div className="row green">
+                        <strong className="pointer no-select" onClick={() => this.togglePermission(key, options)}>
+                            <span className="oi oi-check" /> {key}
+                        </strong>
+                    </div>
+                    <div className="row">
+                        {permissions.map(item => (
+                            <div className="form-check col-md-6" key={item.id}>
+                                <input
+                                    id={item.codename}
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    checked={item.checked}
+                                    onChange={event => this.handleChange(event.target.checked, item)}
+                                />
+                                <label className="form-check-label no-select" htmlFor={item.codename}>
+                                    {item.name}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                    <hr />
+                </div>,
+            );
+        }
         return result;
     };
 
@@ -97,32 +131,7 @@ class PermissionsInput extends React.Component<Props, States> {
                     </strong>
                 </div>
                 <hr />
-                {Object.entries(options).map(([key, permissions]) => (
-                    <div key={key}>
-                        <div className="row green">
-                            <strong className="pointer no-select" onClick={() => this.togglePermission(key, options)}>
-                                <span className="oi oi-check" /> {key}
-                            </strong>
-                        </div>
-                        <div className="row">
-                            {permissions.map(item => (
-                                <div className="form-check col-md-6" key={item.id}>
-                                    <input
-                                        id={item.codename}
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        checked={item.checked}
-                                        onChange={event => this.handleChange(event.target.checked, item)}
-                                    />
-                                    <label className="form-check-label no-select" htmlFor={item.codename}>
-                                        {item.name}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                        <hr />
-                    </div>
-                ))}
+                {this.renderContent(options)}
             </div>
         );
     }

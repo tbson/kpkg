@@ -33,7 +33,6 @@ export class GroupTable extends React.Component<Props, States> {
     handleSearch: Function;
     initPermission: Function;
 
-    filterTimeout: ?TimeoutID = null;
     nextUrl: ?string;
     prevUrl: ?string;
 
