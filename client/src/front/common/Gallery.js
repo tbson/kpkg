@@ -1,17 +1,23 @@
 // @flow
 import * as React from 'react';
+// $FlowFixMe: do not complain about importing node_modules
 import LazyLoad from 'react-lazyload';
 import {apiUrls} from './_data';
 import CustomModal from 'src/utils/components/CustomModal';
 import Carousel from 'src/utils/components/Carousel';
 import Tools from 'src/utils/helpers/Tools';
 
+type galleryItem = {
+    id: number,
+    title: string,
+    imate: string,
+    items: Array<Object>
+};
 type Props = {};
 type State = {
     preview: boolean,
     previewItems: Array<Object>,
-
-    gallery: Object,
+    gallery: { [number]: galleryItem },
     dataLoaded: boolean,
 };
 
@@ -92,7 +98,11 @@ export default class Gallery extends React.Component<Props, State> {
     }
 
     render() {
-        const gallery = Object.values(this.state.gallery);
+        const gallery = [];
+        for (let i in this.state.gallery) {
+            const galleryItem = this.state.gallery[parseInt(i)];
+            gallery.push(galleryItem);
+        }
         if (!gallery.length) return null;
         return (
             <div>
@@ -101,7 +111,7 @@ export default class Gallery extends React.Component<Props, State> {
                 </div>
                 {this.renderPreview()}
                 <div className="row">
-                    {Object.values(gallery).map(item => (
+                    {gallery.map(item => (
                         <LazyLoad height={200} key={item.id}>
                             <GalleryItem item={item} togglePreview={this.togglePreview}/>
                         </LazyLoad>

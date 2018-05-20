@@ -391,7 +391,7 @@ export default class Tools {
                     date = new Date();
                 }
             }
-            var formater = new Intl.DateTimeFormat(locale);
+            var formater = new window.Intl.DateTimeFormat(locale);
             return formater.format(date);
         } catch (error) {
             return String(date);

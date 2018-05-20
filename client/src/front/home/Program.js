@@ -50,7 +50,6 @@ export default class Program extends React.Component<Props, State> {
                 homeProgram: result.data.items[0],
                 dataLoaded: true,
             });
-            console.log(result.data.items);
             Tools.setGlobalState('home_program', result.data.items[0]);
         }
     }
