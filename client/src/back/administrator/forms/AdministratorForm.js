@@ -44,23 +44,20 @@ export default class AdministratorForm extends React.Component<Props, States> {
     state = {};
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=uid]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
     render() {
         return (

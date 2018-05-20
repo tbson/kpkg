@@ -49,23 +49,13 @@ export class BannerTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.list = this.list.bind(this);
-        this.setInitData = this.setInitData.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAdd = this.handleAdd.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-        this.handleToggleCheckAll = this.handleToggleCheckAll.bind(this);
-        this.handleCheck = this.handleCheck.bind(this);
-        this.handleRemove = this.handleRemove.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
         this.list();
     }
 
-    setInitData(initData: Object) {
+    setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
         const newData = initData.items.map(item => {
@@ -76,9 +66,9 @@ export class BannerTable extends React.Component<Props, States> {
             dataLoaded: true,
             mainList: [...newData],
         });
-    }
+    };
 
-    async list(outerParams: Object = {}, url: ?string = null) {
+    list = async (outerParams: Object = {}, url: ?string = null) => {
         let params = {
             category: this.props.match.params.category_id,
         };
@@ -94,9 +84,9 @@ export class BannerTable extends React.Component<Props, States> {
             return result;
         }
         return result;
-    }
+    };
 
-    toggleModal(modalName: string, id: ?number = null): Object {
+    toggleModal = (modalName: string, id: ?number = null): Object => {
         // If modalName not defined -> exit here
         if (typeof this.state[modalName] == 'undefined') return {};
 
@@ -123,9 +113,9 @@ export class BannerTable extends React.Component<Props, States> {
             this.setState(state);
         }
         return state;
-    }
+    };
 
-    async handleSubmit(event: Object): Promise<boolean> {
+    handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
@@ -148,16 +138,16 @@ export class BannerTable extends React.Component<Props, States> {
             this.setState({mainFormErr: error});
             return false;
         }
-    }
+    };
 
-    async handleAdd(params: {
+    handleAdd = async (params: {
         uuid: string,
         category: number,
         title: string,
         description: ?string,
         image: Object,
         order: number,
-    }) {
+    }) => {
         params.uuid = this.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
@@ -165,9 +155,9 @@ export class BannerTable extends React.Component<Props, States> {
             return null;
         }
         return result.data;
-    }
+    };
 
-    async handleEdit(params: {
+    handleEdit = async (params: {
         id: number,
         category: number,
         title: string,
@@ -175,7 +165,7 @@ export class BannerTable extends React.Component<Props, States> {
         image: Object,
         order: number,
         checked: boolean,
-    }) {
+    }) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -186,9 +176,9 @@ export class BannerTable extends React.Component<Props, States> {
             return null;
         }
         return result.data;
-    }
+    };
 
-    handleToggleCheckAll() {
+    handleToggleCheckAll = () => {
         var newList = [];
         const checkedItem = this.state.mainList.filter(item => item.checked);
         const result = (checked: boolean) => {
@@ -209,16 +199,16 @@ export class BannerTable extends React.Component<Props, States> {
             // Nothing checked -> check all
             return result(true);
         }
-    }
+    };
 
-    handleCheck(data: Object, event: Object) {
+    handleCheck = (data: Object, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.mainList.findIndex(item => item.id === parseInt(data.id));
         this.state.mainList[index] = {...data};
         this.setState({mainList: this.state.mainList});
-    }
+    };
 
-    async handleRemove(id: string) {
+    handleRemove = async (id: string) => {
         const listId = id.split(',');
         if (!id || !listId.length) return;
         let message = '';
@@ -237,9 +227,9 @@ export class BannerTable extends React.Component<Props, States> {
         } else {
             this.list();
         }
-    }
+    };
 
-    handleSearch(event: Object) {
+    handleSearch = (event: Object) => {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
@@ -247,7 +237,7 @@ export class BannerTable extends React.Component<Props, States> {
         } else if (!searchStr.length) {
             this.list();
         }
-    }
+    };
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;

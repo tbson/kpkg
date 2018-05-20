@@ -10,7 +10,7 @@ type Props = {
         id: ?number,
         content_type: ?string,
         name: ?string,
-        codename: ?string
+        codename: ?string,
     },
     errorMessages: Object,
 };
@@ -35,23 +35,20 @@ export default class PermissionForm extends React.Component<Props, States> {
     state = {};
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=name]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
     render() {
         return (
@@ -100,4 +97,3 @@ export default class PermissionForm extends React.Component<Props, States> {
         );
     }
 }
-

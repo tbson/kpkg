@@ -20,13 +20,12 @@ class ChangePasswordForm extends React.Component<Props, States> {
     constructor(props: Props) {
         super(props);
         this.state = {};
-        this.resetForm = this.resetForm.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=oldPassword]').focus();
-    }
+    };
 
     render() {
         return (

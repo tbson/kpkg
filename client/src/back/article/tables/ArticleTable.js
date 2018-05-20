@@ -52,19 +52,13 @@ export class ArticleTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.list = this.list.bind(this);
-        this.setInitData = this.setInitData.bind(this);
-        this.handleToggleCheckAll = this.handleToggleCheckAll.bind(this);
-        this.handleCheck = this.handleCheck.bind(this);
-        this.handleRemove = this.handleRemove.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
         this.list();
     }
 
-    setInitData(initData: Object) {
+    setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
         const newData = initData.items.map(item => {
@@ -75,9 +69,9 @@ export class ArticleTable extends React.Component<Props, States> {
             dataLoaded: true,
             mainList: [...newData],
         });
-    }
+    };
 
-    async list(outerParams: Object = {}, url: ?string = null) {
+    list = async (outerParams: Object = {}, url: ?string = null) => {
         let params = {
             [this.props.parent]: this.props.parent_id,
         };
@@ -94,9 +88,9 @@ export class ArticleTable extends React.Component<Props, States> {
             return result;
         }
         return result;
-    }
+    };
 
-    handleToggleCheckAll() {
+    handleToggleCheckAll = () => {
         var newList = [];
         const checkedItem = this.state.mainList.filter(item => item.checked);
         const result = (checked: boolean) => {
@@ -117,16 +111,16 @@ export class ArticleTable extends React.Component<Props, States> {
             // Nothing checked -> check all
             return result(true);
         }
-    }
+    };
 
-    handleCheck(data: Object, event: Object) {
+    handleCheck = (data: Object, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.mainList.findIndex(item => item.id === parseInt(data.id));
         this.state.mainList[index] = {...data};
         this.setState({mainList: this.state.mainList});
-    }
+    };
 
-    async handleRemove(id: string) {
+    handleRemove = async (id: string) => {
         const listId = id.split(',');
         if (!id || !listId.length) return;
         let message = '';
@@ -145,9 +139,9 @@ export class ArticleTable extends React.Component<Props, States> {
         } else {
             this.list();
         }
-    }
+    };
 
-    handleSearch(event: Object) {
+    handleSearch = (event: Object) => {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
@@ -155,7 +149,7 @@ export class ArticleTable extends React.Component<Props, States> {
         } else if (!searchStr.length) {
             this.list();
         }
-    }
+    };
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;

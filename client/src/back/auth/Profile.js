@@ -37,21 +37,14 @@ class Profile extends React.Component<Props, States> {
             changePasswordModal: false,
             changePasswordError: '',
         };
-        this.toggleModal = this.toggleModal.bind(this);
-        this.renderProfileModal = this.renderProfileModal.bind(this);
-        this.renderChangePasswordModal = this.renderChangePasswordModal.bind(this);
-        this.handleUpdateProfile = this.handleUpdateProfile.bind(this);
-        this.handleChangePassword = this.handleChangePassword.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         document.title = 'Profile';
-        Tools.apiCall(apiUrls.profile, 'GET').then(result => {
-            // console.log(result);
-        });
-    }
+        Tools.apiCall(apiUrls.profile, 'GET');
+    };
 
-    async handleUpdateProfile(event) {
+    handleUpdateProfile = async event => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
 
@@ -61,12 +54,11 @@ class Profile extends React.Component<Props, States> {
             this.setState({authData: Tools.getStorageObj('authData')});
             this.toggleModal('profileModal');
         } else {
-            console.log(result);
             this.setState({profileErrorMessage: result.data});
         }
-    }
+    };
 
-    async handleChangePassword(event) {
+    handleChangePassword = async event => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
 
@@ -78,9 +70,9 @@ class Profile extends React.Component<Props, States> {
                 changePasswordError: Tools.errorMessageProcessing(result.data),
             });
         }
-    }
+    };
 
-    toggleModal(modalId: string) {
+    toggleModal = (modalId: string) => {
         let state = {};
         state[modalId] = !this.state[modalId];
         switch (modalId) {
@@ -98,18 +90,18 @@ class Profile extends React.Component<Props, States> {
                 break;
         }
         this.setState(state);
-    }
+    };
 
-    renderErrorMessage(message: ?string = '') {
+    renderErrorMessage = (message: ?string = '') => {
         if (!message) return null;
         return (
             <div className="alert alert-danger" role="alert" style={{marginTop: 16}}>
                 {message}
             </div>
         );
-    }
+    };
 
-    renderProfileModal(defaultValue, errorMessage) {
+    renderProfileModal = (defaultValue, errorMessage) => {
         // const authData = Tools.getStorageObj('authData');
         const modalId = 'profileModal';
         return (
@@ -132,9 +124,9 @@ class Profile extends React.Component<Props, States> {
                 </div>
             </CustomModal>
         );
-    }
+    };
 
-    renderChangePasswordModal() {
+    renderChangePasswordModal = () => {
         const authData = Tools.getStorageObj('authData');
         const modalId = 'changePasswordModal';
         return (
@@ -156,7 +148,7 @@ class Profile extends React.Component<Props, States> {
                 </div>
             </CustomModal>
         );
-    }
+    };
 
     render() {
         const authData = this.state.authData;

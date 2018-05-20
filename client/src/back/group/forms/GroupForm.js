@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PermissionsInput from './PermissionsInput';
 
-
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
@@ -11,7 +10,7 @@ type Props = {
     defaultValues: {
         id: ?number,
         name: ?string,
-        permissions: ?string
+        permissions: ?string,
     },
     permissionList: Object,
     errorMessages: Object,
@@ -37,23 +36,20 @@ export default class GroupForm extends React.Component<Props, States> {
     state = {};
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=name]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
     render() {
         return (
@@ -74,7 +70,7 @@ export default class GroupForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('name')}</div>
                 </div>
 
-                <PermissionsInput name="permissions" options={this.props.permissionList}/>
+                <PermissionsInput name="permissions" options={this.props.permissionList} />
 
                 <div className="right">
                     {this.props.children}
@@ -87,4 +83,3 @@ export default class GroupForm extends React.Component<Props, States> {
         );
     }
 }
-

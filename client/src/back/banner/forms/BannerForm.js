@@ -39,35 +39,31 @@ export default class BannerForm extends React.Component<Props, States> {
     state = {};
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
-        this.renderPreview = this.renderPreview.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
-    renderPreview () {
+    renderPreview = () => {
         if (!this.props.defaultValues.image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={this.props.defaultValues.image} width="100%"/>
+                    <img src={this.props.defaultValues.image} width="100%" />
                 </div>
             </div>
         );
-    }
+    };
 
     render() {
         return (
@@ -97,13 +93,15 @@ export default class BannerForm extends React.Component<Props, States> {
                         type="text"
                         className={this.setClassName('description')}
                         placeholder="Description..."
-                    ></textarea>
+                    />
                     <div className="invalid-feedback">{this.setErrorMessage('description')}</div>
                 </div>
 
                 <div className="form-group">
                     {this.renderPreview()}
-                    <label htmlFor="image" style={{display: this.props.defaultValues.image?'none':'block'}}>Image</label>
+                    <label htmlFor="image" style={{display: this.props.defaultValues.image ? 'none' : 'block'}}>
+                        Image
+                    </label>
                     <input
                         id="image"
                         name="image"
@@ -138,4 +136,3 @@ export default class BannerForm extends React.Component<Props, States> {
         );
     }
 }
-

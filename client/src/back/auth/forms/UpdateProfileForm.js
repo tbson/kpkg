@@ -30,23 +30,20 @@ class UpdateProfileForm extends React.Component<Props, States> {
     constructor(props: Props) {
         super(props);
         this.state = {};
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=username]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessage[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: Object) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessage[name];
-    }
+    };
 
     render() {
         return (

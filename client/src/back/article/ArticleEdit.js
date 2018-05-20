@@ -50,12 +50,6 @@ class ArticleEdit extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAdd = this.handleAdd.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-        this.renderRelatedArticle = this.renderRelatedArticle.bind(this);
-        this.getItem = this.getItem.bind(this);
-        this.getTags = this.getTags.bind(this);
     }
 
     componentDidMount() {
@@ -63,7 +57,7 @@ class ArticleEdit extends React.Component<Props, States> {
         this.getTags();
     }
 
-    async getItem() {
+    getItem = async () => {
         const id = this.props.match.params.id;
         const {parent, parent_id} = this.props;
         if (parent == 'article') {
@@ -85,16 +79,16 @@ class ArticleEdit extends React.Component<Props, States> {
                 });
             }
         }
-    }
+    };
 
-    async getTags () {
+    getTags = async () => {
         const result = await Tools.apiCall(apiUrls.tagCrud + '?limit=20', 'GET');
         if (result.success) {
             this.setState({tagSource: result.data.items.map(item => ({value: item.id, label: item.title}))});
         }
-    }
+    };
 
-    async handleSubmit(event: Object): Promise<boolean> {
+    handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let result: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
@@ -125,22 +119,22 @@ class ArticleEdit extends React.Component<Props, States> {
             this.setState({mainFormErr: result.data ? result.data : result});
             return false;
         }
-    }
+    };
 
-    async handleAdd(params: {
+    handleAdd = async (params: {
         category: number,
         uuid: string,
         title: string,
         description: ?string,
         image: Object,
         order: number,
-    }) {
+    }) => {
         params.uuid = this.state.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         return result;
-    }
+    };
 
-    async handleEdit(params: {
+    handleEdit = async (params: {
         id: number,
         category: number,
         title: string,
@@ -148,16 +142,16 @@ class ArticleEdit extends React.Component<Props, States> {
         image: Object,
         order: number,
         checked: boolean,
-    }) {
+    }) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         return result;
-    }
+    };
 
-    renderRelatedArticle() {
+    renderRelatedArticle = () => {
         if (!this.props.match.params.id || this.props.parent != 'category') return null;
         return <ArticleTable search_form={false} parent="article" parent_id={this.props.match.params.id} />;
-    }
+    };
 
     render() {
         if (!this.state.dataLoaded)

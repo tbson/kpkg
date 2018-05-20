@@ -44,23 +44,13 @@ export class CCalendarTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.list = this.list.bind(this);
-        this.setInitData = this.setInitData.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAdd = this.handleAdd.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-        this.handleToggleCheckAll = this.handleToggleCheckAll.bind(this);
-        this.handleCheck = this.handleCheck.bind(this);
-        this.handleRemove = this.handleRemove.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
         this.list();
     }
 
-    setInitData(initData: Object) {
+    setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
         const newData = initData.items.map(item => {
@@ -71,9 +61,9 @@ export class CCalendarTable extends React.Component<Props, States> {
             dataLoaded: true,
             mainList: [...newData],
         });
-    }
+    };
 
-    async list(outerParams: Object = {}, url: ?string = null) {
+    list = async (outerParams: Object = {}, url: ?string = null) => {
         let params = {};
         let result = {};
 
@@ -87,9 +77,9 @@ export class CCalendarTable extends React.Component<Props, States> {
             return result;
         }
         return result;
-    }
+    };
 
-    toggleModal(modalName: string, id: ?number = null): Object {
+    toggleModal = (modalName: string, id: ?number = null): Object => {
         // If modalName not defined -> exit here
         if (typeof this.state[modalName] == 'undefined') return {};
 
@@ -104,7 +94,7 @@ export class CCalendarTable extends React.Component<Props, States> {
                 case 'mainModal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.mainFormData = result.data
+                            state.mainFormData = result.data;
                         }
                         this.setState(state);
                     });
@@ -114,9 +104,9 @@ export class CCalendarTable extends React.Component<Props, States> {
             this.setState(state);
         }
         return state;
-    }
+    };
 
-    async handleSubmit(event: Object): Promise<boolean> {
+    handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
@@ -135,18 +125,18 @@ export class CCalendarTable extends React.Component<Props, States> {
             this.setState({mainFormErr: error});
             return false;
         }
-    }
+    };
 
-    async handleAdd(params: {uid: string, value: string}) {
+    handleAdd = async (params: {uid: string, value: string}) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({mainList: [{...result.data, checked: false}, ...this.state.mainList]});
             return null;
         }
         return result.data;
-    }
+    };
 
-    async handleEdit(params: {id: number, uid: string, value: string, checked: boolean}) {
+    handleEdit = async (params: {id: number, uid: string, value: string, checked: boolean}) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -157,9 +147,9 @@ export class CCalendarTable extends React.Component<Props, States> {
             return null;
         }
         return result.data;
-    }
+    };
 
-    handleToggleCheckAll() {
+    handleToggleCheckAll = () => {
         var newList = [];
         const checkedItem = this.state.mainList.filter(item => item.checked);
         const result = (checked: boolean) => {
@@ -167,7 +157,7 @@ export class CCalendarTable extends React.Component<Props, States> {
                 return {...value, checked};
             });
             this.setState({mainList});
-        }
+        };
 
         if (checkedItem) {
             if (checkedItem.length === this.state.mainList.length) {
@@ -180,17 +170,16 @@ export class CCalendarTable extends React.Component<Props, States> {
             // Nothing checked -> check all
             return result(true);
         }
-    }
+    };
 
-
-    handleCheck(data: Object, event: Object) {
+    handleCheck = (data: Object, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.mainList.findIndex(item => item.id === parseInt(data.id));
         this.state.mainList[index] = {...data};
         this.setState({mainList: this.state.mainList});
-    }
+    };
 
-    async handleRemove(id: string) {
+    handleRemove = async (id: string) => {
         const listId = id.split(',');
         if (!id || !listId.length) return;
         let message = '';
@@ -201,10 +190,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         }
         const decide = confirm(message);
         if (!decide) return;
-        const result = await Tools.apiCall(
-            apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id),
-            'DELETE'
-        );
+        const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
         if (result.success) {
             const listId = id.split(',').map(item => parseInt(item));
             const mainList = this.state.mainList.filter(item => listId.indexOf(item.id) === -1);
@@ -212,9 +198,9 @@ export class CCalendarTable extends React.Component<Props, States> {
         } else {
             this.list();
         }
-    }
+    };
 
-    handleSearch(event: Object) {
+    handleSearch = (event: Object) => {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
@@ -222,7 +208,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         } else if (!searchStr.length) {
             this.list();
         }
-    }
+    };
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
@@ -329,16 +315,18 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="title">{data.title}</td>
                 <td className="start">{Tools.dateFormat(data.start)}</td>
                 <td className="end">{Tools.dateFormat(data.end)}</td>
-                <td className="url"><a href={data.url} target="_blank">{data.url}</a></td>
+                <td className="url">
+                    <a href={data.url} target="_blank">
+                        {data.url}
+                    </a>
+                </td>
                 <td className="center">
                     <a onClick={() => this.props.toggleModal('mainModal', data.id)}>
-                        <span className="editBtn oi oi-pencil text-info pointer"/>
+                        <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a onClick={() => this.props.handleRemove(String(data.id))}>
-                        <span
-                            className="removeBtn oi oi-x text-danger pointer"
-                        />
+                        <span className="removeBtn oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

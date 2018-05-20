@@ -43,23 +43,20 @@ export default class CategoryForm extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=uid]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
     render() {
         return (
@@ -109,7 +106,9 @@ export default class CategoryForm extends React.Component<Props, States> {
                             placeholder="1 to 100"
                         />
                         <div className="input-group-append">
-                            <span className="input-group-text" id="basic-addon2">%</span>
+                            <span className="input-group-text" id="basic-addon2">
+                                %
+                            </span>
                         </div>
                     </div>
                     <div className="invalid-feedback">{this.setErrorMessage('width_ratio')}</div>

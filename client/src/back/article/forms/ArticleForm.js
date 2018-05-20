@@ -41,10 +41,6 @@ export default class ArticleForm extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
-        this.renderPreview = this.renderPreview.bind(this);
         this.defaultFormData = {
             id: null,
             title: '',
@@ -60,23 +56,23 @@ export default class ArticleForm extends React.Component<Props, States> {
         };
     }
 
-    resetForm() {
+    resetForm = () => {
         this.setState({formData: this.defaultFormData}, () => {
             window.document.getElementById(this.props.formId).reset();
             window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
         });
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         const result = this.props.errorMessages[name];
         return result;
-    }
+    };
 
-    renderPreview() {
+    renderPreview = () => {
         if (!this.state.formData.image) return null;
         return (
             <div className="row">
@@ -85,7 +81,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                 </div>
             </div>
         );
-    }
+    };
 
     render() {
         return (

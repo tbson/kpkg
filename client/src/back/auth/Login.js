@@ -31,13 +31,9 @@ class Login extends React.Component<Props, States> {
         this.state = {
             modal: false,
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleSubmitResetPassword = this.handleSubmitResetPassword.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.renderErrorMessage = this.renderErrorMessage.bind(this);
     }
 
-    async handleSubmit(event) {
+    handleSubmit = async event => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
         const result = await Tools.apiCall(apiUrls.tokenAuth, 'POST', data);
@@ -49,36 +45,36 @@ class Login extends React.Component<Props, States> {
                 loginFail: true,
             });
         }
-    }
+    };
 
-    async handleSubmitResetPassword(event) {
+    handleSubmitResetPassword = async event => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
         const result = await Tools.apiCall(apiUrls.resetPassword, 'POST', data);
         this.toggleModal();
-    }
+    };
 
-    toggleModal() {
+    toggleModal = () => {
         this.setState({
             modal: !this.state.modal,
         });
-    }
+    };
 
-    renderErrorMessage() {
+    renderErrorMessage = () => {
         if (!this.state.loginFail) return null;
         return (
             <div className="alert alert-danger" role="alert" style={{marginTop: 16}}>
                 Wrong username or password!
             </div>
         );
-    }
+    };
 
-    componentDidMount() {
+    componentDidMount = () => {
         const authData = Tools.getStorageObj('authData');
         if (authData.email) {
             Tools.navigateTo(this.props.history);
         }
-    }
+    };
 
     render() {
         return (

@@ -20,7 +20,6 @@ type States = {
     mainFormErr: Object,
 };
 
-
 export class AdministratorTable extends React.Component<Props, States> {
     list: Function;
     setInitData: Function;
@@ -47,16 +46,6 @@ export class AdministratorTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.list = this.list.bind(this);
-        this.setInitData = this.setInitData.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAdd = this.handleAdd.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-        this.handleToggleCheckAll = this.handleToggleCheckAll.bind(this);
-        this.handleCheck = this.handleCheck.bind(this);
-        this.handleRemove = this.handleRemove.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
@@ -77,7 +66,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         });
     }
 
-    async list(outerParams: Object = {}, url: ?string = null) {
+    list = async (outerParams: Object = {}, url: ?string = null) => {
         let params = {};
         let result = {};
 
@@ -91,20 +80,20 @@ export class AdministratorTable extends React.Component<Props, States> {
             return result;
         }
         return result;
-    }
+    };
 
-    async groupList() {
+    groupList = async () => {
         const result = await Tools.apiCall(apiUrls.groupCrud, 'GET');
         if (result.success) {
             this.setState({
-                groupList: result.data.items.map(item => ({value: item.id, label: item.name}))
+                groupList: result.data.items.map(item => ({value: item.id, label: item.name})),
             });
             return result;
         }
         return result;
-    }
+    };
 
-    toggleModal(modalName: string, id: ?number = null): Object {
+    toggleModal = (modalName: string, id: ?number = null): Object => {
         // If modalName not defined -> exit here
         if (typeof this.state[modalName] == 'undefined') return {};
 
@@ -119,7 +108,7 @@ export class AdministratorTable extends React.Component<Props, States> {
                 case 'mainModal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.mainFormData = result.data
+                            state.mainFormData = result.data;
                         }
                         this.setState(state);
                     });
@@ -129,9 +118,9 @@ export class AdministratorTable extends React.Component<Props, States> {
             this.setState(state);
         }
         return state;
-    }
+    };
 
-    async handleSubmit(event: Object): Promise<boolean> {
+    handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
@@ -150,18 +139,24 @@ export class AdministratorTable extends React.Component<Props, States> {
             this.setState({mainFormErr: error});
             return false;
         }
-    }
+    };
 
-    async handleAdd(params: {email: string, username: string, first_name: string, last_name: string, groups: string}) {
+    handleAdd = async (params: {
+        email: string,
+        username: string,
+        first_name: string,
+        last_name: string,
+        groups: string,
+    }) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({mainList: [{...result.data, checked: false}, ...this.state.mainList]});
             return null;
         }
         return result.data;
-    }
+    };
 
-    async handleEdit(params: {
+    handleEdit = async (params: {
         id: number,
         email: string,
         username: string,
@@ -169,7 +164,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         last_name: string,
         groups: string,
         checked: boolean,
-    }) {
+    }) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -180,9 +175,9 @@ export class AdministratorTable extends React.Component<Props, States> {
             return null;
         }
         return result.data;
-    }
+    };
 
-    handleToggleCheckAll() {
+    handleToggleCheckAll = () => {
         var newList = [];
         const checkedItem = this.state.mainList.filter(item => item.checked);
         const result = (checked: boolean) => {
@@ -203,16 +198,16 @@ export class AdministratorTable extends React.Component<Props, States> {
             // Nothing checked -> check all
             return result(true);
         }
-    }
+    };
 
-    handleCheck(data: Object, event: Object) {
+    handleCheck = (data: Object, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.mainList.findIndex(item => item.id === parseInt(data.id));
         this.state.mainList[index] = {...data};
         this.setState({mainList: this.state.mainList});
-    }
+    };
 
-    async handleRemove(id: string) {
+    handleRemove = async (id: string) => {
         const listId = id.split(',');
         if (!id || !listId.length) return;
         let message = '';
@@ -231,9 +226,9 @@ export class AdministratorTable extends React.Component<Props, States> {
         } else {
             this.list();
         }
-    }
+    };
 
-    handleSearch(event: Object) {
+    handleSearch = (event: Object) => {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
@@ -241,7 +236,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         } else if (!searchStr.length) {
             this.list();
         }
-    }
+    };
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;

@@ -40,39 +40,38 @@ export default class AttachForm extends React.Component<Props, States> {
     state = {};
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
-        this.renderPreview = this.renderPreview.bind(this);
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
-    renderPreview() {
+    renderPreview = () => {
         const {attachment, filetype, title} = this.props.defaultValues;
         if (!attachment) return null;
-        if (filetype != 'image') return (
-            <a href={attachment} target="_blank">{title}</a>
-        );
+        if (filetype != 'image')
+            return (
+                <a href={attachment} target="_blank">
+                    {title}
+                </a>
+            );
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={attachment} width="100%"/>
+                    <img src={attachment} width="100%" />
                 </div>
             </div>
         );
-    }
+    };
 
     render() {
         return (

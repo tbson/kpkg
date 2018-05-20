@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
 
-
 type formData = {
     id: ?number,
     uid: ?string,
@@ -17,7 +16,7 @@ type Props = {
     errorMessages: Object,
 };
 type States = {
-    formData: formData
+    formData: formData,
 };
 
 export default class ConfigForm extends React.Component<Props, States> {
@@ -30,7 +29,7 @@ export default class ConfigForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: this.props.formData
+        formData: this.props.formData,
     };
 
     constructor(props: Props) {
@@ -49,15 +48,15 @@ export default class ConfigForm extends React.Component<Props, States> {
     resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=uid]').focus();
-    }
+    };
 
     setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
     setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
     render() {
         return (
@@ -103,4 +102,3 @@ export default class ConfigForm extends React.Component<Props, States> {
         );
     }
 }
-

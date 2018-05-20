@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
 
-
 type formData = {
     id: ?number,
     title: ?string,
@@ -16,7 +15,7 @@ type Props = {
     errorMessages: Object,
 };
 type States = {
-    formData: formData
+    formData: formData,
 };
 
 export default class TagForm extends React.Component<Props, States> {
@@ -29,14 +28,11 @@ export default class TagForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: this.props.formData
+        formData: this.props.formData,
     };
 
     constructor(props: Props) {
         super(props);
-        this.resetForm = this.resetForm.bind(this);
-        this.setClassName = this.setClassName.bind(this);
-        this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
@@ -47,18 +43,18 @@ export default class TagForm extends React.Component<Props, States> {
         return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : defaultFormData};
     }
 
-    resetForm() {
+    resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
-    }
+    };
 
-    setClassName(name: string) {
+    setClassName = (name: string) => {
         return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
-    }
+    };
 
-    setErrorMessage(name: string) {
+    setErrorMessage = (name: string) => {
         return this.props.errorMessages[name];
-    }
+    };
 
     render() {
         return (
@@ -90,4 +86,3 @@ export default class TagForm extends React.Component<Props, States> {
         );
     }
 }
-
