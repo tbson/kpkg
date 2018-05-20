@@ -3,7 +3,7 @@ import * as React from 'react';
 import RichTextInput from 'src/utils/components/RichTextInput';
 import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
-import type {MainFormData} from '../_data';
+import type {FormData} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -11,15 +11,15 @@ type Props = {
     parent_uuid?: string,
     formId: string,
     submitTitle: string,
-    formData: MainFormData,
+    formData: FormData,
     tagSource?: Array<Object>,
     errorMessages: Object,
 };
 type States = {
-    formData: MainFormData,
+    formData: FormData,
 };
 
-const _defaultFormData: MainFormData = {
+const _defaultFormData: FormData = {
     id: null,
     title: '',
     description: '',
@@ -35,7 +35,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     setClassName: Function;
     setErrorMessage: Function;
     renderPreview: Function;
-    defaultFormData: MainFormData;
+    defaultFormData: FormData;
 
      
 

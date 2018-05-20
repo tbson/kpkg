@@ -24,7 +24,7 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export type MainFormData = {
+export type FormData = {
     id: ?number,
     title: string,
     description: string,
@@ -36,6 +36,6 @@ export type MainFormData = {
     tags?: ?string,
 };
 
-export type MainFormDataEdit = MainFormData & {
+export type FormDataEdit = FormData & {
     checked: boolean,
 };

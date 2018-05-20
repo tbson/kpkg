@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
-import type {MainFormDataEdit} from '../_data';
+import type {FormDataEdit} from '../_data';
 import ArticleForm from '../forms/ArticleForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
@@ -225,7 +225,7 @@ export default withRouter(ArticleTable);
 type RowPropTypes = {
     parent: string,
     parent_id: number,
-    data: MainFormDataEdit,
+    data: FormDataEdit,
     _key: number,
     handleRemove: Function,
     onCheck: Function,
