@@ -5,7 +5,6 @@ import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
 import ArticleForm from '../forms/ArticleForm';
-import ArticleModal from '../forms/ArticleModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';

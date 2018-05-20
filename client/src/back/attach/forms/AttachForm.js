@@ -13,6 +13,7 @@ type Props = {
         title: ?string,
         attachment: ?string,
         filetype: ?string,
+        order: ?number,
     },
     errorMessages: Object,
 };

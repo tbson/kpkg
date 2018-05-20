@@ -17,11 +17,11 @@ export type formData = {
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
-    parent_uuid: string,
+    parent_uuid?: string,
     formId: string,
     submitTitle: string,
     formData: formData,
-    tagSource: Array<Object>,
+    tagSource?: Array<Object>,
     errorMessages: Object,
 };
 type States = {
