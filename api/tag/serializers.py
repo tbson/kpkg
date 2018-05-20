@@ -19,9 +19,9 @@ class TagBaseSerializer(ModelSerializer):
         if (Tag.objects.filter(uid=uid).count() >= 1):
             raise ValidationError({'title': 'Duplicate tag'})
         validated_data['uid'] = uid
-        tag = Tag(**validated_data)
-        tag.save()
-        return tag
+        instance = Tag(**validated_data)
+        instance.save()
+        return instance
 
     def update(self, instance, validated_data):
         uid = slugify(validated_data['title'])
