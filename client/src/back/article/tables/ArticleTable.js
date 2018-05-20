@@ -143,7 +143,7 @@ export class ArticleTable extends React.Component<Props, States> {
 
     handleSearch = (event: Object) => {
         event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormValues(event.target));
+        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
             this.list({search: searchStr});
         } else if (!searchStr.length) {

@@ -110,7 +110,7 @@ export class ConfigTable extends React.Component<Props, States> {
     handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let error: ?Object = null;
-        const params = Tools.formDataToObj(new FormValues(event.target));
+        const params = Tools.formDataToObj(new FormData(event.target));
         if (!params.id) {
             error = await this.handleAdd(params);
         } else {
@@ -203,7 +203,7 @@ export class ConfigTable extends React.Component<Props, States> {
 
     handleSearch = (event: Object) => {
         event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormValues(event.target));
+        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
             this.list({search: searchStr});
         } else if (!searchStr.length) {

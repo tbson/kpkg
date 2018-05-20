@@ -92,7 +92,7 @@ class ArticleEdit extends React.Component<Props, States> {
     handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
         let result: ?Object = null;
-        const params = Tools.formDataToObj(new FormValues(event.target));
+        const params = Tools.formDataToObj(new FormData(event.target));
         if (!params.order) {
             params.order = 0;
         }
