@@ -5,15 +5,28 @@ const rawApiUrls = [
     {
         controller: 'admin',
         endpoints: {
-            crud: ''
-        }
+            crud: '',
+        },
     },
     {
         controller: 'group',
         endpoints: {
-            crud: ''
-        }
-    }
+            crud: '',
+        },
+    },
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
+
+export type MainFormData = {
+    id: number,
+    email: string,
+    username: string,
+    first_name: string,
+    last_name: string,
+    groups?: string,
+};
+
+export type MainFormDataEdit = MainFormData & {
+    checked: boolean,
+};

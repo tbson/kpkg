@@ -5,9 +5,22 @@ const rawApiUrls = [
     {
         controller: 'attach',
         endpoints: {
-            crud: ''
-        }
-    }
+            crud: '',
+        },
+    },
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
+
+export type MainFormData = {
+    id?: number,
+    parent_uuid: string,
+    title: string,
+    image: ?Blob,
+    richtext_image: boolean,
+    order: ?number,
+};
+
+export type MainFormDataEdit = MainFormData & {
+    checked: boolean,
+};

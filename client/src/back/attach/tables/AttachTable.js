@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {MainFormData, MainFormDataEdit} from '../_data';
 import AttachForm from '../forms/AttachForm';
 import AttachModal from '../forms/AttachModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -18,7 +19,7 @@ type States = {
     dataLoaded: boolean,
     mainModal: boolean,
     mainList: Array<Object>,
-    mainFormData: Object,
+    mainFormData: MainFormData,
     mainFormErr: Object,
 };
 
@@ -141,13 +142,7 @@ export class AttachTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {
-        parent_uuid: string,
-        title: string,
-        image: Object,
-        richtext_image: boolean,
-        order: number,
-    }) => {
+    handleAdd = async (params: MainFormData) => {
         params.parent_uuid = this.props.parent_uuid;
         params.richtext_image = false;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
@@ -158,7 +153,7 @@ export class AttachTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {id: number, title: string, image: Object, order: number, checked: boolean}) => {
+    handleEdit = async (params: MainFormDataEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -294,7 +289,7 @@ export class AttachTable extends React.Component<Props, States> {
                 <AttachModal
                     uuid={this.uuid}
                     open={this.state.mainModal}
-                    defaultValues={this.state.mainFormData}
+                    formData={this.state.mainFormData}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
                     handleSubmit={this.handleSubmit}
@@ -305,14 +300,8 @@ export class AttachTable extends React.Component<Props, States> {
 }
 export default withRouter(AttachTable);
 
-type DataType = {
-    id: number,
-    title: string,
-    order: number,
-    checked: ?boolean,
-};
 type RowPropTypes = {
-    data: DataType,
+    data: MainFormDataEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

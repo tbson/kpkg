@@ -2,12 +2,13 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import AdministratorForm from './AdministratorForm';
+import type {MainFormData} from '../_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    defaultValues?: Object,
+    formData?: MainFormData,
     groupList: Array<Object>,
     errorMessages: Object,
 };
@@ -25,7 +26,7 @@ export default class AdministratorModal extends React.Component<PropTypes> {
                     <AdministratorForm
                         formId="administratorForm"
                         submitTitle="Update"
-                        defaultValues={this.props.defaultValues}
+                        formData={this.props.formData}
                         groupList={this.props.groupList}
                         errorMessages={this.props.errorMessages}
                         handleSubmit={this.props.handleSubmit}>

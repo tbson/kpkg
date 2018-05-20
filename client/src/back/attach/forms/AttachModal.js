@@ -2,13 +2,14 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import AttachForm from './AttachForm';
+import type {MainFormData} from '../_data';
 
 type PropTypes = {
     uuid: string,
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    defaultValues: Object,
+    formData: MainFormData,
     errorMessages: Object,
 };
 export default class AttachModal extends React.Component<PropTypes> {
@@ -25,7 +26,7 @@ export default class AttachModal extends React.Component<PropTypes> {
                         formId="attachForm"
                         submitTitle="Update"
                         uuid={this.props.uuid}
-                        defaultValues={this.props.defaultValues}
+                        formData={this.props.formData}
                         errorMessages={this.props.errorMessages}
                         handleSubmit={this.props.handleSubmit}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">

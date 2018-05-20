@@ -29,7 +29,7 @@ export type MainFormData = {
     title: string,
     description: string,
     content: string,
-    image: string,
+    image: ?Blob,
     use_slide: boolean,
     pin: boolean,
     order: ?number,

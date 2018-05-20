@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import Tools from 'src/utils/helpers/Tools';
+import type {MainFormData} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -7,17 +9,15 @@ type Props = {
     uuid: string,
     formId: string,
     submitTitle: string,
-    defaultValues: {
-        id: ?number,
-        parent_uuid: ?string,
-        title: ?string,
-        attachment: ?string,
-        filetype: ?string,
-        order: ?number,
-    },
+    formData: MainFormData,
     errorMessages: Object,
 };
-type States = {};
+type States = {
+    formData: MainFormData,
+};
+
+
+const _defaultFormData: MainFormData = {}
 
 export default class AttachForm extends React.Component<Props, States> {
     resetForm: Function;
@@ -27,20 +27,17 @@ export default class AttachForm extends React.Component<Props, States> {
 
     static defaultProps = {
         submitTitle: 'Submit',
-        defaultValues: {
-            id: null,
-            parent_uuid: null,
-            title: null,
-            attachment: null,
-            filetype: null,
-            order: null,
-        },
-        errorMessages: {},
     };
 
-    state = {};
+    state = {
+        formData: _defaultFormData,
+    };
     constructor(props: Props) {
         super(props);
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormData};
     }
 
     resetForm = () => {
@@ -57,7 +54,7 @@ export default class AttachForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        const {attachment, filetype, title} = this.props.defaultValues;
+        const {attachment, filetype, title} = this.state.formData;
         if (!attachment) return null;
         if (filetype != 'image')
             return (
@@ -77,11 +74,11 @@ export default class AttachForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.defaultValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.props.defaultValues.title}
+                        defaultValue={this.state.formData.title}
                         id="title"
                         name="title"
                         type="text"
@@ -96,7 +93,7 @@ export default class AttachForm extends React.Component<Props, States> {
                     {this.renderPreview()}
                     <label
                         htmlFor="attachment"
-                        style={{display: this.props.defaultValues.attachment ? 'none' : 'block'}}>
+                        style={{display: this.state.formData.attachment ? 'none' : 'block'}}>
                         Attachment
                     </label>
                     <input
@@ -112,7 +109,7 @@ export default class AttachForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.props.defaultValues.order}
+                        defaultValue={this.state.formData.order}
                         id="order"
                         name="order"
                         type="number"
