@@ -1,3 +1,4 @@
+
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
 from rest_framework import serializers
@@ -10,18 +11,9 @@ from .models import Administrator
 class AdministratorBaseSerializer(ModelSerializer):
 
     class Meta:
+        read_only_fields = ('id', 'fullname')
         model = Administrator
-        fields = [
-            'id',
-            'username',
-            'user_id',
-            'email',
-            'first_name',
-            'last_name',
-            'fullname',
-            'groups',
-            'fingerprint',
-        ]
+        exclude = ()
 
     username = serializers.CharField(
         source='user.username',
@@ -38,10 +30,14 @@ class AdministratorBaseSerializer(ModelSerializer):
     )
 
     fullname = SerializerMethodField()
-    groups = SerializerMethodField()
 
     def get_fullname(self, obj):
         return obj.user.first_name + ' ' + obj.user.last_name
+
+
+class AdministratorRetrieveSerializer(AdministratorBaseSerializer):
+
+    groups = SerializerMethodField()
 
     def get_groups(self, obj):
         result = [];
@@ -50,45 +46,18 @@ class AdministratorBaseSerializer(ModelSerializer):
         return ','.join(result)
 
 
-class AdministratorCreateSerializer(ModelSerializer):
+class AdministratorCreateSerializer(AdministratorBaseSerializer):
 
-    username = serializers.CharField(
-        source='user.username',
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    email = serializers.EmailField(
-        source='user.email',
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
+    class Meta(AdministratorBaseSerializer.Meta):
+        extra_kwargs = {
+            'user': {'required': False},
+        }
+
     password = serializers.CharField(
         source='user.password',
         allow_blank=True,
         style={'input_type': 'password'}
     )
-    first_name = serializers.CharField(
-        source='user.first_name'
-    )
-    last_name = serializers.CharField(
-        source='user.last_name'
-    )
-
-    fullname = SerializerMethodField()
-
-    def get_fullname(self, obj):
-        return obj.user.first_name + ' ' + obj.user.last_name
-
-    class Meta:
-        model = Administrator
-        fields = [
-            'id',
-            'username',
-            'email',
-            'password',
-            'first_name',
-            'last_name',
-            'fullname',
-        ]
-        read_only_fields = ('id', 'fullname')
 
     def create(self, validated_data):
         groups = []
@@ -112,45 +81,12 @@ class AdministratorCreateSerializer(ModelSerializer):
         return Administrator.objects.create(user=user)
 
 
-class AdministratorUpdateSerializer(ModelSerializer):
+class AdministratorUpdateSerializer(AdministratorBaseSerializer):
 
-    username = serializers.CharField(
-        source='user.username'
-    )
-    email = serializers.EmailField(
-        source='user.email'
-    )
-    """
-    password = serializers.CharField(
-        source='user.password',
-        required=False,
-        style={'input_type': 'password'}
-    )
-    """
-    first_name = serializers.CharField(
-        source='user.first_name'
-    )
-    last_name = serializers.CharField(
-        source='user.last_name'
-    )
-
-    fullname = SerializerMethodField()
-
-    def get_fullname(self, obj):
-        return obj.user.first_name + ' ' + obj.user.last_name
-
-    class Meta:
-        model = Administrator
-        fields = [
-            'id',
-            'username',
-            'email',
-            # 'password',
-            'first_name',
-            'last_name',
-            'fullname',
-        ]
-        read_only_fields = ('id', 'fullname')
+    class Meta(AdministratorBaseSerializer.Meta):
+        extra_kwargs = {
+            'user': {'required': False},
+        }
 
     def update(self, instance, validated_data):
         groups = []

@@ -16,6 +16,7 @@ from rest_framework import status
 from .models import Administrator
 from .serializers import (
     AdministratorBaseSerializer,
+    AdministratorRetrieveSerializer,
     AdministratorCreateSerializer,
     AdministratorUpdateSerializer,
 )
@@ -32,7 +33,7 @@ class ListView(ListAPIView):
     permissions = ['view_administrator_list']
     permission_classes = [CustomPermission]
     queryset = Administrator.objects.all()
-    serializer_class = AdministratorBaseSerializer
+    serializer_class = AdministratorRetrieveSerializer
     search_fields = ['user__username', 'user__email', 'user__first_name', 'user__last_name']
 
 
@@ -40,7 +41,7 @@ class DetailView(RetrieveAPIView):
     permissions = ['view_administrator_detail']
     permission_classes = [CustomPermission]
     queryset = Administrator.objects.all()
-    serializer_class = AdministratorBaseSerializer
+    serializer_class = AdministratorRetrieveSerializer
 
 
 class CreateView(CreateAPIView):
