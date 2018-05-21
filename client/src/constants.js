@@ -13,6 +13,7 @@ export const API_PREFIX = '/api/v1/';
 export const PROTOCOL = window.location.protocol + '//';
 export const DOMAIN = window.location.host;
 export const API_DOMAIN = window.location.host;
+export const PUBLIC_URL = PROTOCOL + API_DOMAIN + '/public/';
 export const MEDIA_URL = PROTOCOL + API_DOMAIN + '/public/media/';
 export const STATIC_URL = PROTOCOL + API_DOMAIN + '/public/static/';
 export const BASE_URL = PROTOCOL + DOMAIN + URL_PREFIX;
