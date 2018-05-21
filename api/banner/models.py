@@ -8,7 +8,7 @@ from category.models import Category
 
 def image_destination(instance, filename):
     # ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), 'webp')
+    filename = "%s.%s" % (uuid.uuid4(), 'jpg')
     return os.path.join('banner', filename)
 
 # Create your models here.

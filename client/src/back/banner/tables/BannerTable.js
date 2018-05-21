@@ -18,7 +18,7 @@ type States = {
     dataLoaded: boolean,
     mainModal: boolean,
     mainList: Array<FormValuesEdit>,
-    mainFormData: FormValues,
+    mainFormValues: FormValues,
     mainFormErr: Object,
 };
 
@@ -43,7 +43,7 @@ export class BannerTable extends React.Component<Props, States> {
         dataLoaded: false,
         mainModal: false,
         mainList: [],
-        mainFormData: {},
+        mainFormValues: {},
         mainFormErr: {},
     };
 
@@ -92,7 +92,7 @@ export class BannerTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            mainFormData: {},
+            mainFormValues: {},
             mainFormErr: {},
         };
 
@@ -101,7 +101,7 @@ export class BannerTable extends React.Component<Props, States> {
                 case 'mainModal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.mainFormData = result.data;
+                            state.mainFormValues = result.data;
                         }
                         this.uuid = result.data.uuid;
                         this.setState(state);
@@ -288,7 +288,7 @@ export class BannerTable extends React.Component<Props, States> {
                 <BannerModal
                     uuid={this.uuid}
                     open={this.state.mainModal}
-                    defaultValues={this.state.mainFormData}
+                    formValues={this.state.mainFormValues}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
                     handleSubmit={this.handleSubmit}

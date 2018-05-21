@@ -2,12 +2,13 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import ConfigForm from './ConfigForm';
+import type {FormValues} from '../_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formValues: Object,
+    formValues: FormValues,
     errorMessages: Object,
 };
 export default class ConfigModal extends React.Component<PropTypes> {

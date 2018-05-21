@@ -35,6 +35,10 @@ export default class BannerForm extends React.Component<Props, States> {
         super(props);
     }
 
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
+    }
+
     resetForm = () => {
         window.document.getElementById(this.props.formId).reset();
         window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();

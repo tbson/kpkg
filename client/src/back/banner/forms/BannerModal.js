@@ -2,13 +2,14 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import BannerForm from './BannerForm';
+import type {FormValues} from '../_data';
 
 type PropTypes = {
     uuid: string,
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    defaultValues: Object,
+    formValues: FormValues,
     errorMessages: Object,
 };
 export default class BannerModal extends React.Component<PropTypes> {
@@ -25,7 +26,7 @@ export default class BannerModal extends React.Component<PropTypes> {
                         formId="bannerForm"
                         submitTitle="Update"
                         uuid={this.props.uuid}
-                        defaultValues={this.props.defaultValues}
+                        formValues={this.props.formValues}
                         errorMessages={this.props.errorMessages}
                         handleSubmit={this.props.handleSubmit}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">

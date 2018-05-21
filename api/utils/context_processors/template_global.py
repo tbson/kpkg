@@ -16,6 +16,6 @@ def vars(request):
         'META': {
             'title': 'Khám Phá Không Gian',
             'description': 'Khám Phá Không Gian',
-            'image': settings.CLIENT_URL + 'default-thumbnail.webp'
+            'image': settings.CLIENT_URL + 'default-thumbnail.jpg'
         }
     }
