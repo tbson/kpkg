@@ -9,12 +9,12 @@ type Props = {
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formData: FormValues,
+    formValues: FormValues,
     groupList: Array<Object>,
     errorMessages: Object,
 };
 type States = {
-    formData: FormValues,
+    formValues: FormValues,
 };
 
 const _defaultFormValues: FormValues = {
@@ -37,14 +37,14 @@ export default class AdministratorForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormValues,
+        formValues: _defaultFormValues,
     };
     constructor(props: Props) {
         super(props);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
@@ -63,13 +63,13 @@ export default class AdministratorForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="row">
                     <div className="col-sm">
                         <div className="form-group">
                             <label htmlFor="email">Email</label>
                             <input
-                                defaultValue={this.state.formData.email}
+                                defaultValue={this.state.formValues.email}
                                 id="email"
                                 name="email"
                                 type="email"
@@ -85,7 +85,7 @@ export default class AdministratorForm extends React.Component<Props, States> {
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
                             <input
-                                defaultValue={this.state.formData.username}
+                                defaultValue={this.state.formValues.username}
                                 id="username"
                                 name="username"
                                 type="text"
@@ -103,7 +103,7 @@ export default class AdministratorForm extends React.Component<Props, States> {
                         <div className="form-group">
                             <label htmlFor="first_name">First name</label>
                             <input
-                                defaultValue={this.state.formData.first_name}
+                                defaultValue={this.state.formValues.first_name}
                                 id="first_name"
                                 name="first_name"
                                 type="text"
@@ -118,7 +118,7 @@ export default class AdministratorForm extends React.Component<Props, States> {
                         <div className="form-group">
                             <label htmlFor="last_name">Last name</label>
                             <input
-                                defaultValue={this.state.formData.last_name}
+                                defaultValue={this.state.formValues.last_name}
                                 id="last_name"
                                 name="last_name"
                                 type="text"
@@ -134,7 +134,7 @@ export default class AdministratorForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="password">Password</label>
                     <input
-                        defaultValue={this.state.formData.password}
+                        defaultValue={this.state.formValues.password}
                         id="password"
                         name="password"
                         type="password"
@@ -150,7 +150,7 @@ export default class AdministratorForm extends React.Component<Props, States> {
                         multi={true}
                         name="groups"
                         options={this.props.groupList}
-                        defaultValue={this.state.formData.groups}
+                        defaultValue={this.state.formValues.groups}
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
                 </div>

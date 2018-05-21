@@ -8,7 +8,7 @@ type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formData?: FormValues,
+    formValues?: FormValues,
     groupList: Array<Object>,
     errorMessages: Object,
 };
@@ -26,7 +26,7 @@ export default class AdministratorModal extends React.Component<PropTypes> {
                     <AdministratorForm
                         formId="administratorForm"
                         submitTitle="Update"
-                        formData={this.props.formData}
+                        formValues={this.props.formValues}
                         groupList={this.props.groupList}
                         errorMessages={this.props.errorMessages}
                         handleSubmit={this.props.handleSubmit}>

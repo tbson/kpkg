@@ -289,7 +289,7 @@ export class AttachTable extends React.Component<Props, States> {
                 <AttachModal
                     uuid={this.uuid}
                     open={this.state.mainModal}
-                    formData={this.state.mainFormValues}
+                    formValues={this.state.mainFormValues}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}
                     handleSubmit={this.handleSubmit}

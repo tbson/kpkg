@@ -11,12 +11,12 @@ type Props = {
     parent_uuid?: string,
     formId: string,
     submitTitle: string,
-    formData: FormValues,
+    formValues: FormValues,
     tagSource?: Array<Object>,
     errorMessages: Object,
 };
 type States = {
-    formData: FormValues,
+    formValues: FormValues,
 };
 
 const _defaultFormValues: FormValues = {
@@ -37,14 +37,12 @@ export default class ArticleForm extends React.Component<Props, States> {
     renderPreview: Function;
     defaultFormValues: FormValues;
 
-     
-
     static defaultProps = {
         submitTitle: 'Submit',
     };
 
     state = {
-        formData: _defaultFormValues,
+        formValues: _defaultFormValues,
     };
 
     constructor(props: Props) {
@@ -52,11 +50,11 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
-        this.setState({formData: this.defaultFormValues}, () => {
+        this.setState({formValues: this.defaultFormValues}, () => {
             window.document.getElementById(this.props.formId).reset();
             window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
         });
@@ -72,11 +70,11 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        if (!this.state.formData.image) return null;
+        if (!this.state.formValues.image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={this.state.formData.image} width="100%" />
+                    <img src={this.state.formValues.image} width="100%" />
                 </div>
             </div>
         );
@@ -85,11 +83,11 @@ export default class ArticleForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.state.formData.title}
+                        defaultValue={this.state.formValues.title}
                         id="title"
                         name="title"
                         type="text"
@@ -105,7 +103,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <label htmlFor="description">Description</label>
                     <RichTextInput
                         parent_uuid={this.props.parent_uuid}
-                        defaultValue={this.state.formData.description}
+                        defaultValue={this.state.formValues.description}
                         name="description"
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('description')}</div>
@@ -115,7 +113,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <label htmlFor="content">Content</label>
                     <RichTextInput
                         parent_uuid={this.props.parent_uuid}
-                        defaultValue={this.state.formData.content}
+                        defaultValue={this.state.formValues.content}
                         name="content"
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('content')}</div>
@@ -123,7 +121,7 @@ export default class ArticleForm extends React.Component<Props, States> {
 
                 <div className="form-group">
                     {this.renderPreview()}
-                    <label htmlFor="image" style={{display: this.state.formData.image ? 'none' : 'block'}}>
+                    <label htmlFor="image" style={{display: this.state.formValues.image ? 'none' : 'block'}}>
                         Image
                     </label>
                     <input
@@ -139,7 +137,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.state.formData.order}
+                        defaultValue={this.state.formValues.order}
                         id="order"
                         name="order"
                         type="number"
@@ -155,7 +153,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                         multi={true}
                         name="tags"
                         options={this.props.tagSource}
-                        defaultValue={this.state.formData.tags}
+                        defaultValue={this.state.formValues.tags}
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
                 </div>
@@ -165,7 +163,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                         id="use_slide"
                         name="use_slide"
                         type="checkbox"
-                        defaultChecked={this.state.formData.use_slide}
+                        defaultChecked={this.state.formValues.use_slide}
                         className="form-check-input"
                     />
                     <label className="form-check-label" htmlFor="use_slide">
@@ -178,7 +176,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                         id="pin"
                         name="pin"
                         type="checkbox"
-                        defaultChecked={this.state.formData.pin}
+                        defaultChecked={this.state.formValues.pin}
                         className="form-check-input"
                     />
                     <label className="form-check-label" htmlFor="pin">

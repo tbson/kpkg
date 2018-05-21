@@ -9,11 +9,11 @@ type Props = {
     uuid: string,
     formId: string,
     submitTitle: string,
-    formData: FormValues,
+    formValues: FormValues,
     errorMessages: Object,
 };
 type States = {
-    formData: FormValues,
+    formValues: FormValues,
 };
 
 const _defaultFormValues: FormValues = {}
@@ -29,7 +29,7 @@ export default class BannerForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormValues,
+        formValues: _defaultFormValues,
     };
     constructor(props: Props) {
         super(props);
@@ -49,11 +49,11 @@ export default class BannerForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        if (!this.state.formData.image) return null;
+        if (!this.state.formValues.image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={this.state.formData.image} width="100%" />
+                    <img src={this.state.formValues.image} width="100%" />
                 </div>
             </div>
         );
@@ -62,11 +62,11 @@ export default class BannerForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.state.formData.title}
+                        defaultValue={this.state.formValues.title}
                         id="title"
                         name="title"
                         type="text"
@@ -81,7 +81,7 @@ export default class BannerForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
                     <textarea
-                        defaultValue={this.state.formData.description}
+                        defaultValue={this.state.formValues.description}
                         id="description"
                         name="description"
                         type="text"
@@ -93,7 +93,7 @@ export default class BannerForm extends React.Component<Props, States> {
 
                 <div className="form-group">
                     {this.renderPreview()}
-                    <label htmlFor="image" style={{display: this.state.formData.image ? 'none' : 'block'}}>
+                    <label htmlFor="image" style={{display: this.state.formValues.image ? 'none' : 'block'}}>
                         Image
                     </label>
                     <input
@@ -109,7 +109,7 @@ export default class BannerForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.state.formData.order}
+                        defaultValue={this.state.formValues.order}
                         id="order"
                         name="order"
                         type="number"

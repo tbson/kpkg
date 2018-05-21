@@ -288,7 +288,7 @@ export class AdministratorTable extends React.Component<Props, States> {
                 </table>
                 <AdministratorModal
                     open={this.state.mainModal}
-                    formData={mainFormValues}
+                    formValues={mainFormValues}
                     groupList={this.state.groupList}
                     errorMessages={this.state.mainFormErr}
                     handleClose={() => this.setState({mainModal: false})}

@@ -9,7 +9,7 @@ type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formData: FormValues,
+    formValues: FormValues,
     errorMessages: Object,
 };
 export default class AttachModal extends React.Component<PropTypes> {
@@ -26,7 +26,7 @@ export default class AttachModal extends React.Component<PropTypes> {
                         formId="attachForm"
                         submitTitle="Update"
                         uuid={this.props.uuid}
-                        formData={this.props.formData}
+                        formValues={this.props.formValues}
                         errorMessages={this.props.errorMessages}
                         handleSubmit={this.props.handleSubmit}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">

@@ -8,11 +8,11 @@ type Props = {
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formData: FormValues,
+    formValues: FormValues,
     errorMessages: Object,
 };
 type States = {
-    formData: FormValues,
+    formValues: FormValues,
 };
 
 const _defaultFormValues: FormValues = {}
@@ -27,7 +27,7 @@ export default class ConfigForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormValues,
+        formValues: _defaultFormValues,
     };
 
     constructor(props: Props) {
@@ -35,7 +35,7 @@ export default class ConfigForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
@@ -54,11 +54,11 @@ export default class ConfigForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="uid">Key</label>
                     <input
-                        defaultValue={this.state.formData.uid}
+                        defaultValue={this.state.formValues.uid}
                         id="uid"
                         name="uid"
                         type="text"
@@ -73,7 +73,7 @@ export default class ConfigForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="value">Value</label>
                     <input
-                        defaultValue={this.state.formData.value}
+                        defaultValue={this.state.formValues.value}
                         id="value"
                         name="value"
                         type="text"

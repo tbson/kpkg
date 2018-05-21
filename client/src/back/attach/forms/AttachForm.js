@@ -9,11 +9,11 @@ type Props = {
     uuid: string,
     formId: string,
     submitTitle: string,
-    formData: FormValues,
+    formValues: FormValues,
     errorMessages: Object,
 };
 type States = {
-    formData: FormValues,
+    formValues: FormValues,
 };
 
 
@@ -30,14 +30,14 @@ export default class AttachForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: _defaultFormValues,
+        formValues: _defaultFormValues,
     };
     constructor(props: Props) {
         super(props);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
@@ -54,7 +54,7 @@ export default class AttachForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        const {attachment, filetype, title} = this.state.formData;
+        const {attachment, filetype, title} = this.state.formValues;
         if (!attachment) return null;
         if (filetype != 'image')
             return (
@@ -74,11 +74,11 @@ export default class AttachForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.state.formData.title}
+                        defaultValue={this.state.formValues.title}
                         id="title"
                         name="title"
                         type="text"
@@ -93,7 +93,7 @@ export default class AttachForm extends React.Component<Props, States> {
                     {this.renderPreview()}
                     <label
                         htmlFor="attachment"
-                        style={{display: this.state.formData.attachment ? 'none' : 'block'}}>
+                        style={{display: this.state.formValues.attachment ? 'none' : 'block'}}>
                         Attachment
                     </label>
                     <input
@@ -109,7 +109,7 @@ export default class AttachForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.state.formData.order}
+                        defaultValue={this.state.formValues.order}
                         id="order"
                         name="order"
                         type="number"
