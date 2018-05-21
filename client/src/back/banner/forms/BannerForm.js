@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import Tools from 'src/utils/helpers/Tools';
+import type {FormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -7,16 +9,14 @@ type Props = {
     uuid: string,
     formId: string,
     submitTitle: string,
-    defaultValues: {
-        id: ?number,
-        title: ?string,
-        description: ?string,
-        image: ?string,
-        order: ?number,
-    },
+    formData: FormValues,
     errorMessages: Object,
 };
-type States = {};
+type States = {
+    formData: FormValues,
+};
+
+const _defaultFormValues: FormValues = {}
 
 export default class BannerForm extends React.Component<Props, States> {
     resetForm: Function;
@@ -26,17 +26,11 @@ export default class BannerForm extends React.Component<Props, States> {
 
     static defaultProps = {
         submitTitle: 'Submit',
-        defaultValues: {
-            id: null,
-            title: null,
-            description: null,
-            image: null,
-            order: null,
-        },
-        errorMessages: {},
     };
 
-    state = {};
+    state = {
+        formData: _defaultFormValues,
+    };
     constructor(props: Props) {
         super(props);
     }
@@ -55,11 +49,11 @@ export default class BannerForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        if (!this.props.defaultValues.image) return null;
+        if (!this.state.formData.image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={this.props.defaultValues.image} width="100%" />
+                    <img src={this.state.formData.image} width="100%" />
                 </div>
             </div>
         );
@@ -68,11 +62,11 @@ export default class BannerForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.defaultValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.props.defaultValues.title}
+                        defaultValue={this.state.formData.title}
                         id="title"
                         name="title"
                         type="text"
@@ -87,7 +81,7 @@ export default class BannerForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
                     <textarea
-                        defaultValue={this.props.defaultValues.description}
+                        defaultValue={this.state.formData.description}
                         id="description"
                         name="description"
                         type="text"
@@ -99,7 +93,7 @@ export default class BannerForm extends React.Component<Props, States> {
 
                 <div className="form-group">
                     {this.renderPreview()}
-                    <label htmlFor="image" style={{display: this.props.defaultValues.image ? 'none' : 'block'}}>
+                    <label htmlFor="image" style={{display: this.state.formData.image ? 'none' : 'block'}}>
                         Image
                     </label>
                     <input
@@ -115,7 +109,7 @@ export default class BannerForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.props.defaultValues.order}
+                        defaultValue={this.state.formData.order}
                         id="order"
                         name="order"
                         type="number"

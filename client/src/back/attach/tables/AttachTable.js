@@ -18,7 +18,7 @@ type Props = {
 type States = {
     dataLoaded: boolean,
     mainModal: boolean,
-    mainList: Array<Object>,
+    mainList: Array<FormValuesEdit>,
     mainFormValues: FormValues,
     mainFormErr: Object,
 };

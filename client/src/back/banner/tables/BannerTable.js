@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {FormValues, FormValuesEdit} from '../_data';
 import BannerForm from '../forms/BannerForm';
 import BannerModal from '../forms/BannerModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -16,8 +17,8 @@ type Props = {
 type States = {
     dataLoaded: boolean,
     mainModal: boolean,
-    mainList: Array<Object>,
-    mainFormData: Object,
+    mainList: Array<FormValuesEdit>,
+    mainFormData: FormValues,
     mainFormErr: Object,
 };
 
@@ -139,14 +140,7 @@ export class BannerTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {
-        uuid: string,
-        category: number,
-        title: string,
-        description: ?string,
-        image: Object,
-        order: number,
-    }) => {
+    handleAdd = async (params: FormValues) => {
         params.uuid = this.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
@@ -156,15 +150,7 @@ export class BannerTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {
-        id: number,
-        category: number,
-        title: string,
-        description: ?string,
-        image: Object,
-        order: number,
-        checked: boolean,
-    }) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -313,15 +299,8 @@ export class BannerTable extends React.Component<Props, States> {
 }
 export default withRouter(BannerTable);
 
-type DataType = {
-    id: number,
-    category_title: string,
-    title: string,
-    order: number,
-    checked: ?boolean,
-};
 type RowPropTypes = {
-    data: DataType,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,
