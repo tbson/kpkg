@@ -3,6 +3,7 @@ import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
 import SelectInput from 'src/utils/components/SelectInput';
 import type {FormValues} from '../_data';
+import {defaultFormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -17,16 +18,6 @@ type States = {
     formValues: FormValues,
 };
 
-const _defaultFormValues: FormValues = {
-    id: null,
-    email: null,
-    username: null,
-    first_name: null,
-    last_name: null,
-    password: null,
-    groups: null,
-}
-
 export default class AdministratorForm extends React.Component<Props, States> {
     resetForm: Function;
     setClassName: Function;
@@ -37,14 +28,14 @@ export default class AdministratorForm extends React.Component<Props, States> {
     };
 
     state = {
-        formValues: _defaultFormValues,
+        formValues: defaultFormValues,
     };
     constructor(props: Props) {
         super(props);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
     }
 
     resetForm = () => {

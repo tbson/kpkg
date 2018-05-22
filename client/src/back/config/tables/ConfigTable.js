@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls, defaultFormValues, ensureFormValues} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesEdit} from '../_data';
 import ConfigForm from '../forms/ConfigForm';
 import ConfigModal from '../forms/ConfigModal';
@@ -15,7 +15,7 @@ type Props = {};
 type States = {
     dataLoaded?: boolean,
     modal?: boolean,
-    list?: Array<FormValuesEdit>,
+    list: Array<FormValuesEdit>,
     formValues?: FormValues,
     formErrors?: Object,
 };
@@ -85,7 +85,7 @@ export class ConfigTable extends React.Component<Props, States> {
                 case 'modal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.formValues = ensureFormValues(result.data);
+                            state.formValues = result.data;
                         }
                         this.setState(state);
                     });
@@ -121,9 +121,9 @@ export class ConfigTable extends React.Component<Props, States> {
     handleAdd = async (params: FormValues) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
-            const list = this.state.list ? this.state.list : [];
+            const {list} = this.state;
             this.setState({
-                list: [{...result.data, checked: false}, ...list],
+                list: [{...result.data, checked: false}, ...this.state.list],
             });
             return null;
         }
@@ -134,7 +134,7 @@ export class ConfigTable extends React.Component<Props, States> {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
-            const list = this.state.list ? this.state.list : [];
+            const {list} = this.state;
             const index = list.findIndex(item => item.id === parseInt(id));
             const {checked} = list[index];
             list[index] = {...result.data, checked};
@@ -150,7 +150,7 @@ export class ConfigTable extends React.Component<Props, States> {
         const checkedItem = list.filter(item => item.checked);
         const result = (checked: boolean) => {
             this.setState({
-                list: list.map(value => ({...value, checked}))
+                list: list.map(value => ({...value, checked})),
             });
         };
 
@@ -169,7 +169,7 @@ export class ConfigTable extends React.Component<Props, States> {
 
     handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
-        const list = this.state.list ? this.state.list : [];
+        const {list} = this.state;
         const index = list.findIndex(item => item.id === parseInt(data.id));
         list[index] = {...data};
         this.setState({list});
@@ -209,7 +209,7 @@ export class ConfigTable extends React.Component<Props, States> {
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
-        const list = this.state.list ? this.state.list : [];
+        const {list} = this.state;
         const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
         const formErrors = this.state.formErrors ? this.state.formErrors : {};
         return (

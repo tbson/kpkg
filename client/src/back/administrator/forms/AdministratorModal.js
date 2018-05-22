@@ -3,12 +3,13 @@ import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import AdministratorForm from './AdministratorForm';
 import type {FormValues} from '../_data';
+import {defaultFormValues} from '../_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formValues?: FormValues,
+    formValues: FormValues,
     groupList: Array<Object>,
     formErrors: Object,
 };
