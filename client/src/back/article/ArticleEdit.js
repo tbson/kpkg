@@ -2,7 +2,7 @@
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
-import {apiUrls} from './_data';
+import {apiUrls, defaultFormValues} from './_data';
 import type {FormValues, FormValuesEdit} from './_data';
 import type {FormValues as TagType} from 'src/back/tag/_data';
 import NavWrapper from 'src/utils/components/NavWrapper';
@@ -36,7 +36,7 @@ class ArticleEdit extends React.Component<Props, States> {
 
     state = {
         dataLoaded: false,
-        formValues: {},
+        formValues: defaultFormValues,
         formErrors: {},
         uuid: Tools.uuid4(),
         categoryId: null,

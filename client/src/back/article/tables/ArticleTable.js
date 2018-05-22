@@ -1,9 +1,9 @@
-// @flow
+/* @flow */
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValuesEdit} from '../_data';
 import ArticleForm from '../forms/ArticleForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -228,6 +228,7 @@ export class Row extends React.Component<RowPropTypes> {
         const data = this.props.data;
         const parentId = this.props.parent_id;
         const parent = this.props.parent;
+        const id = data.id ? data.id : '';
         return (
             <tr key={this.props._key}>
                 <th className="row25">
@@ -239,7 +240,7 @@ export class Row extends React.Component<RowPropTypes> {
                     />
                 </th>
                 <td className="title">
-                    <Link to={`/article/${parent}/${parentId}/${data.id}`}>{data.title}</Link>
+                    <Link to={`/article/${parent}/${parentId}/${id}`}>{data.title}</Link>
                 </td>
                 <td className="category_id">{data.category_title}</td>
                 <td className="use_slide">
@@ -250,7 +251,7 @@ export class Row extends React.Component<RowPropTypes> {
                 </td>
                 <td className="order">{data.order}</td>
                 <td className="center">
-                    <Link to={`/article/${parent}/${parentId}/${data.id}`}>
+                    <Link to={`/article/${parent}/${parentId}/${id}`}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </Link>
                     <span>&nbsp;&nbsp;&nbsp;</span>

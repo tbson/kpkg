@@ -4,6 +4,7 @@ import RichTextInput from 'src/utils/components/RichTextInput';
 import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
 import type {FormValues} from '../_data';
+import {defaultFormValues} from '../_data';
 import type {FormValues as TagType} from 'src/back/tag/_data';
 
 type Props = {
@@ -20,17 +21,6 @@ type States = {
     formValues: FormValues,
 };
 
-const _defaultFormValues: FormValues = {
-    id: null,
-    title: '',
-    description: '',
-    content: '',
-    image: '',
-    use_slide: false,
-    pin: false,
-    order: 0,
-};
-
 export default class ArticleForm extends React.Component<Props, States> {
     resetForm: Function;
     setClassName: Function;
@@ -43,7 +33,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     state = {
-        formValues: _defaultFormValues,
+        formValues: defaultFormValues,
     };
 
     constructor(props: Props) {
@@ -51,7 +41,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
     }
 
     resetForm = () => {
