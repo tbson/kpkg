@@ -1,3 +1,5 @@
+/* @flow */
+
 import Tools from 'src/utils/helpers/Tools';
 import {FIELD_TYPE, APP} from 'src/constants';
 
@@ -18,12 +20,22 @@ export type CatType = {
 };
 
 export type FormValues = {
-    id?: number,
+    id: ?number,
     title: string,
     type: string,
     image_ratio: ?number,
     width_ratio: ?number,
     single: boolean,
+};
+
+export const defaultFormValues: FormValues = {
+    id: null,
+    title: '',
+    type: '',
+    image_ratio: 1.618,
+    width_ratio: 100,
+    single: false
+
 };
 
 export type FormValuesEdit = FormValues & {

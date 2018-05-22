@@ -4,12 +4,10 @@ import * as React from 'react';
 import Select from 'react-select';
 // $FlowFixMe: do not complain about importing node_modules
 import 'react-select/dist/react-select.css';
-type item = {
-    value: any,
-    label: any
-};
+import type {DropdownItemType} from 'src/utils/types/CommonTypes';
+
 type Props = {
-    options: Array<item>,
+    options: Array<DropdownItemType>,
     multi: boolean,
     delimiter: string,
     name: string,

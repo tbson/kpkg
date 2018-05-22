@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesEdit} from '../_data';
 import TagForm from '../forms/TagForm';
 import TagModal from '../forms/TagModal';
@@ -15,7 +15,7 @@ type Props = {};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<FormValues>,
+    list: Array<FormValuesEdit>,
     formValues: FormValues,
     formErrors: Object,
 };
@@ -28,7 +28,7 @@ export class TagTable extends React.Component<Props, States> {
         dataLoaded: false,
         modal: false,
         list: [],
-        formValues: {},
+        formValues: defaultFormValues,
         formErrors: {},
     };
 
@@ -75,7 +75,7 @@ export class TagTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            formValues: {},
+            formValues: defaultFormValues,
             formErrors: {},
         };
 
@@ -162,7 +162,7 @@ export class TagTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: FormValues, event: Object) => {
+    handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -273,7 +273,7 @@ export class TagTable extends React.Component<Props, States> {
 export default withRouter(TagTable);
 
 type RowPropTypes = {
-    data: FormValues,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

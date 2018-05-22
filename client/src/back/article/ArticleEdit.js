@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import {apiUrls, defaultFormValues} from './_data';
 import type {FormValues, FormValuesEdit} from './_data';
-import type {FormValues as TagType} from 'src/back/tag/_data';
+import type {DropdownItemType} from 'src/utils/types/CommonTypes';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import AttachTable from 'src/back/attach/tables/AttachTable';
@@ -25,7 +25,7 @@ type States = {
     formErrors: Object,
     uuid: string,
     categoryId: ?number,
-    tagSource: Array<TagType>,
+    tagSource: Array<DropdownItemType>,
 };
 
 class ArticleEdit extends React.Component<Props, States> {

@@ -1,3 +1,5 @@
+/* @flow */
+
 import Tools from 'src/utils/helpers/Tools';
 import {FIELD_TYPE, APP} from 'src/constants';
 
@@ -19,8 +21,13 @@ const rawApiUrls = [
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 export type FormValues = {
-    id?: number,
+    id: ?number,
     name: string,
+};
+
+export const defaultFormValues: FormValues = {
+    id: null,
+    name: '',
 };
 
 export type FormValuesEdit = FormValues & {

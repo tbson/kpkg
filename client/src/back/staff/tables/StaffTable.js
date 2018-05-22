@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesEdit} from '../_data';
 import StaffForm from '../forms/StaffForm';
 import StaffModal from '../forms/StaffModal';
@@ -30,7 +30,7 @@ export class StaffTable extends React.Component<Props, States> {
         dataLoaded: false,
         modal: false,
         list: [],
-        formValues: {},
+        formValues: defaultFormValues,
         formErrors: {},
     };
 
@@ -77,7 +77,7 @@ export class StaffTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            formValues: {},
+            formValues: defaultFormValues,
             formErrors: {},
         };
 
@@ -279,16 +279,8 @@ export class StaffTable extends React.Component<Props, States> {
 }
 export default withRouter(StaffTable);
 
-type DataType = {
-    id: number,
-    title: string,
-    fullname: string,
-    email: string,
-    order: number,
-    checked: ?boolean,
-};
 type RowPropTypes = {
-    data: DataType,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

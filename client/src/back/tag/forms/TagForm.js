@@ -1,21 +1,19 @@
 // @flow
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
+import type {FormValues} from '../_data';
+import {defaultFormValues} from '../_data';
 
-type formValues = {
-    id: ?number,
-    title: ?string,
-};
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formValues: formValues,
+    formValues: FormValues,
     formErrors: Object,
 };
 type States = {
-    formValues: formValues,
+    formValues: FormValues,
 };
 
 export default class TagForm extends React.Component<Props, States> {
@@ -28,7 +26,7 @@ export default class TagForm extends React.Component<Props, States> {
     };
 
     state = {
-        formValues: this.props.formValues,
+        formValues: defaultFormValues,
     };
 
     constructor(props: Props) {
@@ -36,11 +34,7 @@ export default class TagForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const defaultFormData: formValues = {
-            id: null,
-            title: null,
-        };
-        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormData};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
     }
 
     resetForm = () => {

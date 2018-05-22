@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesEdit} from '../_data';
 import type {FormValues as PermissionType} from 'src/back/permission/_data';
 import GroupForm from '../forms/GroupForm';
@@ -16,7 +16,7 @@ type Props = {};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<FormValues>,
+    list: Array<FormValuesEdit>,
     permissionList: {[string]: PermissionType},
     formValues: FormValues,
     formErrors: Object,
@@ -31,7 +31,7 @@ export class GroupTable extends React.Component<Props, States> {
         modal: false,
         list: [],
         permissionList: {},
-        formValues: {},
+        formValues: defaultFormValues,
         formErrors: {},
     };
 
@@ -110,7 +110,7 @@ export class GroupTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            formValues: {},
+            formValues: defaultFormValues,
             formErrors: {},
         };
 

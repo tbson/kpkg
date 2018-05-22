@@ -8,7 +8,7 @@ type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formValues?: FormValues,
+    formValues: FormValues,
     formErrors: Object,
     typeList: Array<CatType>,
 };

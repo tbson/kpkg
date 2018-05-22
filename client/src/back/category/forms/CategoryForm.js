@@ -3,6 +3,7 @@ import * as React from 'react';
 import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
 import type {FormValues, CatType} from '../_data';
+import {defaultFormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
@@ -17,15 +18,6 @@ type States = {
     formValues: FormValues,
 };
 
-const _defaultFormValues: FormValues = {
-    id: null,
-    title: null,
-    image_ratio: null,
-    width_ratio: 100,
-    type: null,
-    single: false,
-};
-
 export default class CategoryForm extends React.Component<Props, States> {
     static defaultProps = {
         submitTitle: 'Submit',
@@ -33,7 +25,7 @@ export default class CategoryForm extends React.Component<Props, States> {
     };
 
     state = {
-        formValues: _defaultFormValues,
+        formValues: defaultFormValues,
     };
 
     constructor(props: Props) {
@@ -41,7 +33,7 @@ export default class CategoryForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
     }
 
     resetForm = () => {

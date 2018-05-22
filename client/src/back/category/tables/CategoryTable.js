@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesEdit, CatType} from '../_data';
 import CategoryForm from '../forms/CategoryForm';
 import CategoryModal from '../forms/CategoryModal';
@@ -31,7 +31,7 @@ export class CategoryTable extends React.Component<Props, States> {
         dataLoaded: false,
         modal: false,
         list: [],
-        formValues: {},
+        formValues: defaultFormValues,
         formErrors: {},
     };
 
@@ -96,7 +96,7 @@ export class CategoryTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            formValues: {},
+            formValues: defaultFormValues,
             formErrors: {},
         };
         if (id) {
@@ -311,6 +311,7 @@ type RowPropTypes = {
 export class Row extends React.Component<RowPropTypes> {
     render() {
         const data = this.props.data;
+        const id = data.id ? data.id : '';
         return (
             <tr key={this.props._key}>
                 <th className="row25">
@@ -322,7 +323,7 @@ export class Row extends React.Component<RowPropTypes> {
                     />
                 </th>
                 <td className="title">
-                    <Link to={`/${data.type}s/${data.id}`}>
+                    <Link to={`/${data.type}s/${id}`}>
                         <span>{data.title}</span>
                     </Link>
                 </td>

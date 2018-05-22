@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
-import {apiUrls} from '../_data';
+import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesEdit} from '../_data';
 import CCalendarForm from '../forms/CCalendarForm';
 import CCalendarModal from '../forms/CCalendarModal';
@@ -28,7 +28,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         dataLoaded: false,
         modal: false,
         list: [],
-        formValues: {},
+        formValues: defaultFormValues,
         formErrors: {},
     };
 
@@ -75,7 +75,7 @@ export class CCalendarTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            formValues: {},
+            formValues: defaultFormValues,
             formErrors: {},
         };
 

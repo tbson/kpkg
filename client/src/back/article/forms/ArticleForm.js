@@ -5,7 +5,7 @@ import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
 import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
-import type {FormValues as TagType} from 'src/back/tag/_data';
+import type {DropdownItemType} from 'src/utils/types/CommonTypes';
 
 type Props = {
     handleSubmit: Function,
@@ -14,7 +14,7 @@ type Props = {
     formId: string,
     submitTitle: string,
     formValues: FormValues,
-    tagSource?: Array<TagType>,
+    tagSource?: Array<DropdownItemType>,
     formErrors: Object,
 };
 type States = {
