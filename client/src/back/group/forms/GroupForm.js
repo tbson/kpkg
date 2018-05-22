@@ -7,13 +7,13 @@ type Props = {
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    defaultValues: {
+    formValues: {
         id: ?number,
         name: ?string,
         permissions: ?string,
     },
     permissionList: Object,
-    errorMessages: Object,
+    formErrors: Object,
 };
 type States = {};
 
@@ -24,13 +24,13 @@ export default class GroupForm extends React.Component<Props, States> {
 
     static defaultProps = {
         submitTitle: 'Submit',
-        defaultValues: {
+        formValues: {
             id: null,
             name: null,
             permissions: null,
         },
         permissionList: {},
-        errorMessages: {},
+        formErrors: {},
     };
 
     state = {};
@@ -44,21 +44,21 @@ export default class GroupForm extends React.Component<Props, States> {
     };
 
     setClassName = (name: string) => {
-        return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
+        return this.props.formErrors[name] ? 'form-control is-invalid' : 'form-control';
     };
 
     setErrorMessage = (name: string) => {
-        return this.props.errorMessages[name];
+        return this.props.formErrors[name];
     };
 
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.defaultValues.id} name="id" type="hidden" />
+                <input defaultValue={this.props.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="name">Name</label>
                     <input
-                        defaultValue={this.props.defaultValues.name}
+                        defaultValue={this.props.formValues.name}
                         id="name"
                         name="name"
                         type="text"

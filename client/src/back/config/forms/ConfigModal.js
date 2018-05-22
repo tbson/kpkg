@@ -9,7 +9,7 @@ type PropTypes = {
     handleClose: Function,
     handleSubmit: Function,
     formValues: FormValues,
-    errorMessages: Object,
+    formErrors: Object,
 };
 export default class ConfigModal extends React.Component<PropTypes> {
     static defaultProps = {
@@ -25,7 +25,7 @@ export default class ConfigModal extends React.Component<PropTypes> {
                         formId="configForm"
                         submitTitle="Update"
                         formValues={this.props.formValues}
-                        errorMessages={this.props.errorMessages}
+                        formErrors={this.props.formErrors}
                         handleSubmit={this.props.handleSubmit}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">
                             <span className="oi oi-x" />&nbsp; Cancel

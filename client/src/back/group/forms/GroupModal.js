@@ -7,9 +7,9 @@ type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    defaultValues: Object,
+    formValues: Object,
     permissionList: Object,
-    errorMessages: Object,
+    formErrors: Object,
 };
 export default class GroupModal extends React.Component<PropTypes> {
     static defaultProps = {
@@ -24,9 +24,9 @@ export default class GroupModal extends React.Component<PropTypes> {
                     <GroupForm
                         formId="configForm"
                         submitTitle="Update"
-                        defaultValues={this.props.defaultValues}
+                        formValues={this.props.formValues}
                         permissionList={this.props.permissionList}
-                        errorMessages={this.props.errorMessages}
+                        formErrors={this.props.formErrors}
                         handleSubmit={this.props.handleSubmit}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">
                             <span className="oi oi-x" />&nbsp; Cancel

@@ -18,10 +18,10 @@ type Props = {
 };
 type States = {
     dataLoaded: boolean,
-    mainModal: boolean,
-    mainList: Array<FormValuesEdit>,
-    mainFormValues: Object,
-    mainFormErr: Object,
+    modal: boolean,
+    list: Array<FormValuesEdit>,
+    formValues: Object,
+    formErrors: Object,
 };
 
 export class ArticleTable extends React.Component<Props, States> {
@@ -44,10 +44,10 @@ export class ArticleTable extends React.Component<Props, States> {
 
     state = {
         dataLoaded: false,
-        mainModal: false,
-        mainList: [],
-        mainFormValues: {},
-        mainFormErr: {},
+        modal: false,
+        list: [],
+        formValues: {},
+        formErrors: {},
     };
 
     constructor(props: Props) {
@@ -67,7 +67,7 @@ export class ArticleTable extends React.Component<Props, States> {
         });
         this.setState({
             dataLoaded: true,
-            mainList: [...newData],
+            list: [...newData],
         });
     };
 
@@ -92,16 +92,16 @@ export class ArticleTable extends React.Component<Props, States> {
 
     handleToggleCheckAll = () => {
         var newList = [];
-        const checkedItem = this.state.mainList.filter(item => item.checked);
+        const checkedItem = this.state.list.filter(item => item.checked);
         const result = (checked: boolean) => {
-            const mainList = this.state.mainList.map(value => {
+            const list = this.state.list.map(value => {
                 return {...value, checked};
             });
-            this.setState({mainList});
+            this.setState({list});
         };
 
         if (checkedItem) {
-            if (checkedItem.length === this.state.mainList.length) {
+            if (checkedItem.length === this.state.list.length) {
                 // Checked all -> uncheck all
                 return result(false);
             }
@@ -115,9 +115,9 @@ export class ArticleTable extends React.Component<Props, States> {
 
     handleCheck = (data: Object, event: Object) => {
         data.checked = event.target.checked;
-        const index = this.state.mainList.findIndex(item => item.id === parseInt(data.id));
-        this.state.mainList[index] = {...data};
-        this.setState({mainList: this.state.mainList});
+        const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
+        this.state.list[index] = {...data};
+        this.setState({list: this.state.list});
     };
 
     handleRemove = async (id: string) => {
@@ -134,8 +134,8 @@ export class ArticleTable extends React.Component<Props, States> {
         const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
         if (result.success) {
             const listId = id.split(',').map(item => parseInt(item));
-            const mainList = this.state.mainList.filter(item => listId.indexOf(item.id) === -1);
-            this.setState({mainList});
+            const list = this.state.list.filter(item => listId.indexOf(item.id) === -1);
+            this.setState({list});
         } else {
             this.list();
         }
@@ -153,7 +153,7 @@ export class ArticleTable extends React.Component<Props, States> {
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
-        const list = this.state.mainList;
+        const list = this.state.list;
         const parent = this.props.parent;
         const parentId = this.props.parent_id;
         return (
@@ -203,7 +203,7 @@ export class ArticleTable extends React.Component<Props, States> {
                             <th className="row25">
                                 <span
                                     className="oi oi-x text-danger pointer bulk-remove-button"
-                                    onClick={() => this.handleRemove(Tools.getCheckedId(this.state.mainList))}
+                                    onClick={() => this.handleRemove(Tools.getCheckedId(this.state.list))}
                                 />
                             </th>
                             <th className="row25 right" colSpan="99">

@@ -13,10 +13,10 @@ import Tools from 'src/utils/helpers/Tools';
 type Props = {};
 type States = {
     dataLoaded: boolean,
-    mainModal: boolean,
-    mainList: Array<Object>,
-    mainFormData: Object,
-    mainFormErr: Object,
+    modal: boolean,
+    list: Array<Object>,
+    formValues: Object,
+    formErrors: Object,
 };
 
 export class PermissionTable extends React.Component<Props, States> {
@@ -36,10 +36,10 @@ export class PermissionTable extends React.Component<Props, States> {
 
     state = {
         dataLoaded: false,
-        mainModal: false,
-        mainList: [],
-        mainFormData: {},
-        mainFormErr: {},
+        modal: false,
+        list: [],
+        formValues: {},
+        formErrors: {},
     };
 
     constructor(props: Props) {
@@ -59,7 +59,7 @@ export class PermissionTable extends React.Component<Props, States> {
         });
         this.setState({
             dataLoaded: true,
-            mainList: [...newData],
+            list: [...newData],
         });
     };
 
@@ -85,16 +85,16 @@ export class PermissionTable extends React.Component<Props, States> {
 
         const state = {
             [modalName]: !this.state[modalName],
-            mainFormData: {},
-            mainFormErr: {},
+            formValues: {},
+            formErrors: {},
         };
 
         if (id) {
             switch (modalName) {
-                case 'mainModal':
+                case 'modal':
                     Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
                         if (result.success) {
-                            state.mainFormData = result.data;
+                            state.formValues = result.data;
                         }
                         this.setState(state);
                     });
@@ -118,11 +118,11 @@ export class PermissionTable extends React.Component<Props, States> {
 
         if (!error) {
             // No error -> close current modal
-            this.toggleModal('mainModal');
+            this.toggleModal('modal');
             return true;
         } else {
             // Have error -> update err object
-            this.setState({mainFormErr: error});
+            this.setState({formErrors: error});
             return false;
         }
     };
@@ -130,7 +130,7 @@ export class PermissionTable extends React.Component<Props, States> {
     handleAdd = async (params: {name: string}) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
-            this.setState({mainList: [{...result.data, checked: false}, ...this.state.mainList]});
+            this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
             return null;
         }
         return result.data;
@@ -140,10 +140,10 @@ export class PermissionTable extends React.Component<Props, States> {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
-            const index = this.state.mainList.findIndex(item => item.id === parseInt(id));
-            const {checked} = this.state.mainList[index];
-            this.state.mainList[index] = {...result.data, checked};
-            this.setState({mainList: this.state.mainList});
+            const index = this.state.list.findIndex(item => item.id === parseInt(id));
+            const {checked} = this.state.list[index];
+            this.state.list[index] = {...result.data, checked};
+            this.setState({list: this.state.list});
             return null;
         }
         return result.data;
@@ -151,16 +151,16 @@ export class PermissionTable extends React.Component<Props, States> {
 
     handleToggleCheckAll = () => {
         var newList = [];
-        const checkedItem = this.state.mainList.filter(item => item.checked);
+        const checkedItem = this.state.list.filter(item => item.checked);
         const result = (checked: boolean) => {
-            const mainList = this.state.mainList.map(value => {
+            const list = this.state.list.map(value => {
                 return {...value, checked};
             });
-            this.setState({mainList});
+            this.setState({list});
         };
 
         if (checkedItem) {
-            if (checkedItem.length === this.state.mainList.length) {
+            if (checkedItem.length === this.state.list.length) {
                 // Checked all -> uncheck all
                 return result(false);
             }
@@ -174,9 +174,9 @@ export class PermissionTable extends React.Component<Props, States> {
 
     handleCheck = (data: Object, event: Object) => {
         data.checked = event.target.checked;
-        const index = this.state.mainList.findIndex(item => item.id === parseInt(data.id));
-        this.state.mainList[index] = {...data};
-        this.setState({mainList: this.state.mainList});
+        const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
+        this.state.list[index] = {...data};
+        this.setState({list: this.state.list});
     };
 
     handleRemove = async (id: string) => {
@@ -193,8 +193,8 @@ export class PermissionTable extends React.Component<Props, States> {
         const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
         if (result.success) {
             const listId = id.split(',').map(item => parseInt(item));
-            const mainList = this.state.mainList.filter(item => listId.indexOf(item.id) === -1);
-            this.setState({mainList});
+            const list = this.state.list.filter(item => listId.indexOf(item.id) === -1);
+            this.setState({list});
         } else {
             this.list();
         }
@@ -212,7 +212,7 @@ export class PermissionTable extends React.Component<Props, States> {
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
-        const list = this.state.mainList;
+        const list = this.state.list;
         return (
             <div>
                 <SearchInput onSearch={this.handleSearch} />
@@ -234,7 +234,7 @@ export class PermissionTable extends React.Component<Props, States> {
                                 {/*
                                 <button
                                     className="btn btn-primary btn-sm btn-block add-button"
-                                    onClick={() => this.toggleModal('mainModal')}>
+                                    onClick={() => this.toggleModal('modal')}>
                                     <span className="oi oi-plus" />&nbsp; Add
                                 </button>
                                 */}
@@ -261,7 +261,7 @@ export class PermissionTable extends React.Component<Props, States> {
                             <th className="row25">
                                 <span
                                     className="oi oi-x text-danger pointer bulk-remove-button"
-                                    onClick={() => this.handleRemove(Tools.getCheckedId(this.state.mainList))}
+                                    onClick={() => this.handleRemove(Tools.getCheckedId(this.state.list))}
                                 />
                             </th>
                             <th className="row25 right" colSpan="99">
@@ -276,10 +276,10 @@ export class PermissionTable extends React.Component<Props, States> {
                     */}
                 </table>
                 <PermissionModal
-                    open={this.state.mainModal}
-                    defaultValues={this.state.mainFormData}
-                    errorMessages={this.state.mainFormErr}
-                    handleClose={() => this.setState({mainModal: false})}
+                    open={this.state.modal}
+                    formValues={this.state.formValues}
+                    formErrors={this.state.formErrors}
+                    handleClose={() => this.setState({modal: false})}
                     handleSubmit={this.handleSubmit}
                 />
             </div>
@@ -323,7 +323,7 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="right">
                     <span
                         className="editBtn oi oi-pencil text-info pointer"
-                        onClick={() => this.props.toggleModal('mainModal', data.id)}
+                        onClick={() => this.props.toggleModal('modal', data.id)}
                     />
                     {/*
                     <span>&nbsp;&nbsp;&nbsp;</span>

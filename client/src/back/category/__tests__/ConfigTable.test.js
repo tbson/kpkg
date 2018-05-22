@@ -65,7 +65,7 @@ describe('CategoryTable Row component', () => {
             .first()
             .simulate('click');
         expect(props.toggleModal.mock.calls.length).toEqual(1);
-        expect(props.toggleModal.mock.calls[0][0]).toEqual('mainModal');
+        expect(props.toggleModal.mock.calls[0][0]).toEqual('modal');
         expect(props.toggleModal.mock.calls[0][1]).toEqual(1);
     });
 
@@ -181,7 +181,7 @@ describe('CategoryTable component', () => {
                 .simulate('click');
 
             expect(toggleModalSpy).toHaveBeenCalled();
-            expect(toggleModalSpy.mock.calls[0][0]).toEqual('mainModal');
+            expect(toggleModalSpy.mock.calls[0][0]).toEqual('modal');
             done();
         }, 100);
     });
@@ -377,11 +377,11 @@ describe('CategoryTable component', () => {
                 expect(result).toEqual({});
 
                 // State defined
-                modalName = 'mainModal';
+                modalName = 'modal';
                 result = wrapper.instance().toggleModal(modalName);
                 expect(result).toEqual({
                     id: null,
-                    mainModal: true,
+                    modal: true,
                 });
 
                 // No id -> add new or close -> reset obj
@@ -426,12 +426,12 @@ describe('CategoryTable component', () => {
                 const wrapper = shallow(<CategoryTable {...props} />);
 
                 // State defined
-                const modalName = 'mainModal';
+                const modalName = 'modal';
                 const id = 1;
                 const result = wrapper.instance().toggleModal(modalName, 1);
                 expect(result).toEqual({
                     id: 1,
-                    mainModal: true,
+                    modal: true,
                 });
                 setTimeout(() => {
                     // Has id -> set obj

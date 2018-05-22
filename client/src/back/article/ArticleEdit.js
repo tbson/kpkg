@@ -20,8 +20,8 @@ type Props = {
 };
 type States = {
     dataLoaded: boolean,
-    mainFormValues: Object,
-    mainFormErr: Object,
+    formValues: Object,
+    formErrors: Object,
     uuid: string,
     categoryId: ?number,
     tagSource: Array<Object>,
@@ -42,8 +42,8 @@ class ArticleEdit extends React.Component<Props, States> {
 
     state = {
         dataLoaded: false,
-        mainFormValues: {},
-        mainFormErr: {},
+        formValues: {},
+        formErrors: {},
         uuid: Tools.uuid4(),
         categoryId: null,
         tagSource: [],
@@ -74,7 +74,7 @@ class ArticleEdit extends React.Component<Props, States> {
             delete result.data.tag_source;
             if (result.success) {
                 this.setState({
-                    mainFormValues: result.data,
+                    formValues: result.data,
                     uuid: result.data.uuid,
                     dataLoaded: true,
                 });
@@ -117,7 +117,7 @@ class ArticleEdit extends React.Component<Props, States> {
             return true;
         } else {
             // Have error -> update err object
-            this.setState({mainFormErr: result.data ? result.data : result});
+            this.setState({formErrors: result.data ? result.data : result});
             return false;
         }
     };
@@ -152,9 +152,9 @@ class ArticleEdit extends React.Component<Props, States> {
                     parent_uuid={this.state.uuid}
                     formId="articleForm"
                     submitTitle="Update"
-                    formValues={this.state.mainFormValues}
+                    formValues={this.state.formValues}
                     tagSource={this.state.tagSource}
-                    errorMessages={this.state.mainFormErr}
+                    formErrors={this.state.formErrors}
                     handleSubmit={this.handleSubmit}>
                     <button
                         type="button"

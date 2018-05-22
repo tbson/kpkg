@@ -7,8 +7,8 @@ type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formData: Object,
-    errorMessages: Object,
+    formValues: Object,
+    formErrors: Object,
 };
 export default class CCalendarModal extends React.Component<PropTypes> {
     static defaultProps = {
@@ -23,8 +23,8 @@ export default class CCalendarModal extends React.Component<PropTypes> {
                     <CCalendarForm
                         formId="ccalendarForm"
                         submitTitle="Update"
-                        formData={this.props.formData}
-                        errorMessages={this.props.errorMessages}
+                        formValues={this.props.formValues}
+                        formErrors={this.props.formErrors}
                         handleSubmit={this.props.handleSubmit}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">
                             <span className="oi oi-x" />&nbsp; Cancel

@@ -10,7 +10,7 @@ type Props = {
     formId: string,
     submitTitle: string,
     formValues: FormValues,
-    errorMessages: Object,
+    formErrors: Object,
 };
 type States = {
     formValues: FormValues,
@@ -46,11 +46,11 @@ export default class AttachForm extends React.Component<Props, States> {
     };
 
     setClassName = (name: string) => {
-        return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
+        return this.props.formErrors[name] ? 'form-control is-invalid' : 'form-control';
     };
 
     setErrorMessage = (name: string) => {
-        return this.props.errorMessages[name];
+        return this.props.formErrors[name];
     };
 
     renderPreview = () => {

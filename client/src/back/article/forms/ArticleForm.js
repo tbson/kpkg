@@ -13,7 +13,7 @@ type Props = {
     submitTitle: string,
     formValues: FormValues,
     tagSource?: Array<Object>,
-    errorMessages: Object,
+    formErrors: Object,
 };
 type States = {
     formValues: FormValues,
@@ -61,11 +61,11 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     setClassName = (name: string) => {
-        return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
+        return this.props.formErrors[name] ? 'form-control is-invalid' : 'form-control';
     };
 
     setErrorMessage = (name: string) => {
-        const result = this.props.errorMessages[name];
+        const result = this.props.formErrors[name];
         return result;
     };
 

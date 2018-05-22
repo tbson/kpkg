@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
 
-type formData = {
+type formValues = {
     id: ?number,
     title: ?string,
 };
@@ -11,11 +11,11 @@ type Props = {
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formData: formData,
-    errorMessages: Object,
+    formValues: formValues,
+    formErrors: Object,
 };
 type States = {
-    formData: formData,
+    formValues: formValues,
 };
 
 export default class TagForm extends React.Component<Props, States> {
@@ -28,7 +28,7 @@ export default class TagForm extends React.Component<Props, States> {
     };
 
     state = {
-        formData: this.props.formData,
+        formValues: this.props.formValues,
     };
 
     constructor(props: Props) {
@@ -36,11 +36,11 @@ export default class TagForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const defaultFormData: formData = {
+        const defaultFormData: formValues = {
             id: null,
             title: null,
         };
-        return {formData: !Tools.emptyObj(nextProps.formData) ? nextProps.formData : defaultFormData};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormData};
     }
 
     resetForm = () => {
@@ -49,21 +49,21 @@ export default class TagForm extends React.Component<Props, States> {
     };
 
     setClassName = (name: string) => {
-        return this.props.errorMessages[name] ? 'form-control is-invalid' : 'form-control';
+        return this.props.formErrors[name] ? 'form-control is-invalid' : 'form-control';
     };
 
     setErrorMessage = (name: string) => {
-        return this.props.errorMessages[name];
+        return this.props.formErrors[name];
     };
 
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formData.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
-                        defaultValue={this.state.formData.title}
+                        defaultValue={this.state.formValues.title}
                         id="title"
                         name="title"
                         type="text"

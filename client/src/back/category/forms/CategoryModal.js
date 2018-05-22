@@ -2,14 +2,15 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import CategoryForm from './CategoryForm';
+import type {FormValues, CatType} from '../_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    defaultValues?: Object,
-    errorMessages: Object,
-    typeList: Array<Object>,
+    formValues?: FormValues,
+    formErrors: Object,
+    typeList: Array<CatType>,
 };
 export default class CategoryModal extends React.Component<PropTypes> {
     static defaultProps = {
@@ -24,8 +25,8 @@ export default class CategoryModal extends React.Component<PropTypes> {
                     <CategoryForm
                         formId="categoryForm"
                         submitTitle="Update"
-                        defaultValues={this.props.defaultValues}
-                        errorMessages={this.props.errorMessages}
+                        formValues={this.props.formValues}
+                        formErrors={this.props.formErrors}
                         handleSubmit={this.props.handleSubmit}
                         typeList={this.props.typeList}>
                         <button type="button" onClick={this.props.handleClose} className="btn btn-warning">
