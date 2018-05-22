@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {FormValues, FormValuesEdit} from '../_data';
 import CCalendarForm from '../forms/CCalendarForm';
 import CCalendarModal from '../forms/CCalendarModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -14,23 +15,12 @@ type Props = {};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<Object>,
-    formValues: Object,
+    list: Array<FormValuesEdit>,
+    formValues: FormValues,
     formErrors: Object,
 };
 
 export class CCalendarTable extends React.Component<Props, States> {
-    list: Function;
-    setInitData: Function;
-    toggleModal: Function;
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    handleToggleCheckAll: Function;
-    handleCheck: Function;
-    handleRemove: Function;
-    handleSearch: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -127,7 +117,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {uid: string, value: string}) => {
+    handleAdd = async (params: FormValues) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
@@ -136,7 +126,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {id: number, uid: string, value: string, checked: boolean}) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -172,7 +162,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: Object, event: Object) => {
+    handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -284,16 +274,8 @@ export class CCalendarTable extends React.Component<Props, States> {
 }
 export default withRouter(CCalendarTable);
 
-type DataType = {
-    id: number,
-    title: string,
-    start: string,
-    end: string,
-    url: string,
-    checked: ?boolean,
-};
 type RowPropTypes = {
-    data: DataType,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

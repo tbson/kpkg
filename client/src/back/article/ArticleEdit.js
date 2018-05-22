@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import {apiUrls} from './_data';
 import type {FormValues, FormValuesEdit} from './_data';
+import type {FormValues as TagType} from 'src/back/tag/_data';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import AttachTable from 'src/back/attach/tables/AttachTable';
@@ -20,21 +21,14 @@ type Props = {
 };
 type States = {
     dataLoaded: boolean,
-    formValues: Object,
+    formValues: FormValues,
     formErrors: Object,
     uuid: string,
     categoryId: ?number,
-    tagSource: Array<Object>,
+    tagSource: Array<TagType>,
 };
 
 class ArticleEdit extends React.Component<Props, States> {
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    renderRelatedArticle: Function;
-    getItem: Function;
-    getTags: Function;
-
     static defaultProps = {
         parent: 'category',
         category_id: null,
@@ -153,8 +147,8 @@ class ArticleEdit extends React.Component<Props, States> {
                     formId="articleForm"
                     submitTitle="Update"
                     formValues={this.state.formValues}
-                    tagSource={this.state.tagSource}
                     formErrors={this.state.formErrors}
+                    tagSource={this.state.tagSource}
                     handleSubmit={this.handleSubmit}>
                     <button
                         type="button"

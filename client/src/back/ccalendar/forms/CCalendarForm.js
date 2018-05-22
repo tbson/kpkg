@@ -1,31 +1,29 @@
 // @flow
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
+import type {FormValues} from '../_data';
 
-type formValues = {
-    id: ?number,
-    title: ?string,
-    start: ?string,
-    end: ?string,
-    url: ?string,
-};
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formValues: formValues,
+    formValues: FormValues,
     formErrors: Object,
 };
 type States = {
-    formValues: formValues,
+    formValues: FormValues,
+};
+
+const _defaultFormValues: FormValues = {
+    id: null,
+    title: null,
+    start: new Date().toISOString().slice(0, 10),
+    end: new Date().toISOString().slice(0, 10),
+    url: null,
 };
 
 export default class CCalendarForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
-
     static defaultProps = {
         submitTitle: 'Submit',
     };
@@ -39,15 +37,7 @@ export default class CCalendarForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const defaultFormData: formValues = {
-            id: null,
-            title: null,
-            start: new Date().toISOString().slice(0, 10),
-            end: new Date().toISOString().slice(0, 10),
-            url: null,
-        };
-        console.log(defaultFormData);
-        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormData};
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {

@@ -1,40 +1,38 @@
 // @flow
 import * as React from 'react';
+import Tools from 'src/utils/helpers/Tools';
+import type {FormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formValues: {
-        id: ?number,
-        content_type: ?string,
-        name: ?string,
-        codename: ?string,
-    },
+    formValues: FormValues,
     formErrors: Object,
 };
-type States = {};
+
+type States = {
+    formValues: FormValues,
+};
+
+const _defaultFormValues: FormValues = {};
 
 export default class PermissionForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
-
     static defaultProps = {
         submitTitle: 'Submit',
-        formValues: {
-            id: null,
-            content_type: null,
-            name: null,
-            codename: null,
-        },
-        formErrors: {},
     };
 
-    state = {};
+    state = {
+        formValues: _defaultFormValues,
+    };
+
     constructor(props: Props) {
         super(props);
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
@@ -53,14 +51,14 @@ export default class PermissionForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.formValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <p>
-                    Content type: <strong>{this.props.formValues.content_type}</strong>
+                    Content type: <strong>{this.state.formValues.content_type}</strong>
                 </p>
                 <div className="form-group">
                     <label htmlFor="name">Name</label>
                     <input
-                        defaultValue={this.props.formValues.name}
+                        defaultValue={this.state.formValues.name}
                         id="name"
                         name="name"
                         type="text"
@@ -75,7 +73,7 @@ export default class PermissionForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="codename">Code name</label>
                     <input
-                        defaultValue={this.props.formValues.codename}
+                        defaultValue={this.state.formValues.codename}
                         id="codename"
                         name="codename"
                         type="text"

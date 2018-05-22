@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {FormValues, FormValuesEdit} from '../_data';
 import StaffForm from '../forms/StaffForm';
 import StaffModal from '../forms/StaffModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -16,23 +17,12 @@ type Props = {
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<Object>,
-    formValues: Object,
+    list: Array<FormValuesEdit>,
+    formValues: FormValues,
     formErrors: Object,
 };
 
 export class StaffTable extends React.Component<Props, States> {
-    list: Function;
-    setInitData: Function;
-    toggleModal: Function;
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    handleToggleCheckAll: Function;
-    handleCheck: Function;
-    handleRemove: Function;
-    handleSearch: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -132,14 +122,7 @@ export class StaffTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {
-        title: string,
-        fullname: string,
-        email: string,
-        description: ?string,
-        image: Object,
-        order: number,
-    }) => {
+    handleAdd = async (params: FormValues) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
@@ -148,16 +131,7 @@ export class StaffTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {
-        id: number,
-        title: string,
-        fullname: string,
-        email: string,
-        description: ?string,
-        image: Object,
-        order: number,
-        checked: boolean,
-    }) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -193,7 +167,7 @@ export class StaffTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: Object, event: Object) => {
+    handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};

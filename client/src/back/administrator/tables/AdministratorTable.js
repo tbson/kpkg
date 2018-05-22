@@ -22,17 +22,6 @@ type States = {
 };
 
 export class AdministratorTable extends React.Component<Props, States> {
-    list: Function;
-    setInitData: Function;
-    toggleModal: Function;
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    handleToggleCheckAll: Function;
-    handleCheck: Function;
-    handleRemove: Function;
-    handleSearch: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -187,7 +176,7 @@ export class AdministratorTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: Object, event: Object) => {
+    handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};

@@ -4,6 +4,8 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {FormValues, FormValuesEdit} from '../_data';
+import type {FormValues as PermissionType} from 'src/back/permission/_data';
 import GroupForm from '../forms/GroupForm';
 import GroupModal from '../forms/GroupModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -14,25 +16,13 @@ type Props = {};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<Object>,
-    permissionList: Object,
-    formValues: Object,
+    list: Array<FormValues>,
+    permissionList: {[string]: PermissionType},
+    formValues: FormValues,
     formErrors: Object,
 };
 
 export class GroupTable extends React.Component<Props, States> {
-    list: Function;
-    setInitData: Function;
-    toggleModal: Function;
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    handleToggleCheckAll: Function;
-    handleCheck: Function;
-    handleRemove: Function;
-    handleSearch: Function;
-    initPermission: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -168,7 +158,7 @@ export class GroupTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {name: string}) => {
+    handleAdd = async (params: FormValues) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
@@ -177,7 +167,7 @@ export class GroupTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {id: number, name: string, checked: boolean}) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -213,7 +203,7 @@ export class GroupTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: Object, event: Object) => {
+    handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -323,13 +313,8 @@ export class GroupTable extends React.Component<Props, States> {
 }
 export default withRouter(GroupTable);
 
-type DataType = {
-    id: number,
-    name: string,
-    checked: ?boolean,
-};
 type RowPropTypes = {
-    data: DataType,
+    data: FormValuesEdit,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

@@ -2,13 +2,15 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import GroupForm from './GroupForm';
+import type {FormValues} from '../_data';
+import type {FormValues as PermissionType} from 'src/back/permission/_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formValues: Object,
-    permissionList: Object,
+    formValues: FormValues,
+    permissionList: {[string]: PermissionType},
     formErrors: Object,
 };
 export default class GroupModal extends React.Component<PropTypes> {

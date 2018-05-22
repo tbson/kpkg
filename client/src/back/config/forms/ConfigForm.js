@@ -15,13 +15,9 @@ type States = {
     formValues: FormValues,
 };
 
-const _defaultFormValues: FormValues = {}
+const _defaultFormValues: FormValues = {};
 
 export default class ConfigForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
-
     static defaultProps = {
         submitTitle: 'Submit',
     };

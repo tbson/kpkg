@@ -4,6 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls} from '../_data';
+import type {FormValues, FormValuesEdit, RowValues} from '../_data';
 import PermissionForm from '../forms/PermissionForm';
 import PermissionModal from '../forms/PermissionModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -14,23 +15,12 @@ type Props = {};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<Object>,
-    formValues: Object,
+    list: Array<FormValuesEdit>,
+    formValues: FormValues,
     formErrors: Object,
 };
 
 export class PermissionTable extends React.Component<Props, States> {
-    list: Function;
-    setInitData: Function;
-    toggleModal: Function;
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    handleToggleCheckAll: Function;
-    handleCheck: Function;
-    handleRemove: Function;
-    handleSearch: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -127,7 +117,7 @@ export class PermissionTable extends React.Component<Props, States> {
         }
     };
 
-    handleAdd = async (params: {name: string}) => {
+    handleAdd = async (params: FormValues) => {
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
             this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
@@ -136,7 +126,7 @@ export class PermissionTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: {id: number, name: string, checked: boolean}) => {
+    handleEdit = async (params: FormValuesEdit) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -172,7 +162,7 @@ export class PermissionTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: Object, event: Object) => {
+    handleCheck = (data: FormValuesEdit, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -219,26 +209,10 @@ export class PermissionTable extends React.Component<Props, States> {
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
-                            {/*
-                            <th className="row25">
-                                <span
-                                    className="oi oi-check text-info pointer check-all-button"
-                                    onClick={() => this.handleToggleCheckAll()}
-                                />
-                            </th>
-                            */}
                             <th scope="col">Content type</th>
                             <th scope="col">Code name</th>
                             <th scope="col">Name</th>
-                            <th scope="col" style={{padding: 8}} className="row80">
-                                {/*
-                                <button
-                                    className="btn btn-primary btn-sm btn-block add-button"
-                                    onClick={() => this.toggleModal('modal')}>
-                                    <span className="oi oi-plus" />&nbsp; Add
-                                </button>
-                                */}
-                            </th>
+                            <th scope="col" style={{padding: 8}} className="row80"></th>
                         </tr>
                     </thead>
 
@@ -255,25 +229,6 @@ export class PermissionTable extends React.Component<Props, States> {
                             />
                         ))}
                     </tbody>
-                    {/*
-                    <tfoot className="thead-light">
-                        <tr>
-                            <th className="row25">
-                                <span
-                                    className="oi oi-x text-danger pointer bulk-remove-button"
-                                    onClick={() => this.handleRemove(Tools.getCheckedId(this.state.list))}
-                                />
-                            </th>
-                            <th className="row25 right" colSpan="99">
-                                <Pagination
-                                    next={this.nextUrl}
-                                    prev={this.prevUrl}
-                                    onNavigate={url => this.list({}, url)}
-                                />
-                            </th>
-                        </tr>
-                    </tfoot>
-                    */}
                 </table>
                 <PermissionModal
                     open={this.state.modal}
@@ -288,15 +243,9 @@ export class PermissionTable extends React.Component<Props, States> {
 }
 export default withRouter(PermissionTable);
 
-type DataType = {
-    id: number,
-    content_type: string,
-    codename: string,
-    name: string,
-    checked: ?boolean,
-};
+
 type RowPropTypes = {
-    data: DataType,
+    data: RowValues,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,
@@ -307,16 +256,6 @@ export class Row extends React.Component<RowPropTypes> {
         const data = this.props.data;
         return (
             <tr key={this.props._key}>
-                {/*
-                <th className="row25">
-                    <input
-                        className="check"
-                        type="checkbox"
-                        checked={data.checked}
-                        onChange={event => this.props.onCheck(data, event)}
-                    />
-                </th>
-                */}
                 <td className="name">{data.content_type}</td>
                 <td className="name">{data.codename}</td>
                 <td className="name">{data.name}</td>
@@ -325,13 +264,6 @@ export class Row extends React.Component<RowPropTypes> {
                         className="editBtn oi oi-pencil text-info pointer"
                         onClick={() => this.props.toggleModal('modal', data.id)}
                     />
-                    {/*
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <span
-                        className="removeBtn oi oi-x text-danger pointer"
-                        onClick={() => this.props.handleRemove(String(data.id))}
-                    />
-                    */}
                 </td>
             </tr>
         );

@@ -1,41 +1,41 @@
 // @flow
 import * as React from 'react';
 import PermissionsInput from './PermissionsInput';
+import Tools from 'src/utils/helpers/Tools';
+import type {FormValues} from '../_data';
+import type {FormValues as PermissionType} from 'src/back/permission/_data';
 
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formValues: {
-        id: ?number,
-        name: ?string,
-        permissions: ?string,
-    },
-    permissionList: Object,
+    formValues: FormValues,
+    permissionList: {[string]: PermissionType},
     formErrors: Object,
 };
-type States = {};
+type States = {
+    formValues: FormValues,
+};
+
+const _defaultFormValues: FormValues = {};
 
 export default class GroupForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
 
     static defaultProps = {
         submitTitle: 'Submit',
-        formValues: {
-            id: null,
-            name: null,
-            permissions: null,
-        },
-        permissionList: {},
-        formErrors: {},
     };
 
-    state = {};
+    state = {
+        formValues: _defaultFormValues,
+    };
+
     constructor(props: Props) {
         super(props);
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
@@ -54,11 +54,11 @@ export default class GroupForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.formValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="name">Name</label>
                     <input
-                        defaultValue={this.props.formValues.name}
+                        defaultValue={this.state.formValues.name}
                         id="name"
                         name="name"
                         type="text"

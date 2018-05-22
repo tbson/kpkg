@@ -21,7 +21,6 @@ type States = {
 };
 
 export class ConfigTable extends React.Component<Props, States> {
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -41,7 +40,7 @@ export class ConfigTable extends React.Component<Props, States> {
         this.list();
     }
 
-    setInitData(initData: Object) {
+    setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
         const newData = initData.items.map(item => {
@@ -52,7 +51,7 @@ export class ConfigTable extends React.Component<Props, States> {
             dataLoaded: true,
             list: [...newData],
         });
-    }
+    };
 
     list = async (outerParams: Object = {}, url: ?string = null): Object => {
         let params = {};

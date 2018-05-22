@@ -5,15 +5,24 @@ const rawApiUrls = [
     {
         controller: 'group',
         endpoints: {
-            crud: ''
-        }
+            crud: '',
+        },
     },
     {
         controller: 'permission',
         endpoints: {
-            crud: ''
-        }
-    }
+            crud: '',
+        },
+    },
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
+
+export type FormValues = {
+    id?: number,
+    name: string,
+};
+
+export type FormValuesEdit = FormValues & {
+    checked: boolean,
+};

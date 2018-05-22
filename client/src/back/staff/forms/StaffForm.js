@@ -1,23 +1,22 @@
 // @flow
 import * as React from 'react';
+import Tools from 'src/utils/helpers/Tools';
+import type {FormValues} from '../_data';
 
 type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
     submitTitle: string,
-    formValues: {
-        id: ?number,
-        title: ?string,
-        fullname: ?string,
-        email: ?string,
-        description: ?string,
-        image: ?string,
-        order: ?number,
-    },
+    formValues: FormValues,
     formErrors: Object,
 };
-type States = {};
+
+type States = {
+    formValues: FormValues,
+};
+
+const _defaultFormValues: FormValues = {};
 
 export default class StaffForm extends React.Component<Props, States> {
     resetForm: Function;
@@ -27,21 +26,18 @@ export default class StaffForm extends React.Component<Props, States> {
 
     static defaultProps = {
         submitTitle: 'Submit',
-        formValues: {
-            id: null,
-            title: null,
-            fullname: null,
-            email: null,
-            description: null,
-            image: null,
-            order: null,
-        },
-        formErrors: {},
     };
 
-    state = {};
+    state = {
+        formValues: _defaultFormValues,
+    };
+
     constructor(props: Props) {
         super(props);
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : _defaultFormValues};
     }
 
     resetForm = () => {
@@ -58,11 +54,11 @@ export default class StaffForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        if (!this.props.formValues.image) return null;
+        if (!this.state.formValues.image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
-                    <img src={this.props.formValues.image} width="100%" />
+                    <img src={this.state.formValues.image} width="100%" />
                 </div>
             </div>
         );
@@ -71,13 +67,13 @@ export default class StaffForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.props.formValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="row">
                     <div className="col-md-3">
                         <div className="form-group">
                             <label htmlFor="title">Title</label>
                             <input
-                                defaultValue={this.props.formValues.title}
+                                defaultValue={this.state.formValues.title}
                                 id="title"
                                 name="title"
                                 type="text"
@@ -93,7 +89,7 @@ export default class StaffForm extends React.Component<Props, States> {
                         <div className="form-group">
                             <label htmlFor="fullname">Fullname</label>
                             <input
-                                defaultValue={this.props.formValues.fullname}
+                                defaultValue={this.state.formValues.fullname}
                                 id="fullname"
                                 name="fullname"
                                 type="text"
@@ -109,7 +105,7 @@ export default class StaffForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <input
-                        defaultValue={this.props.formValues.email}
+                        defaultValue={this.state.formValues.email}
                         id="email"
                         name="email"
                         type="email"
@@ -123,7 +119,7 @@ export default class StaffForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
                     <textarea
-                        defaultValue={this.props.formValues.description}
+                        defaultValue={this.state.formValues.description}
                         id="description"
                         name="description"
                         type="text"
@@ -135,7 +131,7 @@ export default class StaffForm extends React.Component<Props, States> {
 
                 <div className="form-group">
                     {this.renderPreview()}
-                    <label htmlFor="image" style={{display: this.props.formValues.image ? 'none' : 'block'}}>
+                    <label htmlFor="image" style={{display: this.state.formValues.image ? 'none' : 'block'}}>
                         Image
                     </label>
                     <input
@@ -151,7 +147,7 @@ export default class StaffForm extends React.Component<Props, States> {
                 <div className="form-group">
                     <label htmlFor="order">Order</label>
                     <input
-                        defaultValue={this.props.formValues.order}
+                        defaultValue={this.state.formValues.order}
                         id="order"
                         name="order"
                         type="number"

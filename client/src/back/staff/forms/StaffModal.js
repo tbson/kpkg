@@ -2,12 +2,13 @@
 import * as React from 'react';
 import CustomModal from 'src/utils/components/CustomModal';
 import StaffForm from './StaffForm';
+import type {FormValues} from '../_data';
 
 type PropTypes = {
     open: boolean,
     handleClose: Function,
     handleSubmit: Function,
-    formValues: Object,
+    formValues: FormValues,
     formErrors: Object,
 };
 export default class StaffModal extends React.Component<PropTypes> {

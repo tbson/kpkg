@@ -4,6 +4,7 @@ import RichTextInput from 'src/utils/components/RichTextInput';
 import SelectInput from 'src/utils/components/SelectInput';
 import Tools from 'src/utils/helpers/Tools';
 import type {FormValues} from '../_data';
+import type {FormValues as TagType} from 'src/back/tag/_data';
 
 type Props = {
     handleSubmit: Function,
@@ -12,7 +13,7 @@ type Props = {
     formId: string,
     submitTitle: string,
     formValues: FormValues,
-    tagSource?: Array<Object>,
+    tagSource?: Array<TagType>,
     formErrors: Object,
 };
 type States = {
