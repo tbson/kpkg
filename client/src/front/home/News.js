@@ -8,16 +8,16 @@ import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
 import {apiUrls} from '../common/_data';
 
+import type {FormValues as ArticleType} from 'src/back/article/_data';
+
 
 type Props = {};
 type State = {
-    homeNews: Array<Object>,
+    homeNews: Array<ArticleType>,
     dataLoaded: boolean
 };
 
 export default class News extends React.Component<Props, State> {
-    getNews: Function;
-
     static defaultProps = {};
     state: State = {
         homeNews: [],
@@ -25,7 +25,6 @@ export default class News extends React.Component<Props, State> {
     };
     constructor(props: Props) {
         super(props);
-        this.getNews = this.getNews.bind(this);
     }
 
     componentDidMount() {
@@ -40,7 +39,7 @@ export default class News extends React.Component<Props, State> {
         this.getNews();
     }
 
-    async getNews() {
+    getNews = async () => {
         const result = await Tools.apiCall(apiUrls.homeArticle + '?limit=4', 'GET', {}, false, false);
         if (result.success) {
             this.setState({
@@ -51,7 +50,8 @@ export default class News extends React.Component<Props, State> {
         }
     }
 
-    renderFirstItem (item: Object) {
+    renderFirstItem = (item: ArticleType) => {
+        if (!item.id || !item.uid) return null;
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
@@ -70,7 +70,8 @@ export default class News extends React.Component<Props, State> {
         );
     }
 
-    renderOtherItem (item: Object) {
+    renderOtherItem = (item: ArticleType) => {
+        if (!item.id || !item.uid) return null;
         return (
             <LazyLoad height={200}  key={item.id}>
                 <div className="content-container">

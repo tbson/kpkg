@@ -1,3 +1,5 @@
+/* @flow */
+
 import Tools from 'src/utils/helpers/Tools';
 import {APP} from 'src/constants';
 

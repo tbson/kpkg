@@ -1,26 +1,27 @@
 /* @flow */
 import Tools from 'src/utils/helpers/Tools';
 import {FIELD_TYPE, APP} from 'src/constants';
+import type {FormValues as AttachType} from 'src/back/attach/_data';
 
 const rawApiUrls = [
     {
         controller: 'article',
         endpoints: {
-            crud: ''
-        }
+            crud: '',
+        },
     },
     {
         controller: 'category',
         endpoints: {
-            crud: ''
-        }
+            crud: '',
+        },
     },
     {
         controller: 'tag',
         endpoints: {
-            crud: ''
-        }
-    }
+            crud: '',
+        },
+    },
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
@@ -29,6 +30,7 @@ export type FormValues = {
     id: ?number,
     category_title?: ?string,
     uuid: ?string,
+    uid: ?string,
     title: string,
     description: string,
     content: string,
@@ -37,11 +39,14 @@ export type FormValues = {
     pin: boolean,
     order: ?number,
     tags?: ?string,
+    created_at?: ??Date,
+    attaches?: Array<AttachType>
 };
 
 export const defaultFormValues: FormValues = {
     id: null,
     uuid: '',
+    uid: '',
     title: '',
     description: '',
     content: '',

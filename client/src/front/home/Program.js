@@ -6,26 +6,23 @@ import Carousel from 'src/utils/components/Carousel';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
 import {apiUrls} from '../common/_data';
+import type {FormValues as ArticleType} from 'src/back/article/_data';
+import {defaultFormValues as defaultProgram} from 'src/back/article/_data';
 
 type Props = {};
 type State = {
-    homeProgram: Object,
+    homeProgram: ArticleType,
     dataLoaded: boolean,
 };
 
 export default class Program extends React.Component<Props, State> {
-    getArticleFromCategoryUid: Function;
-    renderBanner: Function;
-
     static defaultProps = {};
     state: State = {
-        homeProgram: {},
+        homeProgram: defaultProgram,
         dataLoaded: false,
     };
     constructor(props: Props) {
         super(props);
-        this.getArticleFromCategoryUid = this.getArticleFromCategoryUid.bind(this);
-        this.renderBanner = this.renderBanner.bind(this);
     }
 
     componentDidMount() {
@@ -40,7 +37,7 @@ export default class Program extends React.Component<Props, State> {
         this.getArticleFromCategoryUid('chuong-trinh-tham-quan');
     }
 
-    async getArticleFromCategoryUid(uid: string) {
+    getArticleFromCategoryUid = async (uid: string) => {
         const params = {
             category__uid: uid,
         };
@@ -52,14 +49,16 @@ export default class Program extends React.Component<Props, State> {
             });
             Tools.setGlobalState('home_program', result.data.items[0]);
         }
-    }
+    };
 
-    renderBanner(article: Object) {
-        const {attaches} = article;
+    renderBanner = (article: ArticleType) => {
+        let {attaches} = article;
+        if (!attaches) attaches = [];
         if (article.use_slide && attaches.length) {
             return (
                 <div>
-                    <Carousel listItem={attaches} imageKey="attachment" /><br />
+                    <Carousel listItem={attaches} imageKey="attachment" />
+                    <br />
                 </div>
             );
         } else {
@@ -75,22 +74,23 @@ export default class Program extends React.Component<Props, State> {
                 </div>
             );
         }
-    }
+    };
 
     render() {
+        if (!this.state.dataLoaded) return null;
+
         const item = this.state.homeProgram;
-        if (!item.image) return null;
+        if (!item.image || !item.id || !item.uid) return null;
+        const detailUrl = ['bai-viet', item.id, item.uid].join('/');
         return (
             <div className="content-container">
                 <div className="row">
-                    <div className="col-lg-6">
-                        {this.renderBanner(item)}
-                    </div>
+                    <div className="col-lg-6">{this.renderBanner(item)}</div>
                     <div className="col-lg-6">
                         <h1>{item.title}</h1>
                         <div dangerouslySetInnerHTML={{__html: item.description}} />
                         <div className="center">
-                            <Link to={`/bai-viet/${item.id}/${item.uid}`} className="btn btn-primary">
+                            <Link to={detailUrl} className="btn btn-primary">
                                 <em>Xem chi tiết</em>
                             </Link>
                         </div>
