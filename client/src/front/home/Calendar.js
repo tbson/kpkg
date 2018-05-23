@@ -7,6 +7,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 // $FlowFixMe: do not complain about importing node_modules
 import BigCalendar from 'react-big-calendar';
 // $FlowFixMe: do not complain about importing node_modules
+import LazyLoad from 'react-lazyload';
+// $FlowFixMe: do not complain about importing node_modules
 import moment from 'moment';
 import Carousel from 'src/utils/components/Carousel';
 import Tools from 'src/utils/helpers/Tools';
@@ -71,8 +73,11 @@ export default class Calendar extends React.Component<Props, State> {
 
     getOtherEvents = async () => {
         const result = await Tools.apiCall(
-            apiUrls.homeArticle + 'category__uid=su-kien-thien-van?limit=5', 'GET',
-            {}, false, false
+            apiUrls.homeArticle + '?category__uid=su-kien-thien-van&limit=5',
+            'GET',
+            {},
+            false,
+            false,
         );
         if (result.success) {
             this.setState({
@@ -81,7 +86,7 @@ export default class Calendar extends React.Component<Props, State> {
             });
             Tools.setGlobalState('other_events', result.data.items);
         }
-    }
+    };
 
     selectDateHandle = (event: Object) => {
         if (!event.url) return;
@@ -109,12 +114,36 @@ export default class Calendar extends React.Component<Props, State> {
                 </div>
             </div>
         );
-    }
+    };
+
+    renderOtherEvents = () => {
+        if (!this.state.otherEventsLoaded) return null;
+        const listItem = this.state.otherEvents;
+        return listItem.map((item, index) => {
+            if (!item.id || !item.uid) return null;
+            return (
+                <div className="content-container">
+                    <div className="col-xl-12">
+                        <h2>
+                            <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                        </h2>
+                        <div className="date-time">
+                            <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
+                        </div>
+                        <div className="article-description">
+                            <p>{Tools.getText(item.description)}</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+    };
 
     render() {
         return (
             <React.Fragment>
                 {this.renderCalendar()}
+                <div>{this.renderOtherEvents()}</div>
             </React.Fragment>
         );
     }
