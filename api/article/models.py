@@ -28,6 +28,7 @@ class Article(models.Model):
     tags = models.ManyToManyField(Tag)
     use_slide = models.BooleanField(default=False)
     pin = models.BooleanField(default=False)
+    thumbnail_in_content = models.BooleanField(default=False)
     order = models.IntegerField(default=1)
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)

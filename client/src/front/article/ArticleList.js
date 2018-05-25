@@ -10,6 +10,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 
 import {apiUrls} from '../common/_data';
+import type {FormValues as ArticleType} from 'src/back/article/_data';
 import Wrapper from '../common/Wrapper';
 import Tools from 'src/utils/helpers/Tools';
 import {FrontPagination} from 'src/utils/components/TableUtils';
@@ -22,7 +23,7 @@ type Props = {
     location: Object,
 };
 type State = {
-    listItem: Array<Object>,
+    listItem: Array<ArticleType>,
     dataLoaded: boolean,
     pathname: ?string,
 };
@@ -37,7 +38,7 @@ class ArticleList extends React.Component<Props, State> {
     prevUrl: ?string;
 
     static defaultProps = {
-        alwaysFirst: false
+        alwaysFirst: false,
     };
     state: State = {
         pathname: null,
@@ -124,20 +125,20 @@ class ArticleList extends React.Component<Props, State> {
         return result;
     }
 
-    renderFirstItem(item: Object) {
+    renderThumbnail = (item: ArticleType) => {
+        if (!item.image) return null;
+        return <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title} />;
+    };
+
+    renderFirstItem(item: ArticleType) {
+        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
                     <h2>
-                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                        <Link to={detailUrl}>{item.title}</Link>
                     </h2>
-                    <img
-                        src={item.image}
-                        className="img-thumbnail"
-                        width="100%"
-                        title={item.title}
-                        alt={item.title}
-                    />
+                    {this.renderThumbnail(item)}
                     <div className="date-time">
                         <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
                     </div>
@@ -151,24 +152,17 @@ class ArticleList extends React.Component<Props, State> {
         );
     }
 
-    renderOtherItem(item: Object) {
+    renderOtherItem(item: ArticleType) {
         if (this.props.alwaysFirst) return this.renderFirstItem(item);
+        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
                     <div className="row">
-                        <div className="col-md-4">
-                            <img
-                                src={item.image}
-                                className="img-thumbnail"
-                                width="100%"
-                                title={item.title}
-                                alt={item.title}
-                            />
-                        </div>
+                        <div className="col-md-4">{this.renderThumbnail(item)}</div>
                         <div className="col-md-8 article-description">
                             <h2>
-                                <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                                <Link to={detailUrl}>{item.title}</Link>
                             </h2>
                             <div className="date-time">
                                 <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>

@@ -163,6 +163,19 @@ export default class ArticleForm extends React.Component<Props, States> {
 
                 <div className="form-check">
                     <input
+                        id="thumbnail_in_content"
+                        name="thumbnail_in_content"
+                        type="checkbox"
+                        defaultChecked={this.state.formValues.thumbnail_in_content}
+                        className="form-check-input"
+                    />
+                    <label className="form-check-label" htmlFor="thumbnail_in_content">
+                        Thumbnail in content
+                    </label>
+                </div>
+
+                <div className="form-check">
+                    <input
                         id="pin"
                         name="pin"
                         type="checkbox"

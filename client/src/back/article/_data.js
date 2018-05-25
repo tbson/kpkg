@@ -37,6 +37,7 @@ export type FormValues = {
     image: ?Blob,
     use_slide: boolean,
     pin: boolean,
+    thumbnail_in_content: boolean,
     order: ?number,
     tags?: ?string,
     created_at?: ??Date,
@@ -53,6 +54,7 @@ export const defaultFormValues: FormValues = {
     image: null,
     use_slide: false,
     pin: false,
+    thumbnail_in_content: false,
     order: 0,
 };
 

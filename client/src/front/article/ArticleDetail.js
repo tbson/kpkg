@@ -158,15 +158,18 @@ class ArticleDetail extends React.Component<Props, State> {
     }
 
     renderBanner(article: Object) {
+        if (!article.thumbnail_in_content) return null;
         const {attaches} = article;
         const widthRatio = article.category ? article.category.width_ratio : 100;
         if (article.use_slide && attaches.length) {
             return (
                 <div>
-                    <Carousel listItem={attaches} imageKey="attachment"></Carousel><br/>
+                    <Carousel listItem={attaches} imageKey="attachment" />
+                    <br />
                 </div>
             );
         } else {
+            if (!article.image) return null;
             return (
                 <div className="center">
                     <img
@@ -190,12 +193,18 @@ class ArticleDetail extends React.Component<Props, State> {
                         <div className="content-container">
                             <div className="row">
                                 <div className="col-lg-4">
-                                    <img src={staff.image} width="100%"/>
+                                    <img src={staff.image} width="100%" />
                                 </div>
                                 <div className="col-lg-8">
-                                    <p><strong>{staff.title} {staff.fullname}</strong></p>
+                                    <p>
+                                        <strong>
+                                            {staff.title} {staff.fullname}
+                                        </strong>
+                                    </p>
                                     <div>{staff.description}</div>
-                                    <div><a href={'email:' + staff.email}>{staff.email}</a></div>
+                                    <div>
+                                        <a href={'email:' + staff.email}>{staff.email}</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
