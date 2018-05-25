@@ -27,7 +27,7 @@ const rawApiUrls = [
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 export type FormValues = {
-    id: ?number,
+    id: number,
     category_title?: ?string,
     uuid: ?string,
     uid: ?string,
@@ -40,11 +40,11 @@ export type FormValues = {
     order: ?number,
     tags?: ?string,
     created_at?: ??Date,
-    attaches?: Array<AttachType>
+    attaches?: Array<AttachType>,
 };
 
 export const defaultFormValues: FormValues = {
-    id: null,
+    id: 0,
     uuid: '',
     uid: '',
     title: '',
@@ -58,4 +58,10 @@ export const defaultFormValues: FormValues = {
 
 export type FormValuesEdit = FormValues & {
     checked: boolean,
+};
+
+export type UrlParms = {
+    parent: string,
+    parent_id: number,
+    id: number,
 };

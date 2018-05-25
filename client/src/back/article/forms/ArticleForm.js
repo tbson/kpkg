@@ -22,12 +22,6 @@ type States = {
 };
 
 export default class ArticleForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
-    renderPreview: Function;
-    defaultFormValues: FormValues;
-
     static defaultProps = {
         submitTitle: 'Submit',
     };
@@ -41,14 +35,19 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        const formValues = !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        return {formValues};
+    }
+
+    componentDidUpdate(prevProps: Props, prevState: States) {
+        this.resetForm();
     }
 
     resetForm = () => {
-        this.setState({formValues: this.defaultFormValues}, () => {
-            window.document.getElementById(this.props.formId).reset();
-            window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
-        });
+        const {formId} = this.props;
+        const firstInputSelector = ['#', formId, ' [name=title]'].join('');
+        window.document.getElementById(formId).reset();
+        window.document.querySelector(firstInputSelector).focus();
     };
 
     setClassName = (name: string) => {
@@ -74,7 +73,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     render() {
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
+                <input defaultValue={this.state.formValues.id} name="id" type="number" />
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input

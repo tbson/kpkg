@@ -33,12 +33,11 @@ class SelectInput extends React.Component<Props, States> {
         super(props);
     }
 
-    componentDidMount() {
-        const {defaultValue, options} = this.props;
-        this.setState({
-            // value: defaultValue ? defaultValue : (options.length ? options[0].value : '')
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {defaultValue, options} = nextProps;
+        return {
             value: defaultValue ? defaultValue : ''
-        });
+        };
     }
 
     handleChange = (result:any) => {

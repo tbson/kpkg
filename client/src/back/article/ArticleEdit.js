@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import {apiUrls, defaultFormValues} from './_data';
-import type {FormValues, FormValuesEdit} from './_data';
+import type {FormValues, FormValuesEdit, UrlParms} from './_data';
 import type {DropdownItemType} from 'src/utils/types/CommonTypes';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -14,13 +14,14 @@ import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
     history: Object,
-    match: Object,
-    parent: string,
-    parent_id: number,
-    category_id: ?number,
+    match: {
+        params: UrlParms,
+        url: string,
+    },
 };
 type States = {
     dataLoaded: boolean,
+    url: ?string,
     formValues: FormValues,
     formErrors: Object,
     uuid: string,
@@ -29,13 +30,11 @@ type States = {
 };
 
 class ArticleEdit extends React.Component<Props, States> {
-    static defaultProps = {
-        parent: 'category',
-        category_id: null,
-    };
+    static defaultProps = {};
 
     state = {
         dataLoaded: false,
+        url: null,
         formValues: defaultFormValues,
         formErrors: {},
         uuid: Tools.uuid4(),
@@ -48,21 +47,42 @@ class ArticleEdit extends React.Component<Props, States> {
     }
 
     componentDidMount() {
-        this.getItem();
-        this.getTags();
+        this.setInitData();
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const {url} = nextProps.match;
+        if (url !== prevState.url) {
+            return {url};
+        }
+        return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const {url} = this.props.match;
+        if (prevProps.match.url !== url) {
+            this.setInitData();
+        }
+    }
+
+    setInitData = () => {
+        this.getItem();
+        this.getTags();
+    };
+
     getItem = async () => {
-        const id = this.props.match.params.id;
-        const {parent, parent_id} = this.props;
+        const {parent, parent_id, id} = this.props.match.params;
         if (parent == 'article') {
             const parentArticle = await Tools.apiCall(apiUrls.crud + parent_id.toString(), 'GET');
             this.setState({
-                categoryId: parentArticle.data.category,
+                categoryId: parentArticle.data.category.id,
             });
         }
         if (!id) {
-            this.setState({dataLoaded: true});
+            this.setState({
+                dataLoaded: true,
+                formValues: defaultFormValues,
+            });
         } else {
             const result = await Tools.apiCall(apiUrls.crud + id.toString(), 'GET');
             delete result.data.tag_source;
@@ -85,12 +105,14 @@ class ArticleEdit extends React.Component<Props, States> {
 
     handleSubmit = async (event: Object): Promise<boolean> => {
         event.preventDefault();
+        const {parent, parent_id} = this.props.match.params;
         let result: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
+        params.id = parseInt(params.id);
         if (!params.order) {
             params.order = 0;
         }
-        params[this.props.parent] = this.props.match.params.parent_id;
+        params[parent] = parent_id;
         if (!params.id) {
             result = await this.handleAdd(params);
         } else {
@@ -98,15 +120,12 @@ class ArticleEdit extends React.Component<Props, States> {
         }
 
         if (result.success) {
-            if (this.props.parent == 'category') {
+            if (parent == 'category') {
                 // Back to parent list
-                Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
+                Tools.navigateTo(this.props.history, '/articles', [parent_id]);
             } else {
                 // Back to parent item
-                Tools.navigateTo(this.props.history, '/article/category', [
-                    this.state.categoryId,
-                    this.props.match.params.parent_id,
-                ]);
+                Tools.navigateTo(this.props.history, '/article/category', [this.state.categoryId, parent_id]);
             }
             return true;
         } else {
@@ -117,6 +136,7 @@ class ArticleEdit extends React.Component<Props, States> {
     };
 
     handleAdd = async (params: FormValues) => {
+        delete params.id;
         params.uuid = this.state.uuid;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         return result;
@@ -129,8 +149,9 @@ class ArticleEdit extends React.Component<Props, States> {
     };
 
     renderRelatedArticle = () => {
-        if (!this.props.match.params.id || this.props.parent != 'category') return null;
-        return <ArticleTable search_form={false} parent="article" parent_id={this.props.match.params.id} />;
+        const {id, parent} = this.props.match.params;
+        if (!id || parent != 'category') return null;
+        return <ArticleTable search_form={false} parent="article" parent_id={id} />;
     };
 
     render() {
@@ -140,6 +161,7 @@ class ArticleEdit extends React.Component<Props, States> {
                     <LoadingLabel />
                 </NavWrapper>
             );
+        const {parent_id} = this.props.match.params;
         return (
             <NavWrapper>
                 <ArticleForm
@@ -154,11 +176,11 @@ class ArticleEdit extends React.Component<Props, States> {
                         type="button"
                         onClick={() => {
                             if (!this.state.categoryId) {
-                                Tools.navigateTo(this.props.history, '/articles', [this.props.match.params.parent_id]);
+                                Tools.navigateTo(this.props.history, '/articles', [parent_id]);
                             } else {
                                 Tools.navigateTo(this.props.history, '/article/category', [
                                     this.state.categoryId,
-                                    this.props.match.params.parent_id,
+                                    parent_id,
                                 ]);
                             }
                         }}

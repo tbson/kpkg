@@ -32,20 +32,27 @@ type Props = {
 
 type States = {
     value: string,
-    editorState: Object,
+    editorState: ?Object,
 };
 
 class RichTextInput extends React.Component<Props, States> {
+    state = {
+        value: '',
+        editorState: null,
+    };
+
     constructor(props: Props) {
         super(props);
+    }
 
-        const blocksFromHtml = htmlToDraft(this.props.defaultValue);
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {defaultValue} = nextProps;
+        const blocksFromHtml = htmlToDraft(defaultValue);
         const {contentBlocks, entityMap} = blocksFromHtml;
         const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
         const editorState = EditorState.createWithContent(contentState);
-
-        this.state = {
-            value: '',
+        return {
+            value: defaultValue,
             editorState,
         };
     }
@@ -54,8 +61,8 @@ class RichTextInput extends React.Component<Props, States> {
         const rawContentState = convertToRaw(editorState.getCurrentContent());
         const value = draftToHtml(rawContentState);
         this.setState({
-            editorState,
             value,
+            editorState,
         });
     };
 
