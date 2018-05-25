@@ -1,7 +1,16 @@
+@font-face {
+    font-family: georia;
+    src: url(../fonts/georgia/Georgia.ttf);
+}
+
 .content-container {
     background-color: white;
     padding: 5px;
     margin: 10px 0;
+}
+
+h1, h2 {
+    font-family: georgia;
 }
 
 .gallery-thumbnail {

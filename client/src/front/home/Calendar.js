@@ -122,7 +122,7 @@ export default class Calendar extends React.Component<Props, State> {
         return listItem.map((item, index) => {
             if (!item.id || !item.uid) return null;
             return (
-                <div className="content-container">
+                <div className="content-container" key={index}>
                     <div className="col-xl-12">
                         <h2>
                             <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
