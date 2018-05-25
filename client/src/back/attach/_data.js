@@ -15,7 +15,7 @@ const rawApiUrls = [
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 export type FormValues = {
-    id: ?number,
+    id: number,
     parent_uuid: string,
     title: string,
     attachment: ?Blob,
@@ -25,7 +25,7 @@ export type FormValues = {
 };
 
 export const defaultFormValues: FormValues = {
-    id: null,
+    id: 0,
     parent_uuid: '',
     title: '',
     attachment: null,

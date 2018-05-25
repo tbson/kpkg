@@ -23,7 +23,6 @@ type States = {
 };
 
 export class CategoryTable extends React.Component<Props, States> {
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -120,6 +119,7 @@ export class CategoryTable extends React.Component<Props, States> {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target), ['single']);
+        params.id = parseInt(params.id);
         if (!params.image_ratio) {
             delete params.image_ratio;
         }
@@ -299,7 +299,6 @@ export class CategoryTable extends React.Component<Props, States> {
     }
 }
 export default withRouter(CategoryTable);
-
 
 type RowPropTypes = {
     data: FormValuesEdit,

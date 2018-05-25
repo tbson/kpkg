@@ -23,17 +23,6 @@ type States = {
 };
 
 export class BannerTable extends React.Component<Props, States> {
-    list: Function;
-    setInitData: Function;
-    toggleModal: Function;
-    handleSubmit: Function;
-    handleAdd: Function;
-    handleEdit: Function;
-    handleToggleCheckAll: Function;
-    handleCheck: Function;
-    handleRemove: Function;
-    handleSearch: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -119,6 +108,7 @@ export class BannerTable extends React.Component<Props, States> {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
+        params.id = parseInt(params.id);
         if (!params.order) {
             params.order = 0;
         }

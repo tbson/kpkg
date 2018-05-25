@@ -15,7 +15,7 @@ const rawApiUrls = [
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 export type FormValues = {
-    id: ?number,
+    id: number,
     title: string,
     url: string,
     start: ?Date,
@@ -23,7 +23,7 @@ export type FormValues = {
 };
 
 export const defaultFormValues: FormValues = {
-    id: null,
+    id: 0,
     title: '',
     url: '',
     start: null,

@@ -20,7 +20,7 @@ export type CatType = {
 };
 
 export type FormValues = {
-    id: ?number,
+    id: number,
     title: string,
     type: string,
     image_ratio: ?number,
@@ -29,7 +29,7 @@ export type FormValues = {
 };
 
 export const defaultFormValues: FormValues = {
-    id: null,
+    id: 0,
     title: '',
     type: '',
     image_ratio: 1.618,

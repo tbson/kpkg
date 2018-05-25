@@ -100,6 +100,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         event.preventDefault();
         let error: ?Object = null;
         const params = Tools.formDataToObj(new FormData(event.target));
+        params.id = parseInt(params.id);
         if (!params.id) {
             error = await this.handleAdd(params);
         } else {
