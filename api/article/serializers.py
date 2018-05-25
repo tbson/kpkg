@@ -64,7 +64,6 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
     class Meta(ArticleBaseSerializer.Meta):
         extra_kwargs = {
             'uid': {'required': False},
-            'image': {'required': False},
         }
         exclude = ('uuid',)
 

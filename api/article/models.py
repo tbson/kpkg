@@ -23,7 +23,7 @@ class Article(models.Model):
     uid = models.CharField(max_length=256)
     title = models.CharField(max_length=256)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to=image_destination)
+    image = models.ImageField(upload_to=image_destination, blank=True)
     content = models.TextField(blank=True)
     tags = models.ManyToManyField(Tag)
     use_slide = models.BooleanField(default=False)
@@ -40,7 +40,8 @@ class Article(models.Model):
                 self.content = item.content
             if self.description == "":
                 self.description = item.description
-            if self.image:
+            if self.image and item.image and hasattr(item.image, 'url'):
+                print(self.image)
                 if item.image != self.image:
                     # Update: remove exist image
                     Tools.removeFile(item.image.path, True)
@@ -54,8 +55,9 @@ class Article(models.Model):
             image_ratio = self.category.image_ratio
         else:
             image_ratio = self.article.category.image_ratio
-        Tools.scaleImage(image_ratio, self.image.path)
-        Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.image.path)
+        if self.image and hasattr(self.image, 'url'):
+            Tools.scaleImage(image_ratio, self.image.path)
+            Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.image.path)
 
     def delete(self, *args, **kwargs):
         Attach.objects.removeByUUID(self.uuid)
