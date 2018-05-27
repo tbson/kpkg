@@ -29,8 +29,13 @@ class BannerListView(ListAPIView):
     filter_fields = ('category__uid', 'category__type', )
 
 class HomeArticleListView(ListAPIView):
+    supportCategories = (
+        'tin-hoat-ong',
+        'tin-khoa-hoc',
+        'kien-thuc',
+    )
     permission_classes = (AllowAny, )
-    queryset = Article.objects.all()
+    queryset = Article.objects.filter(category__uid__in=supportCategories)
     serializer_class = ArticleLandingSerializer
     filter_fields = ('category__uid', )
     pagination_class = CustomLimitOffsetPagination

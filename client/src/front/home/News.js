@@ -80,10 +80,10 @@ export default class News extends React.Component<Props, State> {
                 <div className="content-container">
                     <div className="col-xl-12">
                         <div className="row">
-                            <div className="col-md-4">
+                            <div className={item.image ? "col-md-4" : ""}>
                                 {this.renderThumbnail(item)}
                             </div>
-                            <div className="col-md-8 article-description">
+                            <div className={(item.image ? "col-md-8" : "col-md-12") + " article-description"}>
                                 <h2>
                                     <Link to={detailUrl}>{item.title}</Link>
                                 </h2>
