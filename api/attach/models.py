@@ -51,6 +51,9 @@ class Attach(models.Model):
                 self.order = 1
         super(Attach, self).save(*args, **kwargs)
         if self.filetype == 'image':
+            imageRatio = settings.IMAGE_RATIO
+            if self.richtext_image:
+                imageRatio = 0
             Tools.scaleImage(settings.IMAGE_RATIO, self.attachment.path)
             Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.attachment.path)
 

@@ -47,8 +47,10 @@ class Tools():
             width = maxWidth
             if originalWidth < maxWidth:
                 width = originalWidth
-
-            height = int(width / ratio)
+            if ratio > 0:
+                height = int(width / ratio)
+            else:
+                height = originalHeight
             widthFactor = width / originalWidth
             heightFactor = height / originalHeight
 
