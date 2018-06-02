@@ -3,6 +3,7 @@ import sys
 import uuid
 import magic
 from PIL import Image
+from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
@@ -167,3 +168,12 @@ class Tools():
         except Exception as e:
             print(e);
             error = Tools.returnException(e)
+
+    @staticmethod
+    def userFromToken (token):
+        try:
+            token = {'token': token}
+            data = VerifyJSONWebTokenSerializer().validate(token)
+            return valid_data['user']
+        except Exception as e:
+            return None

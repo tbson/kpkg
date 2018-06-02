@@ -1,3 +1,8 @@
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'tgwj=)h$kaiooy@im=wg!^9!em3s$$egzhsx^wuloszonc06t_'
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
 APP_NAME = 'APP_NAME'
 PROTOCOL = 'https'
 DOMAIN = 'my.domain'
@@ -32,6 +37,7 @@ TEST_ADMIN = {
     'first_name': 'First',
     'last_name': 'Admin'
 }
+TEST_FINGERPRINT = 'test-fingerprint'
 
 DEFAULT_FROM_EMAIL = '"APP_NAME"<admin@gmail.com>'
 EMAIL_HOST = 'smtp.gmail.com'

@@ -1,9 +1,12 @@
 import json
+from rest_framework.test import APIClient
 from django.test import TestCase
 from django.urls import reverse
 from config.models import Config
+from administrator.models import Administrator
 from config.serializers import ConfigBaseSerializer
 from utils.helpers.test_helpers import TestHelpers
+from django.conf import settings
 # Create your tests here.
 
 
@@ -11,7 +14,8 @@ class ConfigTestCase(TestCase):
 
     def setUp(self):
         self.token = TestHelpers.testSetup(self)
-
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
         item0 = {
             "uid": "key0",
             "value": "value0",
@@ -42,31 +46,22 @@ class ConfigTestCase(TestCase):
 
     def test_list(self):
         response = self.client.get(
-            reverse('api_v1:config:list'),
-            Authorization='JWT ' + self.token,
+            '/api/v1/config/'
         )
         self.assertEqual(response.status_code, 200)
         response = response.json()
         self.assertEqual(response['count'], 3)
 
     def test_detail(self):
-        # View not exist
+        # Item not exist
         response = self.client.get(
-            reverse(
-                'api_v1:config:detail',
-                kwargs={'pk': 0}
-            ),
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % 0
         )
         self.assertEqual(response.status_code, 404)
 
-        # View success
+        # Item exist
         response = self.client.get(
-            reverse(
-                'api_v1:config:detail',
-                kwargs={'pk': self.item1.pk}
-            ),
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % self.item1.pk
         )
         self.assertEqual(response.status_code, 200)
 
@@ -82,19 +77,17 @@ class ConfigTestCase(TestCase):
 
         # Add duplicate
         response = self.client.post(
-            reverse('api_v1:config:create'),
-            json.dumps(dataFail),
-            content_type='application/json',
-            Authorization='JWT ' + self.token,
+            '/api/v1/config/',
+            dataFail,
+            format='json'
         )
         self.assertEqual(response.status_code, 400)
 
         # Add success
         response = self.client.post(
-            reverse('api_v1:config:create'),
-            json.dumps(dataSuccess),
-            content_type='application/json',
-            Authorization='JWT ' + self.token,
+            '/api/v1/config/',
+            dataSuccess,
+            format='json'
         )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Config.objects.count(), 4)
@@ -112,82 +105,46 @@ class ConfigTestCase(TestCase):
 
         # Update not exist
         response = self.client.put(
-            reverse(
-                'api_v1:config:edit',
-                kwargs={
-                    'pk': 0
-                }
-            ),
-            json.dumps(dataFail),
-            content_type='application/json',
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % 0,
+            dataFail,
+            format='json'
         )
         self.assertEqual(response.status_code, 404)
 
         # Update duplicate
         response = self.client.put(
-            reverse(
-                'api_v1:config:edit',
-                kwargs={
-                    'pk': self.item1.pk
-                }
-            ),
-            json.dumps(dataFail),
-            content_type='application/json',
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % self.item1.pk,
+            dataFail,
+            format='json'
         )
         self.assertEqual(response.status_code, 400)
 
         # Update success
         response = self.client.put(
-            reverse(
-                'api_v1:config:edit',
-                kwargs={
-                    'pk': self.item1.pk
-                }
-            ),
-            json.dumps(dataSuccess),
-            content_type='application/json',
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % self.item1.pk,
+            dataSuccess,
+            format='json'
         )
         self.assertEqual(response.status_code, 200)
 
     def test_delete(self):
         # Remove not exist
         response = self.client.delete(
-            reverse(
-                'api_v1:config:delete',
-                kwargs={
-                    'pk': 0
-                }
-            ),
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % 0
         )
         self.assertEqual(response.status_code, 404)
         self.assertEqual(Config.objects.count(), 3)
 
         # Remove single success
         response = self.client.delete(
-            reverse(
-                'api_v1:config:delete',
-                kwargs={
-                    'pk': self.item1.pk
-                }
-            ),
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/%d" % self.item1.pk
         )
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Config.objects.count(), 2)
 
         # Remove list success
         response = self.client.delete(
-            reverse(
-                'api_v1:config:delete',
-                kwargs={
-                    'pk': ','.join([str(self.item0.pk), str(self.item2.pk)])
-                }
-            ),
-            Authorization='JWT ' + self.token,
+            "/api/v1/config/?ids=%s" % ','.join([str(self.item0.pk), str(self.item2.pk)])
         )
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Config.objects.count(), 0)

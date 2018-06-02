@@ -6,9 +6,9 @@ from django.conf import settings
 class Administrator(models.Model):
 
     user = models.OneToOneField(
-            settings.AUTH_USER_MODEL,
-            on_delete=models.CASCADE
-            )
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     fingerprint = models.CharField(max_length=250, blank=True)
 
     reset_password_token = models.CharField(max_length=250, blank=True)

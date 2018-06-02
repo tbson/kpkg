@@ -17,25 +17,13 @@ from .env import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# APP_NAME = env.APP_NAME
-# PROTOCOL = env.PROTOCOL
-# DOMAIN = env.DOMAIN
 BASE_URL = PROTOCOL + '://' + DOMAIN + '/'
 BASE_URL_TRIM = PROTOCOL + '://' + DOMAIN
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'tgwj=)h$kaiooy@im=wg!^9!em3s$$egzhsx^wuloszonc06t_'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 APPEND_SLASH = True
-
-# ALLOWED_HOSTS = env.ALLOWED_HOSTS
-
 
 # Application definition
 
