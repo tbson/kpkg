@@ -11,7 +11,9 @@ import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
-type Props = {};
+type Props = {
+    list?: Array<FormValuesEdit>,
+};
 type States = {
     dataLoaded?: boolean,
     modal?: boolean,
@@ -21,6 +23,8 @@ type States = {
 };
 
 export class ConfigTable extends React.Component<Props, States> {
+    getList: Function;
+
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -34,10 +38,17 @@ export class ConfigTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
+        this.getList = this.getList.bind(this);
     }
 
     componentDidMount() {
-        this.list();
+        this.getList();
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {list} = nextProps;
+        if (nextProps.list) return {list};
+        return null;
     }
 
     setInitData = (initData: Object) => {
@@ -53,23 +64,17 @@ export class ConfigTable extends React.Component<Props, States> {
         });
     };
 
-    list = async (outerParams: Object = {}, url: ?string = null): Object => {
-        let params = {};
-        let result = {};
-
-        if (!Tools.emptyObj(outerParams)) {
-            params = {...params, ...outerParams};
-        }
-
-        result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
+    async getList(params: Object = {}, url: ?string = null): Promise<Array<FormValuesEdit>> {
+        // Do not use arrow function if this function call when component init
+        const result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
         if (result.success) {
             this.setInitData(result.data);
-            return result;
+            return result.data.items ? result.data.items : [];
         }
-        return result;
-    };
+        return [];
+    }
 
-    toggleModal = (modalName: string, id: ?number = null): Object => {
+    toggleModal = async (modalName: string, id: ?number = null): Promise<Object> => {
         // If modalName not defined -> exit here
         if (typeof this.state[modalName] == 'undefined') return {};
 
@@ -83,129 +88,118 @@ export class ConfigTable extends React.Component<Props, States> {
         if (id) {
             switch (modalName) {
                 case 'modal':
-                    Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
-                        if (result.success) {
-                            state.formValues = result.data;
-                        }
-                        this.setState(state);
-                    });
+                    const result = await Tools.apiCall(apiUrls.crud + id.toString(), 'GET');
+                    if (result.success) {
+                        state.formValues = result.data;
+                    }
+                    this.setState(state);
                     return state;
             }
-        } else {
-            this.setState(state);
         }
+        this.setState(state);
         return state;
     };
 
-    handleSubmit = async (event: Object): Promise<boolean> => {
+    handleSubmit = async (event: Object): Promise<Object> => {
         event.preventDefault();
-        let error: ?Object = null;
-        const params = Tools.formDataToObj(new FormData(event.target));
-        params.id = parseInt(params.id);
-        if (!params.id) {
-            error = await this.handleAdd(params);
-        } else {
-            error = await this.handleEdit(params);
-        }
 
-        if (!error) {
-            // No error -> close current modal
-            this.toggleModal('modal');
-            return true;
-        } else {
+        const params = Tools.formDataToObj(new FormData(event.target));
+        const isAdding = params.id ? false : true;
+        const result = isAdding ? await this.handleAdd(params) : await this.handleEdit(params);
+        const {data, error} = Tools.parseDataError(result);
+        const {list} = this.state;
+
+        if (!Tools.isEmpty(error)) {
             // Have error -> update err object
             this.setState({formErrors: error});
-            return false;
+            return error;
         }
-    };
 
-    handleAdd = async (params: FormValues) => {
-        const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
-        if (result.success) {
-            const {list} = this.state;
-            this.setState({
-                list: [{...result.data, checked: false}, ...this.state.list],
-            });
-            return null;
-        }
-        return result.data;
-    };
-
-    handleEdit = async (params: FormValuesEdit) => {
-        const id = String(params.id);
-        const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
-        if (result.success) {
-            const {list} = this.state;
-            const index = list.findIndex(item => item.id === parseInt(id));
+        if (isAdding) {
+            list.unshift({...data, checked: false});
+        } else {
+            const index = list.findIndex(item => item.id === params.id);
             const {checked} = list[index];
             list[index] = {...result.data, checked};
-            this.setState({list});
-            return null;
         }
-        return result.data;
-    };
 
-    handleToggleCheckAll = () => {
-        var newList = [];
-        let list = this.state.list ? this.state.list : [];
-        const checkedItem = list.filter(item => item.checked);
-        const result = (checked: boolean) => {
-            this.setState({
-                list: list.map(value => ({...value, checked})),
-            });
-        };
-
-        if (checkedItem) {
-            if (checkedItem.length === list.length) {
-                // Checked all -> uncheck all
-                return result(false);
-            }
-            // Some item checked -> checke all
-            return result(true);
-        } else {
-            // Nothing checked -> check all
-            return result(true);
-        }
-    };
-
-    handleCheck = (data: FormValuesEdit, event: Object) => {
-        data.checked = event.target.checked;
-        const {list} = this.state;
-        const index = list.findIndex(item => item.id === parseInt(data.id));
-        list[index] = {...data};
+        // No error -> close current modal
         this.setState({list});
+        this.toggleModal('modal');
+        return data;
     };
 
-    handleRemove = async (id: string) => {
+    handleAdd = async (params: FormValues): Promise<Object> => {
+        try {
+            return await Tools.apiCall(apiUrls.crud, 'POST', params);
+        } catch (error) {
+            return Tools.commonErrorResponse(error);
+        }
+    };
+
+    handleEdit = async (params: FormValuesEdit): Promise<Object> => {
+        try {
+            const id = String(params.id);
+            return await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
+        } catch (error) {
+            return Tools.commonErrorResponse(error);
+        }
+    };
+
+    handleToggleCheckAll = (): Array<FormValuesEdit> => {
+        let {list} = this.state;
+        let checked = false;
+        const checkedItem = list.filter(item => item.checked);
+        if (checkedItem.length) {
+            checked = checkedItem.length === list.length ? false : true;
+        } else {
+            checked = true;
+        }
+        list = list.map(value => ({...value, checked}));
+        this.setState({list});
+        return list;
+    };
+
+    handleCheck = (event: Object): FormValuesEdit => {
+        const id = parseInt(event.target.id);
+        const {list} = this.state;
+        const index = list.findIndex(item => item.id === id);
+        list[index].checked = event.target.checked;
+        this.setState({list});
+        return list[index];
+    };
+
+    handleRemove = async (id: string): Promise<Array<FormValuesEdit>> => {
         const listId = id.split(',');
-        if (!id || !listId.length) return;
+        if (!id || !listId.length) return [];
         let message = '';
         if (listId.length === 1) {
             message = 'Do you want to remove this item?';
         } else {
             message = 'Do you want to remove selected items?';
         }
-        const decide = confirm(message);
-        if (!decide) return;
+        const decide = window.confirm(message);
+        if (!decide) return [];
         const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
         let list = this.state.list ? this.state.list : [];
         if (result.success) {
             const listId = id.split(',').map(item => parseInt(item));
-            list = list.filter(item => listId.indexOf(item.id) === -1);
+            list = list.filter(item => !listId.includes(item.id));
             this.setState({list});
-        } else {
-            this.list();
+            return list;
         }
+        return [];
     };
 
-    handleSearch = (event: Object) => {
+    handleSearch = async (event: Object): Promise<?Array<FormValuesEdit>> => {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
-            this.list({search: searchStr});
+            return await this.getList({search: searchStr});
         } else if (!searchStr.length) {
-            this.list();
+            return await this.getList();
         }
+        return null;
     };
 
     render() {
@@ -263,7 +257,7 @@ export class ConfigTable extends React.Component<Props, States> {
                                 <Pagination
                                     next={this.nextUrl}
                                     prev={this.prevUrl}
-                                    onNavigate={url => this.list({}, url)}
+                                    onNavigate={url => this.getList({}, url)}
                                 />
                             </th>
                         </tr>
@@ -297,20 +291,21 @@ export class Row extends React.Component<RowPropTypes> {
             <tr key={this.props._key}>
                 <th className="row25">
                     <input
+                        id={data.id}
                         className="check"
                         type="checkbox"
                         checked={data.checked}
-                        onChange={event => this.props.onCheck(data, event)}
+                        onChange={this.props.onCheck}
                     />
                 </th>
                 <td className="uid">{data.uid}</td>
                 <td className="value">{data.value}</td>
                 <td className="center">
-                    <a onClick={() => this.props.toggleModal('modal', data.id)}>
+                    <a className="editBtn" onClick={() => this.props.toggleModal('modal', data.id)}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <a onClick={() => this.props.handleRemove(String(data.id))}>
+                    <a className="removeBtn" onClick={() => this.props.handleRemove(String(data.id))}>
                         <span className="removeBtn oi oi-x text-danger pointer" />
                     </a>
                 </td>

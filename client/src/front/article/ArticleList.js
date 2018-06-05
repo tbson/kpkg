@@ -112,7 +112,7 @@ class ArticleList extends React.Component<Props, State> {
         };
         let result = {};
 
-        if (!Tools.emptyObj(outerParams)) {
+        if (!Tools.isEmpty(outerParams)) {
             params = {...params, ...outerParams};
         }
 

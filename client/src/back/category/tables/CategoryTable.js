@@ -73,7 +73,7 @@ export class CategoryTable extends React.Component<Props, States> {
         let params = {};
         let result = {};
 
-        if (!Tools.emptyObj(outerParams)) {
+        if (!Tools.isEmpty(outerParams)) {
             params = {...params, ...outerParams};
         }
 

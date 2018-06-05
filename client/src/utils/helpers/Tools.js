@@ -58,6 +58,9 @@ export default class Tools {
                 data[checkbox] = true;
             }
         }
+        if (data.id) {
+            data.id = parseInt(data.id);
+        }
         return data;
     }
 
@@ -73,7 +76,7 @@ export default class Tools {
         }
     }
 
-    static emptyObj(obj: Object): boolean {
+    static isEmpty(obj: Object): boolean {
         return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
 
@@ -148,9 +151,7 @@ export default class Tools {
             const apiUrl = rawApiUrls[index];
             for (let key in apiUrl.endpoints) {
                 const url = kebabCase(apiUrl.endpoints[key]);
-                result[
-                    parseInt(index) === 0 ? key : camelCase(apiUrl.controller) + this.cap(key)
-                ] =
+                result[parseInt(index) === 0 ? key : camelCase(apiUrl.controller) + this.cap(key)] =
                     API_BASE_URL + kebabCase(apiUrl.controller) + '/' + url + (url ? '/' : '');
             }
         }
@@ -408,5 +409,27 @@ export default class Tools {
         if (!html) return '';
         html = html.replace(/<img /g, `<img alt="${alt}" title="${alt}" `);
         return html;
+    }
+
+    static commonErrorResponse(error: Object): Object {
+        return {
+            success: false,
+            data: {
+                detail: error.message,
+            },
+        };
+    }
+
+    static parseDataError(response: Object): {data: Object, error: Object} {
+        let data = {};
+        let error = {};
+
+        if (response.success) {
+            data = response.data;
+        } else {
+            error = response.data;
+        }
+
+        return {data, error};
     }
 }

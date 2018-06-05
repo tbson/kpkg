@@ -65,7 +65,7 @@ export class AttachTable extends React.Component<Props, States> {
         };
         let result = {};
 
-        if (!Tools.emptyObj(outerParams)) {
+        if (!Tools.isEmpty(outerParams)) {
             params = {...params, ...outerParams};
         }
 

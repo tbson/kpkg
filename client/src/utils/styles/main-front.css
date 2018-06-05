@@ -9,6 +9,10 @@
     margin: 10px 0;
 }
 
+.content-container figure{
+    text-align: center;
+}
+
 h1, h2 {
     font-family: georgia;
 }

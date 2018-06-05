@@ -35,7 +35,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const formValues = !Tools.emptyObj(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
         return {formValues};
     }
 

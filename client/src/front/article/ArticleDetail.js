@@ -58,13 +58,13 @@ class ArticleDetail extends React.Component<Props, State> {
         }
         const {article} = this.state;
         const widthRatio = article.category ? article.category.width_ratio : 100;
-        const figures = document.querySelector('.content-container figure');
-        const imgs = document.querySelector('.content-container figure img');
-        if (figures) {
-            figures.className += ' center';
-        }
-        if (imgs) {
-            imgs.style.width = widthRatio + '%';
+        const imgs = document.querySelectorAll('.content-container figure img');
+
+        if (imgs.length) {
+            for (let i = 0; i < imgs.length; i++) {
+                const img = imgs[i] ;
+                img.style.width = widthRatio + '%';
+            }
         }
     }
 

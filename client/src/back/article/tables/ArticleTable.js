@@ -71,7 +71,7 @@ export class ArticleTable extends React.Component<Props, States> {
 
         let result = {};
 
-        if (!Tools.emptyObj(outerParams)) {
+        if (!Tools.isEmpty(outerParams)) {
             params = {...params, ...outerParams};
         }
 

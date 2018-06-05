@@ -57,7 +57,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         let params = {};
         let result = {};
 
-        if (!Tools.emptyObj(outerParams)) {
+        if (!Tools.isEmpty(outerParams)) {
             params = {...params, ...outerParams};
         }
 
