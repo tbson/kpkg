@@ -22,6 +22,7 @@ export type CatType = {
 export type FormValues = {
     id: number,
     title: string,
+    uid?: string,
     type: string,
     image_ratio: ?number,
     width_ratio: ?number,

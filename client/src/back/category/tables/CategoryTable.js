@@ -240,6 +240,7 @@ export class CategoryTable extends React.Component<Props, States> {
                                 />
                             </th>
                             <th scope="col">Title</th>
+                            <th scope="col">UID</th>
                             <th scope="col">Type</th>
                             <th scope="col">Image ratio (width / height)</th>
                             <th scope="col">Width ratio</th>
@@ -326,6 +327,7 @@ export class Row extends React.Component<RowPropTypes> {
                         <span>{data.title}</span>
                     </Link>
                 </td>
+                <td className="uid">{data.uid}</td>
                 <td className="type">{data.type}</td>
                 <td className="image_ratio">{data.image_ratio}</td>
                 <td className="image_ratio">{data.width_ratio}%</td>
