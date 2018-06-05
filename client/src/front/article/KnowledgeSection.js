@@ -25,7 +25,7 @@ class KnowledgeSection extends React.Component<Props, State> {
         return (
             <Wrapper>
                 <div className="row">
-                    <div className="col-lg-8" style={{paddingTop: 10}}>
+                    <div className="col-lg-8 no-padding-right" style={{paddingTop: 10}}>
                         <div className="content-container">
                             <h1>Bài Viết Mới</h1>
                         </div>
