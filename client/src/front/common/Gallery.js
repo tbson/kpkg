@@ -139,7 +139,7 @@ class GalleryItem extends React.Component<ItemProps, ItemState> {
     render() {
         const {item} = this.props;
         return (
-            <div className="col-md-3">
+            <div className="col-md-3 no-padding-right">
                 <div
                     className="thumbnail gallery-thumbnail"
                     onClick={() => this.props.togglePreview(true, item.items)}>
