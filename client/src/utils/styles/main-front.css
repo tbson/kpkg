@@ -9,9 +9,28 @@
     margin: 10px 0;
 }
 
+.no-padding-right {
+    padding-right: 0;
+}
+
+@media only screen and (max-width: 991px) {
+    .no-padding-right {
+        padding-right: 15px;
+    }
+}
+
 .content-container figure{
     text-align: center;
 }
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 27px;
+}
+
 
 h1, h2 {
     font-family: georgia;

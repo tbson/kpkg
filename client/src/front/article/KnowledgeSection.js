@@ -26,9 +26,15 @@ class KnowledgeSection extends React.Component<Props, State> {
             <Wrapper>
                 <div className="row">
                     <div className="col-lg-8" style={{paddingTop: 10}}>
+                        <div className="content-container">
+                            <h1>Bài Viết Mới</h1>
+                        </div>
                         <ArticleList resourceUrl={apiUrls.article} resourceParams={{category__uid: 'kien-thuc'}} />
                     </div>
                     <div className="col-lg-4" style={{paddingTop: 10}}>
+                        <div className="content-container">
+                            <h1>Bài Viết Tổng Hợp</h1>
+                        </div>
                         <ArticleList
                             alwaysFirst={true}
                             resourceUrl={apiUrls.article}

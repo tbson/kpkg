@@ -98,7 +98,7 @@ export default class Calendar extends React.Component<Props, State> {
         return (
             <div>
                 <div className="content-container">
-                    <h1>Lịch Thiên Văn</h1>
+                    <h1>Sự Kiện Thiên Văn</h1>
                 </div>
                 <div className="content-container">
                     <div style={{height: 400, paddingTop: 15}}>

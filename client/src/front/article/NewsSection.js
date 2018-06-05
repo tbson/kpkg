@@ -26,9 +26,15 @@ class NewsSection extends React.Component<Props, State> {
             <Wrapper>
                 <div className="row">
                     <div className="col-lg-8" style={{paddingTop: 10}}>
+                        <div className="content-container">
+                            <h1>Tin Khoa Học</h1>
+                        </div>
                         <ArticleList resourceUrl={apiUrls.article} resourceParams={{category__uid: 'tin-khoa-hoc'}} />
                     </div>
                     <div className="col-lg-4" style={{paddingTop: 10}}>
+                        <div className="content-container">
+                            <h1>Tin Hoạt Động</h1>
+                        </div>
                         <ArticleList
                             alwaysFirst={true}
                             resourceUrl={apiUrls.article}

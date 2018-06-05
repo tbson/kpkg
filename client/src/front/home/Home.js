@@ -29,7 +29,7 @@ export default class Home extends React.Component<Props, State> {
             <Wrapper>
                 <Program />
                 <div className="row">
-                    <div className="col-lg-8">
+                    <div className="col-lg-8 no-padding-right">
                         <News />
                         <Gallery />
                     </div>

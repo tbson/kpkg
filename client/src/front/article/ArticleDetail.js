@@ -62,7 +62,7 @@ class ArticleDetail extends React.Component<Props, State> {
 
         if (imgs.length) {
             for (let i = 0; i < imgs.length; i++) {
-                const img = imgs[i] ;
+                const img = imgs[i];
                 img.style.width = widthRatio + '%';
             }
         }
@@ -163,9 +163,11 @@ class ArticleDetail extends React.Component<Props, State> {
         const widthRatio = article.category ? article.category.width_ratio : 100;
         if (article.use_slide && attaches.length) {
             return (
-                <div>
-                    <Carousel listItem={attaches} imageKey="attachment" />
-                    <br />
+                <div className="center">
+                    <div style={{width: widthRatio + '%', margin: "auto"}}>
+                        <Carousel listItem={attaches} imageKey="attachment" />
+                        <br />
+                    </div>
                 </div>
             );
         } else {
