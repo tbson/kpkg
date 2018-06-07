@@ -3,76 +3,12 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 import 'src/__mocks__/FormData';
-import {Row, ConfigTable} from '../tables/ConfigTable';
+import {ConfigTable} from '../tables/ConfigTable';
+import {seeding} from '../_data';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import Tools from 'src/utils/helpers/Tools';
 
 Enzyme.configure({adapter: new Adapter()});
-
-function seeding(numberOfItems, single = false) {
-    let result = [];
-    for (let i = 1; i <= numberOfItems; i++) {
-        result.push({
-            id: i,
-            uid: 'key' + String(i),
-            value: 'value ' + String(i),
-            checked: false,
-        });
-    }
-    if (!single) return result;
-    return result[result.length - 1];
-}
-
-describe('ConfigTable Row component', () => {
-    let wrapper;
-    const props = {
-        _key: 0,
-        data: {
-            id: 1,
-            uid: 'key1',
-            value: 'value 1',
-        },
-        toggleModal: jest.fn(),
-        handleRemove: jest.fn(),
-        onCheck: jest.fn(),
-    };
-
-    beforeAll(() => {
-        wrapper = shallow(<Row {...props} />);
-    });
-
-    it('Check output value', () => {
-        expect(wrapper.contains(<td className="uid">key1</td>)).toEqual(true);
-        expect(wrapper.contains(<td className="value">value 1</td>)).toEqual(true);
-    });
-
-    it('Check', () => {
-        wrapper
-            .find('.check')
-            .first()
-            .simulate('change', {target: {checked: true}});
-        expect(props.onCheck.mock.calls.length).toEqual(1);
-    });
-
-    it('Toggle modal', () => {
-        wrapper
-            .find('.editBtn')
-            .first()
-            .simulate('click');
-        expect(props.toggleModal.mock.calls.length).toEqual(1);
-        expect(props.toggleModal.mock.calls[0][0]).toEqual('modal');
-        expect(props.toggleModal.mock.calls[0][1]).toEqual(1);
-    });
-
-    it('Remove', () => {
-        wrapper
-            .find('.removeBtn')
-            .first()
-            .simulate('click');
-        expect(props.handleRemove.mock.calls.length).toEqual(1);
-        expect(props.handleRemove.mock.calls[0][0]).toEqual('1');
-    });
-});
 
 describe('ConfigTable component', () => {
     beforeAll(() => {
@@ -283,7 +219,7 @@ describe('ConfigTable methods', () => {
             const response = {
                 status: 200,
                 success: true,
-                data: seeding(1, true),
+                data: seeding(1, true)[0],
             };
 
             // Spy/mock static methods
@@ -349,7 +285,7 @@ describe('ConfigTable methods', () => {
     describe('handleAdd', () => {
         it('Fail', async () => {
             // Prepare data
-            const data = seeding(1, true);
+            const data = seeding(1, true)[0];
             const formValues = {...data};
             delete formValues.id;
             const error = {
@@ -380,7 +316,7 @@ describe('ConfigTable methods', () => {
 
         it('Success', async () => {
             // Prepare data
-            const data = seeding(1, true);
+            const data = seeding(1, true)[0];
             const formValues = {...data};
             delete formValues.id;
             const response = {
@@ -411,7 +347,7 @@ describe('ConfigTable methods', () => {
     describe('handleEdit', () => {
         it('Fail', async () => {
             // Prepare data
-            const data = seeding(1, true);
+            const data = seeding(1, true)[0];
             const formValues = {...data};
             const error = {
                 status: 400,
@@ -441,7 +377,7 @@ describe('ConfigTable methods', () => {
 
         it('Success', async () => {
             // Prepare data
-            const data = seeding(1, true);
+            const data = seeding(1, true)[0];
             const formValues = {...data};
             const response = {
                 status: 200,
@@ -477,7 +413,7 @@ describe('ConfigTable methods', () => {
         describe('Adding', () => {
             it('Fail', async () => {
                 // Prepare data
-                const data = seeding(1, true);
+                const data = seeding(1, true)[0];
                 delete data.id;
                 const formValues = {...data};
                 const response = {
@@ -515,7 +451,7 @@ describe('ConfigTable methods', () => {
 
             it('Success', async () => {
                 // Prepare data
-                const data = seeding(1, true);
+                const data = seeding(1, true)[0];
                 delete data.id;
                 const formValues = {...data};
                 const response = {
@@ -553,8 +489,8 @@ describe('ConfigTable methods', () => {
         describe('Editing', () => {
             it('Fail', async () => {
                 // Prepare data
-                const data = seeding(1, true);
-                const originalData = seeding(1, true);
+                const data = seeding(1, true)[0];
+                const originalData = seeding(1, true)[0];
                 data.uid = 'test-uid';
                 data.value = 'test-value';
                 const formValues = {...data};
@@ -594,7 +530,7 @@ describe('ConfigTable methods', () => {
 
             it('Success', async () => {
                 // Prepare data
-                const data = seeding(1, true);
+                const data = seeding(1, true)[0];
                 data.uid = 'test-uid';
                 data.value = 'test-value';
                 const formValues = {...data};
