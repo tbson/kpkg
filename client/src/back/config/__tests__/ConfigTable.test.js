@@ -92,7 +92,6 @@ describe('ConfigTable component', () => {
 
     it('Init data', done => {
         // This function run right after component init -> declare it's mock before render
-        const getList = jest.spyOn(ConfigTable.prototype, 'getList');
 
         const wrapper = shallow(<ConfigTable />);
         const instance = wrapper.instance();
@@ -106,7 +105,6 @@ describe('ConfigTable component', () => {
             wrapper.update();
             expect(wrapper.find('.table-row')).toHaveLength(10);
 
-            expect(getList).toHaveBeenCalled();
             expect(setInitData).toHaveBeenCalled();
             done();
         }, 100);
@@ -236,7 +234,7 @@ describe('ConfigTable methods', () => {
             expect(apiCall.mock.calls[0][1]).toEqual('GET');
             expect(apiCall.mock.calls[0][2]).toEqual(params);
             expect(setInitData).not.toHaveBeenCalled();
-            expect(result).toEqual([]);
+            expect(result).toEqual(null);
         });
 
         it('success', async () => {
@@ -811,11 +809,11 @@ describe('ConfigTable methods', () => {
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
             jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-            const getList = jest.spyOn(ConfigTable.prototype, 'getList').mockImplementation(() => list);
 
             // Init component
             const wrapper = shallow(<ConfigTable />);
             const instance = wrapper.instance();
+            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => list);
 
             // Execute tested method
             const output = await instance.handleSearch(event);
@@ -836,11 +834,11 @@ describe('ConfigTable methods', () => {
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
             jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-            const getList = jest.spyOn(ConfigTable.prototype, 'getList').mockImplementation(() => list);
 
             // Init component
             const wrapper = shallow(<ConfigTable />);
             const instance = wrapper.instance();
+            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => list);
 
             // Execute tested method
             const output = await instance.handleSearch(event);
@@ -861,11 +859,11 @@ describe('ConfigTable methods', () => {
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
             jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-            const getList = jest.spyOn(ConfigTable.prototype, 'getList').mockImplementation(() => list);
 
             // Init component
             const wrapper = shallow(<ConfigTable />);
             const instance = wrapper.instance();
+            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => list);
 
             // Execute tested method
             const output = await instance.handleSearch(event);

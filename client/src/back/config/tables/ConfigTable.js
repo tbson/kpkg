@@ -38,7 +38,6 @@ export class ConfigTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        this.getList = this.getList.bind(this);
     }
 
     componentDidMount() {
@@ -54,25 +53,24 @@ export class ConfigTable extends React.Component<Props, States> {
     setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
-        const newData = initData.items.map(item => {
-            item.checked = !!item.checked;
-            return item;
-        });
         this.setState({
             dataLoaded: true,
-            list: [...newData],
+            list: [...initData.items],
         });
     };
 
-    async getList(params: Object = {}, url: ?string = null): Promise<Array<FormValuesEdit>> {
-        // Do not use arrow function if this function call when component init
+    getList = async (params: Object = {}, url: ?string = null): Promise<?Array<FormValuesEdit>> => {
         const result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
         if (result.success) {
+            result.data.items = result.data.items.map(item => {
+                item.checked = false;
+                return item;
+            });
             this.setInitData(result.data);
             return result.data.items ? result.data.items : [];
         }
-        return [];
-    }
+        return null;
+    };
 
     toggleModal = async (modalName: string, id: ?number = null): Promise<Object> => {
         // If modalName not defined -> exit here
