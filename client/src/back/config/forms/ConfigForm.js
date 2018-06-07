@@ -8,21 +8,20 @@ type Props = {
     handleSubmit: Function,
     children?: React.Node,
     formId: string,
-    submitTitle: string,
     formValues: FormValues,
     formErrors: Object,
 };
 type States = {
     formValues: FormValues,
+    actionName: string,
 };
 
 export default class ConfigForm extends React.Component<Props, States> {
-    static defaultProps = {
-        submitTitle: 'Submit',
-    };
+    static defaultProps = {};
 
     state = {
         formValues: defaultFormValues,
+        actionName: '',
     };
 
     constructor(props: Props) {
@@ -30,7 +29,10 @@ export default class ConfigForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        return {
+            formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues,
+            actionName: nextProps.formValues.id ? 'Update' : 'Add new',
+        };
     }
 
     resetForm = () => {
@@ -83,7 +85,7 @@ export default class ConfigForm extends React.Component<Props, States> {
                     {this.props.children}
                     <button className="btn btn-primary">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        {this.state.actionName}
                     </button>
                 </div>
             </form>
