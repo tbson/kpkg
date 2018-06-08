@@ -167,7 +167,7 @@ export default class Tools {
         return result;
     }
 
-    static paramsProcessing(data: Object = {}): Object {
+    static payloadFromObject(data: Object = {}): Object {
         try {
             if (Object.values(data).filter(item => item instanceof Blob).length) {
                 let formData = new FormData();
@@ -267,7 +267,7 @@ export default class Tools {
     static async apiCall(
         url: string,
         method: string,
-        params: Object = {},
+        payload: Object = {},
         popMessage: boolean = true,
         usingLoading: boolean = true,
     ): Promise<{status: number, success: boolean, data: Object}> {
@@ -288,15 +288,15 @@ export default class Tools {
             }
             if (['POST', 'PUT'].indexOf(method) !== -1) {
                 // Have payload
-                params = this.paramsProcessing(params);
-                requestConfig.body = params.data;
-                if (!params.contentType) {
+                payload = this.payloadFromObject(payload);
+                requestConfig.body = payload.data;
+                if (!payload.contentType) {
                     delete requestConfig.headers['Content-Type'];
                 }
             } else {
                 // No payload but url encode
                 if (url.indexOf('?') === -1) {
-                    url += '?' + this.urlDataEncode(params);
+                    url += '?' + this.urlDataEncode(payload);
                 }
             }
             let response = await fetch(url, requestConfig);

@@ -60,26 +60,21 @@ describe('Pagination component', () => {
 });
 
 describe('SearchInput component', () => {
-    it('Empty input str with change', () => {
+    it('On show', () => {
         let props = {
-            searchStr: '',
             onSearch: jest.fn(),
         };
         let wrapper = shallow(<SearchInput {...props} />);
-        let elem = wrapper.find('input').first();
-        elem.simulate('change', 'abc');
-
+        wrapper.find('form').simulate('submit');
         expect(props.onSearch.mock.calls.length).toEqual(1);
-        expect(props.onSearch.mock.calls[0][0]).toEqual('abc');
-        expect(elem.props().value).toEqual('');
     });
-    it('Not empty input str', () => {
+
+    it('On hide', () => {
         let props = {
-            searchStr: 'abc',
+            show: false,
             onSearch: jest.fn(),
         };
         let wrapper = shallow(<SearchInput {...props} />);
-        let elem = wrapper.find('input').first();
-        expect(elem.props().value).toEqual('abc');
+        expect(wrapper.find('form').exists()).toEqual(false);
     });
 });

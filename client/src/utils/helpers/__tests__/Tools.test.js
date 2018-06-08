@@ -49,20 +49,20 @@ test('formDataToObj', () => {
 });
 
 
-test('emptyObj', () => {
+test('isEmpty', () => {
     let input = {};
     let eput = true;
-    let output = Tools.emptyObj(input);
+    let output = Tools.isEmpty(input);
     expect(output).toBe(eput);
 
     input = {key: 'value'};
     eput = false;
-    output = Tools.emptyObj(input);
+    output = Tools.isEmpty(input);
     expect(output).toBe(eput);
 
     input = {key: null};
     eput = false;
-    output = Tools.emptyObj(input);
+    output = Tools.isEmpty(input);
     expect(output).toBe(eput);
 });
 
@@ -191,12 +191,12 @@ test('getApiUrls', () => {
 });
 
 
-test('paramsProcessing', () => {
+test('payloadFromObject', () => {
     let input = {
         key1: 'value1',
         key2: 'value2'
     };
-    let output = Tools.paramsProcessing(input);
+    let output = Tools.payloadFromObject(input);
     let eput = JSON.stringify(input);
     expect(output).toEqual({
         data: eput,
@@ -207,8 +207,9 @@ test('paramsProcessing', () => {
         key1: 'value1',
         key2: 'value2'
     };
-    output = Tools.paramsProcessing(input, {});
+    output = Tools.payloadFromObject({...input, key0: new Blob()}); // Create formFata
     output.data = Tools.formDataToObj(output.data);
+    delete output.data.key0;
     eput = input;
     expect(output).toEqual({
         data: eput,
