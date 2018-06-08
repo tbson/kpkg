@@ -5,11 +5,11 @@ import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
 
 type Props = {
-    handleSubmit: Function,
-    children?: React.Node,
-    formId: string,
+    formName: string,
     formValues: FormValues,
     formErrors: Object,
+    children?: React.Node,
+    handleSubmit: Function,
 };
 type States = {
     formValues: FormValues,
@@ -18,6 +18,7 @@ type States = {
 
 export default class ConfigForm extends React.Component<Props, States> {
     static defaultProps = {};
+    name = 'config';
 
     state = {
         formValues: defaultFormValues,
@@ -36,8 +37,9 @@ export default class ConfigForm extends React.Component<Props, States> {
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=uid]').focus();
+        const {formName} = this.props;
+        window.document.querySelector("form[name=${formName}]").reset();
+        window.document.querySelector("form[name=${formName}] [name=uid]").focus();
     };
 
     setClassName = (name: string) => {
@@ -49,14 +51,15 @@ export default class ConfigForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {formName} = this.props;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
-                <div className="form-group">
-                    <label htmlFor="uid">Key</label>
+            <form name={formName} onSubmit={this.props.handleSubmit}>
+                <input defaultValue={this.state.formValues.id} name="id" id="${formName}-id" type="hidden" />
+                <div className="form-group uid-field">
+                    <label htmlFor="${name}-uid">Key</label>
                     <input
                         defaultValue={this.state.formValues.uid}
-                        id="uid"
+                        id="${name}-uid"
                         name="uid"
                         type="text"
                         className={this.setClassName('uid')}
@@ -67,11 +70,11 @@ export default class ConfigForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('uid')}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="value">Value</label>
+                <div className="form-group value-field">
+                    <label htmlFor="${name}-value">Value</label>
                     <input
                         defaultValue={this.state.formValues.value}
-                        id="value"
+                        id="${name}-value"
                         name="value"
                         type="text"
                         className={this.setClassName('value')}
@@ -83,9 +86,11 @@ export default class ConfigForm extends React.Component<Props, States> {
 
                 <div className="right">
                     {this.props.children}
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        {this.state.actionName}
+                        <span className="label">
+                            {this.state.actionName}
+                        </span>
                     </button>
                 </div>
             </form>

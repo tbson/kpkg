@@ -2,6 +2,7 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
+import {seeding} from '../_data';
 import {Row} from '../tables/ConfigTable';
 
 Enzyme.configure({adapter: new Adapter()});
@@ -10,11 +11,7 @@ describe('ConfigTable Row component', () => {
     let wrapper;
     const props = {
         _key: 0,
-        data: {
-            id: 1,
-            uid: 'key1',
-            value: 'value 1',
-        },
+        data: seeding(1, true)[0],
         toggleModal: jest.fn(),
         handleRemove: jest.fn(),
         onCheck: jest.fn(),
