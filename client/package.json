@@ -17,6 +17,9 @@
         "transform": {
             "^.+\\.js?$": "babel-jest",
             "^.+\\.jsx?$": "babel-jest"
+        },
+        "moduleNameMapper": {
+            "\\.(css|less|scss|sass)$": "identity-obj-proxy"
         }
     },
     "devDependencies": {
@@ -43,6 +46,7 @@
         "eslint": "^4.13.1",
         "file-loader": "1.1.5",
         "flow-bin": "^0.72.0",
+        "identity-obj-proxy": "^3.0.0",
         "jest": "^23.1.0",
         "jest-enzyme": "^6.0.1",
         "jest-webpack": "^0.4.0",
