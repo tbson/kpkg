@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
-import type {FormValues, FormValuesEdit} from '../_data';
+import type {FormValues, FormValuesWithCheck} from '../_data';
 import ConfigForm from '../forms/ConfigForm';
 import ConfigModal from '../forms/ConfigModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -12,19 +12,17 @@ import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
-    list?: Array<FormValuesEdit>,
+    list?: Array<FormValuesWithCheck>,
 };
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<FormValuesEdit>,
+    list: Array<FormValuesWithCheck>,
     formValues: FormValues,
     formErrors: Object,
 };
 
 export class ConfigTable extends React.Component<Props, States> {
-    getList: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -59,7 +57,7 @@ export class ConfigTable extends React.Component<Props, States> {
         });
     };
 
-    getList = async (params: Object = {}, url: ?string = null): Promise<?Array<FormValuesEdit>> => {
+    getList = async (params: Object = {}, url: ?string = null): Promise<?Array<FormValuesWithCheck>> => {
         const result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
         if (result.success) {
             result.data.items = result.data.items.map(item => {
@@ -135,7 +133,7 @@ export class ConfigTable extends React.Component<Props, States> {
         }
     };
 
-    handleEdit = async (params: FormValuesEdit): Promise<Object> => {
+    handleEdit = async (params: FormValuesWithCheck): Promise<Object> => {
         try {
             const id = String(params.id);
             return await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
@@ -144,7 +142,7 @@ export class ConfigTable extends React.Component<Props, States> {
         }
     };
 
-    handleToggleCheckAll = (): Array<FormValuesEdit> => {
+    handleToggleCheckAll = (): Array<FormValuesWithCheck> => {
         let {list} = this.state;
         let checked = false;
         const checkedItem = list.filter(item => item.checked);
@@ -158,7 +156,7 @@ export class ConfigTable extends React.Component<Props, States> {
         return list;
     };
 
-    handleCheck = (event: Object): FormValuesEdit => {
+    handleCheck = (event: Object): FormValuesWithCheck => {
         const id = parseInt(event.target.id);
         const {list} = this.state;
         const index = list.findIndex(item => item.id === id);
@@ -167,7 +165,7 @@ export class ConfigTable extends React.Component<Props, States> {
         return list[index];
     };
 
-    handleRemove = async (id: string): Promise<Array<FormValuesEdit>> => {
+    handleRemove = async (id: string): Promise<Array<FormValuesWithCheck>> => {
         const listId = id.split(',');
         if (!id || !listId.length) return [];
         let message = '';
@@ -189,7 +187,7 @@ export class ConfigTable extends React.Component<Props, States> {
         return [];
     };
 
-    handleSearch = async (event: Object): Promise<?Array<FormValuesEdit>> => {
+    handleSearch = async (event: Object): Promise<?Array<FormValuesWithCheck>> => {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
@@ -274,7 +272,7 @@ export class ConfigTable extends React.Component<Props, States> {
 export default withRouter(ConfigTable);
 
 type RowPropTypes = {
-    data: FormValuesEdit,
+    data: FormValuesWithCheck,
     toggleModal: Function,
     handleRemove: Function,
     onCheck: Function,

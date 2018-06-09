@@ -14,7 +14,7 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export function seeding(numberOfItems: number, single:boolean = false): Array<FormValuesEdit> {
+export function seeding(numberOfItems: number, single:boolean = false): Array<FormValuesWithCheck> {
     let result = [];
     for (let i = 1; i <= numberOfItems; i++) {
         result.push({
@@ -40,6 +40,6 @@ export const defaultFormValues: FormValues = {
     value: '',
 };
 
-export type FormValuesEdit = FormValues & {
+export type FormValuesWithCheck = FormValues & {
     checked: boolean,
 };
