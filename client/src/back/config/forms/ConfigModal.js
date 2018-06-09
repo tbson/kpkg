@@ -33,15 +33,16 @@ export default class ConfigModal extends React.Component<Props, States> {
 
     render() {
         if (!this.props.open) return null;
+        const {handleClose, formValues, formErrors, handleSubmit} = this.props;
         return (
-            <CustomModal open={true} close={this.props.handleClose} title={this.state.modalTitle} size="md">
-                <div className="modal-content">
+            <CustomModal open={true} close={handleClose} title={this.state.modalTitle} size="md">
+                <div className="modal-inner">
                     <ConfigForm
                         formName="config"
-                        formValues={this.props.formValues}
-                        formErrors={this.props.formErrors}
-                        handleSubmit={this.props.handleSubmit}>
-                        <button type="button" onClick={this.props.handleClose} className="btn btn-warning">
+                        formValues={formValues}
+                        formErrors={formErrors}
+                        handleSubmit={handleSubmit}>
+                        <button type="button" onClick={handleClose} className="btn btn-warning">
                             <span className="oi oi-x" />&nbsp; Cancel
                         </button>
                     </ConfigForm>

@@ -11,7 +11,9 @@ import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
-type Props = {};
+type Props = {
+    list?: Array<FormValuesEdit>,
+};
 type States = {
     dataLoaded: boolean,
     modal: boolean,

@@ -15,11 +15,11 @@ type Props = {
     list?: Array<FormValuesEdit>,
 };
 type States = {
-    dataLoaded?: boolean,
-    modal?: boolean,
+    dataLoaded: boolean,
+    modal: boolean,
     list: Array<FormValuesEdit>,
-    formValues?: FormValues,
-    formErrors?: Object,
+    formValues: FormValues,
+    formErrors: Object,
 };
 
 export class ConfigTable extends React.Component<Props, States> {
@@ -235,7 +235,6 @@ export class ConfigTable extends React.Component<Props, States> {
                                 className="table-row"
                                 data={data}
                                 key={key}
-                                _key={key}
                                 toggleModal={this.toggleModal}
                                 handleRemove={this.handleRemove}
                                 onCheck={this.handleCheck}
@@ -276,7 +275,6 @@ export default withRouter(ConfigTable);
 
 type RowPropTypes = {
     data: FormValuesEdit,
-    _key: number,
     toggleModal: Function,
     handleRemove: Function,
     onCheck: Function,
@@ -284,26 +282,20 @@ type RowPropTypes = {
 
 export class Row extends React.Component<RowPropTypes> {
     render() {
-        let data: FormValuesEdit = this.props.data;
+        const {data, toggleModal, handleRemove, onCheck} = this.props;
         return (
-            <tr key={this.props._key}>
+            <tr>
                 <th className="row25">
-                    <input
-                        id={data.id}
-                        className="check"
-                        type="checkbox"
-                        checked={data.checked}
-                        onChange={this.props.onCheck}
-                    />
+                    <input id={data.id} className="check" type="checkbox" checked={data.checked} onChange={onCheck} />
                 </th>
                 <td className="uid">{data.uid}</td>
                 <td className="value">{data.value}</td>
                 <td className="center">
-                    <a className="editBtn" onClick={() => this.props.toggleModal('modal', data.id)}>
+                    <a className="editBtn" onClick={() => toggleModal('modal', data.id)}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <a className="removeBtn" onClick={() => this.props.handleRemove(String(data.id))}>
+                    <a className="removeBtn" onClick={() => handleRemove(String(data.id))}>
                         <span className="removeBtn oi oi-x text-danger pointer" />
                     </a>
                 </td>

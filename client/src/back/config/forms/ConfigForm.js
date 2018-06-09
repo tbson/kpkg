@@ -38,8 +38,8 @@ export default class ConfigForm extends React.Component<Props, States> {
 
     resetForm = () => {
         const {formName} = this.props;
-        window.document.querySelector("form[name=${formName}]").reset();
-        window.document.querySelector("form[name=${formName}] [name=uid]").focus();
+        window.document.querySelector('form[name=${formName}]').reset();
+        window.document.querySelector('form[name=${formName}] [name=uid]').focus();
     };
 
     setClassName = (name: string) => {
@@ -51,14 +51,15 @@ export default class ConfigForm extends React.Component<Props, States> {
     };
 
     render() {
-        const {formName} = this.props;
+        const {formName, handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form name={formName} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" id="${formName}-id" type="hidden" />
+            <form name={formName} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id="${formName}-id" type="hidden" />
                 <div className="form-group uid-field">
                     <label htmlFor="${name}-uid">Key</label>
                     <input
-                        defaultValue={this.state.formValues.uid}
+                        defaultValue={formValues.uid}
                         id="${name}-uid"
                         name="uid"
                         type="text"
@@ -73,7 +74,7 @@ export default class ConfigForm extends React.Component<Props, States> {
                 <div className="form-group value-field">
                     <label htmlFor="${name}-value">Value</label>
                     <input
-                        defaultValue={this.state.formValues.value}
+                        defaultValue={formValues.value}
                         id="${name}-value"
                         name="value"
                         type="text"
@@ -85,12 +86,10 @@ export default class ConfigForm extends React.Component<Props, States> {
                 </div>
 
                 <div className="right">
-                    {this.props.children}
+                    {children}
                     <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        <span className="label">
-                            {this.state.actionName}
-                        </span>
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>
