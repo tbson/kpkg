@@ -50,9 +50,10 @@ describe('ConfigForm', () => {
     });
 
     it('Editing form', () => {
+        const formValues = seeding(1, true)[0];
         const props = {
             formName,
-            formValues: seeding(1, true)[0],
+            formValues,
             formErrors: {},
             handleSubmit: jest.fn(),
         };

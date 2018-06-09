@@ -35,7 +35,7 @@ export default class ConfigModal extends React.Component<Props, States> {
         if (!this.props.open) return null;
         return (
             <CustomModal open={true} close={this.props.handleClose} title={this.state.modalTitle} size="md">
-                <div>
+                <div className="modal-content">
                     <ConfigForm
                         formName="config"
                         formValues={this.props.formValues}
