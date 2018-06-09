@@ -28,12 +28,6 @@ export function seeding(numberOfItems: number, single: boolean = false): Array<F
     return [result[numberOfItems - 1]];
 }
 
-export const emptySeed = {
-    id: 0,
-    uid: '',
-    value: '',
-};
-
 export type FormValues = {
     id?: number,
     uid: string,

@@ -4,7 +4,7 @@ import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 import 'src/__mocks__/FormData';
 import {ConfigTable} from '../tables/ConfigTable';
-import {seeding, emptySeed} from '../_data';
+import {seeding, defaultFormValues} from '../_data';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import Tools from 'src/utils/helpers/Tools';
 
@@ -240,7 +240,7 @@ describe('ConfigTable methods', () => {
             result = await instance.toggleModal(modalName);
             expect(result).toEqual({
                 formErrors: {},
-                formValues: emptySeed,
+                formValues: defaultFormValues,
                 modal: true,
             });
         });

@@ -6,8 +6,8 @@ import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesWithCheck} from '../_data';
 import ConfigForm from '../forms/ConfigForm';
-import ConfigModal from '../forms/ConfigModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
+import DefaultModal from 'src/utils/components/DefaultModal';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
@@ -204,6 +204,7 @@ export class ConfigTable extends React.Component<Props, States> {
         const {list} = this.state;
         const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
         const formErrors = this.state.formErrors ? this.state.formErrors : {};
+        const modalTitle = formValues.id ? 'Update config' : 'Add new config';
         return (
             <div>
                 <SearchInput onSearch={this.handleSearch} />
@@ -259,13 +260,20 @@ export class ConfigTable extends React.Component<Props, States> {
                         </tr>
                     </tfoot>
                 </table>
-                <ConfigModal
+                <DefaultModal
                     open={this.state.modal}
-                    formValues={formValues}
-                    formErrors={formErrors}
-                    handleClose={() => this.setState({modal: false})}
-                    handleSubmit={this.handleSubmit}
-                />
+                    title={modalTitle}
+                    handleClose={() => this.toggleModal('modal')}>
+                    <ConfigForm
+                        formName="config"
+                        formValues={formValues}
+                        formErrors={formErrors}
+                        handleSubmit={this.handleSubmit}>
+                        <button type="button" onClick={() => this.toggleModal('modal')} className="btn btn-warning">
+                            <span className="oi oi-x" />&nbsp; Cancel
+                        </button>
+                    </ConfigForm>
+                </DefaultModal>
             </div>
         );
     }
