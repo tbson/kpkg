@@ -16,7 +16,7 @@ export class SearchInput extends React.Component<SearchInputPropTypes> {
         return (
             <form onSubmit={this.props.onSearch}>
                 <div className="input-group mb-3">
-                    <input type="text" name="searchStr" className="form-control" placeholder="Search..." />
+                    <input type="text" name="search" className="form-control" placeholder="Search..." />
                     <div className="input-group-append">
                         <button className="btn btn-outline-secondary">
                             <span className="oi oi-check" />

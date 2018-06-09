@@ -49,6 +49,19 @@ export class ConfigTable extends React.Component<Props, States> {
         return null;
     }
 
+    toggleModal = async (modalName: string, formValues: Object = {}) => {
+        const formErrors = {};
+        const modalState = this.state[modalName];
+        if (!modalName || modalState === undefined) return;
+
+        const state = {
+            [modalName]: !modalState,
+            formValues,
+            formErrors,
+        };
+        this.setState(state);
+    };
+
     setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
@@ -58,145 +71,82 @@ export class ConfigTable extends React.Component<Props, States> {
         });
     };
 
-    getList = async (params: Object = {}, url: ?string = null): Promise<?Array<FormValuesWithCheck>> => {
-        const result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
-        if (result.success) {
-            result.data.items = result.data.items.map(item => {
-                item.checked = false;
-                return item;
-            });
-            this.setInitData(result.data);
-            return result.data.items ? result.data.items : [];
+    getList = async (url: string = '', params: Object = {}) => {
+        const result = await Tools.getList(url ? url : apiUrls.crud, params);
+        if (result) {
+            this.setInitData(result);
         }
-        return null;
     };
 
-    toggleModal = async (modalName: string, id: ?number = null): Promise<Object> => {
-        // If modalName not defined -> exit here
-        if (typeof this.state[modalName] == 'undefined') return {};
-
-        const state = {
-            [modalName]: !this.state[modalName],
-            formValues: {},
-            formValues: defaultFormValues,
-            formErrors: {},
-        };
-
-        if (id) {
-            switch (modalName) {
-                case 'modal':
-                    const result = await Tools.apiCall(apiUrls.crud + id.toString(), 'GET');
-                    if (result.success) {
-                        state.formValues = result.data;
-                    }
-                    this.setState(state);
-                    return state;
-            }
+    handleSearch = async (event: Object) => {
+        event.preventDefault();
+        const {search} = Tools.formDataToObj(new FormData(event.target));
+        if (search.length > 2) {
+            await this.getList('', {search});
+        } else if (!search.length) {
+            await this.getList();
         }
-        this.setState(state);
-        return state;
     };
 
-    handleSubmit = async (event: Object): Promise<Object> => {
+    handleSubmit = async (event: Object) => {
         event.preventDefault();
 
         const params = Tools.formDataToObj(new FormData(event.target));
-        const isAdding = params.id ? false : true;
-        const result = isAdding ? await this.handleAdd(params) : await this.handleEdit(params);
-        const {data, error} = Tools.parseDataError(result);
-        const {list} = this.state;
+        const isEdit = params.id ? true : false;
+        let url = apiUrls.crud;
+        if (isEdit) url += String(params.id);
 
-        if (!Tools.isEmpty(error)) {
-            // Have error -> update err object
-            this.setState({formErrors: error});
-            return error;
-        }
+        const {data, error} = await Tools.handleSubmit(url, params);
+        const isSuccess = Tools.isEmpty(error);
+        isSuccess ? this.onSuccessSubmit(isEdit, data) : this.setState({formErrors: error});
+    };
 
-        if (isAdding) {
-            list.unshift({...data, checked: false});
-        } else {
-            const index = list.findIndex(item => item.id === params.id);
-            const {checked} = list[index];
-            list[index] = {...result.data, checked};
-        }
-
-        // No error -> close current modal
+    onSuccessSubmit = (isEdit: boolean, data: FormValues) => {
+        const list = isEdit ? this.onSuccessEditing(data) : this.onSuccessAdding(data);
         this.setState({list});
         this.toggleModal('modal');
-        return data;
     };
 
-    handleAdd = async (params: FormValues): Promise<Object> => {
-        try {
-            return await Tools.apiCall(apiUrls.crud, 'POST', params);
-        } catch (error) {
-            return Tools.commonErrorResponse(error);
-        }
-    };
-
-    handleEdit = async (params: FormValuesWithCheck): Promise<Object> => {
-        try {
-            const id = String(params.id);
-            return await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
-        } catch (error) {
-            return Tools.commonErrorResponse(error);
-        }
-    };
-
-    handleToggleCheckAll = (): Array<FormValuesWithCheck> => {
-        let {list} = this.state;
-        let checked = false;
-        const checkedItem = list.filter(item => item.checked);
-        if (checkedItem.length) {
-            checked = checkedItem.length === list.length ? false : true;
-        } else {
-            checked = true;
-        }
-        list = list.map(value => ({...value, checked}));
-        this.setState({list});
+    onSuccessAdding = (data: FormValues): Array<FormValuesWithCheck> => {
+        const {list} = this.state;
+        const newItem = {...data, checked: false};
+        list.unshift(newItem);
         return list;
     };
 
-    handleCheck = (event: Object): FormValuesWithCheck => {
-        const id = parseInt(event.target.id);
+    onSuccessEditing = (data: FormValues): Array<FormValuesWithCheck> => {
+        const {id} = data;
         const {list} = this.state;
         const index = list.findIndex(item => item.id === id);
-        list[index].checked = event.target.checked;
-        this.setState({list});
-        return list[index];
+        const oldItem = list[index];
+        const newItem = {...data, checked: oldItem.checked};
+        list[index] = newItem;
+        return list;
     };
 
-    handleRemove = async (id: string): Promise<Array<FormValuesWithCheck>> => {
-        const listId = id.split(',');
-        if (!id || !listId.length) return [];
-        let message = '';
-        if (listId.length === 1) {
-            message = 'Do you want to remove this item?';
-        } else {
-            message = 'Do you want to remove selected items?';
-        }
-        const decide = window.confirm(message);
-        if (!decide) return [];
-        const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
-        let list = this.state.list ? this.state.list : [];
-        if (result.success) {
-            const listId = id.split(',').map(item => parseInt(item));
-            list = list.filter(item => !listId.includes(item.id));
+    handleRemove = async (id: string) => {
+        let {list} = this.state;
+        const url = apiUrls.crud;
+        const deletedIds = await Tools.handleRemove(url, id);
+        if (deletedIds && deletedIds.length) {
+            list = list.filter(item => !deletedIds.includes(item.id));
             this.setState({list});
-            return list;
         }
-        return [];
     };
 
-    handleSearch = async (event: Object): Promise<?Array<FormValuesWithCheck>> => {
-        event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
-        if (searchStr.length > 2) {
-            return await this.getList({search: searchStr});
-        } else if (!searchStr.length) {
-            return await this.getList();
-        }
-        return null;
+    handleCheck = (event: Object) => {
+        const {id, checked} = event.target;
+        const {list} = this.state;
+        const index = list.findIndex(item => item.id === parseInt(id));
+        list[index].checked = checked;
+        this.setState({list});
+    };
+
+    handleToggleCheckAll = () => {
+        let {list} = this.state;
+        const checked = Tools.checkOrUncheckAll(list);
+        list = list.map(value => ({...value, checked}));
+        this.setState({list});
     };
 
     render() {
@@ -254,16 +204,13 @@ export class ConfigTable extends React.Component<Props, States> {
                                 <Pagination
                                     next={this.nextUrl}
                                     prev={this.prevUrl}
-                                    onNavigate={url => this.getList({}, url)}
+                                    onNavigate={url => this.getList(url)}
                                 />
                             </th>
                         </tr>
                     </tfoot>
                 </table>
-                <DefaultModal
-                    open={this.state.modal}
-                    title={modalTitle}
-                    handleClose={() => this.toggleModal('modal')}>
+                <DefaultModal open={this.state.modal} title={modalTitle} handleClose={() => this.toggleModal('modal')}>
                     <ConfigForm
                         formName="config"
                         formValues={formValues}
@@ -288,17 +235,25 @@ type RowPropTypes = {
 };
 
 export class Row extends React.Component<RowPropTypes> {
+
+    getItem = async (id: number) => {
+        const result = await Tools.getItem(apiUrls.crud, id);
+        if (result) {
+            this.props.toggleModal('modal', result);
+        }
+    }
+
     render() {
         const {data, toggleModal, handleRemove, onCheck} = this.props;
         return (
             <tr>
                 <th className="row25">
-                    <input className="check" type="checkbox" checked={data.checked} onChange={onCheck} />
+                    <input id={data.id} className="check" type="checkbox" checked={data.checked} onChange={onCheck} />
                 </th>
                 <td className="uid">{data.uid}</td>
                 <td className="value">{data.value}</td>
                 <td className="center">
-                    <a className="editBtn" onClick={() => toggleModal('modal', data.id)}>
+                    <a className="editBtn" onClick={() => this.getItem(parseInt(data.id))}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>

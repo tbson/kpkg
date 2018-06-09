@@ -30,6 +30,22 @@ type ApiUrl = {
 
 type RawApiUrls = Array<ApiUrl>;
 
+type GetListResponseData = {
+    links: {
+        next: ?string,
+        previous: ?string,
+    },
+    items: Array<Object>,
+};
+type GetListResponse = Promise<?GetListResponseData>;
+
+type GetItemResponse = Promise<?Object>;
+
+type DataErrorPair = {
+    data: Object,
+    error: Object,
+};
+
 export default class Tools {
     static emitter = new EventEmitter();
 
@@ -420,7 +436,7 @@ export default class Tools {
         };
     }
 
-    static parseDataError(response: Object): {data: Object, error: Object} {
+    static parseDataError(response: Object): DataErrorPair {
         let data = {};
         let error = {};
 
@@ -431,5 +447,77 @@ export default class Tools {
         }
 
         return {data, error};
+    }
+
+    static async getItem(url: string, id: number): GetItemResponse {
+        const result = await this.apiCall(url + id.toString(), 'GET');
+        if (result.success) {
+            return result.data;
+        }
+        return null;
+    }
+
+    static async getList(url: string, params: Object = {}): GetListResponse {
+        const result = await this.apiCall(url, 'GET', params);
+        if (result.success) {
+            result.data.items = result.data.items.map(item => {
+                item.checked = false;
+                return item;
+            });
+            const {links, items} = result.data;
+            return {links, items};
+        }
+        return null;
+    }
+
+    static async handleAdd(url: string, params: Object): Promise<Object> {
+        try {
+            return await this.apiCall(url, 'POST', params);
+        } catch (error) {
+            return this.commonErrorResponse(error);
+        }
+    }
+
+    static async handleEdit(url: string, params: Object): Promise<Object> {
+        try {
+            const id = String(params.id);
+            return await this.apiCall(url, 'PUT', params);
+        } catch (error) {
+            return this.commonErrorResponse(error);
+        }
+    }
+
+    static async handleSubmit(url: string, params: Object): Promise<DataErrorPair> {
+        const isEdit = params.id ? true : false;
+        const args = [url, params];
+        const result = await (isEdit ? this.handleEdit(...args) : this.handleAdd(...args));
+        const {data, error} = this.parseDataError(result);
+        return {data, error};
+    }
+
+    static async handleRemove(url: string, id: string): Promise<?Array<number>> {
+        const listId = id.split(',');
+        if (!id || !listId.length) return null;
+        let message = '';
+        if (listId.length === 1) {
+            message = 'Do you want to remove this item?';
+        } else {
+            message = 'Do you want to remove selected items?';
+        }
+        const decide = window.confirm(message);
+        if (!decide) return null;
+        const result = await Tools.apiCall(url + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
+        return result.success ? id.split(',').map(item => parseInt(item)) : null;
+    }
+
+    static checkOrUncheckAll(list: Array<Object>): boolean {
+        let checkAll = false;
+        const checkedItem = list.filter(item => item.checked);
+        if (checkedItem.length) {
+            checkAll = checkedItem.length === list.length ? false : true;
+        } else {
+            checkAll = true;
+        }
+        return checkAll;
     }
 }
