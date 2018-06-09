@@ -24,7 +24,7 @@ describe('ConfigModal', () => {
             handleSubmit: jest.fn(),
         };
         const wrapper = shallow(<ConfigModal {...props} />);
-        expect(wrapper.find('.modal-content').exists()).toEqual(false);
+        expect(wrapper.find('.modal-inner').exists()).toEqual(false);
     });
 
     it('Open', () => {
@@ -36,7 +36,7 @@ describe('ConfigModal', () => {
             handleSubmit: jest.fn(),
         };
         const wrapper = shallow(<ConfigModal {...props} />);
-        expect(wrapper.find('.modal-content').exists()).toEqual(true);
+        expect(wrapper.find('.modal-inner').exists()).toEqual(true);
     });
 
     it('Adding title', () => {
