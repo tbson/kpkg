@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
-import type {FormValuesEdit} from '../_data';
+import type {FormValuesWithCheck} from '../_data';
 import ArticleForm from '../forms/ArticleForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
@@ -19,7 +19,7 @@ type Props = {
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<FormValuesEdit>,
+    list: Array<FormValuesWithCheck>,
     formValues: Object,
     formErrors: Object,
 };
@@ -106,7 +106,7 @@ export class ArticleTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: FormValuesEdit, event: Object) => {
+    handleCheck = (data: FormValuesWithCheck, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -218,7 +218,7 @@ export default withRouter(ArticleTable);
 type RowPropTypes = {
     parent: string,
     parent_id: number,
-    data: FormValuesEdit,
+    data: FormValuesWithCheck,
     _key: number,
     handleRemove: Function,
     onCheck: Function,

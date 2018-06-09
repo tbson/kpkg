@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
-import type {FormValues, FormValuesEdit} from '../_data';
+import type {FormValues, FormValuesWithCheck} from '../_data';
 import TagForm from '../forms/TagForm';
 import TagModal from '../forms/TagModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -15,7 +15,7 @@ type Props = {};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
-    list: Array<FormValuesEdit>,
+    list: Array<FormValuesWithCheck>,
     formValues: FormValues,
     formErrors: Object,
 };
@@ -127,7 +127,7 @@ export class TagTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: FormValuesEdit) => {
+    handleEdit = async (params: FormValuesWithCheck) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -163,7 +163,7 @@ export class TagTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: FormValuesEdit, event: Object) => {
+    handleCheck = (data: FormValuesWithCheck, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -274,7 +274,7 @@ export class TagTable extends React.Component<Props, States> {
 export default withRouter(TagTable);
 
 type RowPropTypes = {
-    data: FormValuesEdit,
+    data: FormValuesWithCheck,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

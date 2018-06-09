@@ -28,11 +28,11 @@ export const defaultFormValues: FormValues = {
     codename: '',
 };
 
-export type FormValuesEdit = FormValues & {
+export type FormValuesWithCheck = FormValues & {
     checked: boolean,
 };
 
-export type RowValues = FormValuesEdit & {
+export type RowValues = FormValuesWithCheck & {
     content_type: string,
     codename: string,
 };

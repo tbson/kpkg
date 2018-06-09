@@ -4,7 +4,7 @@ import * as React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
-import type {FormValues, FormValuesEdit, CatType} from '../_data';
+import type {FormValues, FormValuesWithCheck, CatType} from '../_data';
 import CategoryForm from '../forms/CategoryForm';
 import CategoryModal from '../forms/CategoryModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -149,7 +149,7 @@ export class CategoryTable extends React.Component<Props, States> {
         return result.data;
     };
 
-    handleEdit = async (params: FormValuesEdit) => {
+    handleEdit = async (params: FormValuesWithCheck) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         if (result.success) {
@@ -185,7 +185,7 @@ export class CategoryTable extends React.Component<Props, States> {
         }
     };
 
-    handleCheck = (data: FormValuesEdit, event: Object) => {
+    handleCheck = (data: FormValuesWithCheck, event: Object) => {
         data.checked = event.target.checked;
         const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
         this.state.list[index] = {...data};
@@ -302,7 +302,7 @@ export class CategoryTable extends React.Component<Props, States> {
 export default withRouter(CategoryTable);
 
 type RowPropTypes = {
-    data: FormValuesEdit,
+    data: FormValuesWithCheck,
     _key: number,
     toggleModal: Function,
     handleRemove: Function,

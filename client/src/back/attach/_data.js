@@ -34,6 +34,6 @@ export const defaultFormValues: FormValues = {
     order: null,
 };
 
-export type FormValuesEdit = FormValues & {
+export type FormValuesWithCheck = FormValues & {
     checked: boolean,
 };

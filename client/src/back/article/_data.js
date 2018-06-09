@@ -58,7 +58,7 @@ export const defaultFormValues: FormValues = {
     order: 0,
 };
 
-export type FormValuesEdit = FormValues & {
+export type FormValuesWithCheck = FormValues & {
     checked: boolean,
 };
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
 import {apiUrls, defaultFormValues} from './_data';
-import type {FormValues, FormValuesEdit, UrlParms} from './_data';
+import type {FormValues, FormValuesWithCheck, UrlParms} from './_data';
 import type {DropdownItemType} from 'src/utils/types/CommonTypes';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
@@ -142,7 +142,7 @@ class ArticleEdit extends React.Component<Props, States> {
         return result;
     };
 
-    handleEdit = async (params: FormValuesEdit) => {
+    handleEdit = async (params: FormValuesWithCheck) => {
         const id = String(params.id);
         const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
         return result;

@@ -26,6 +26,6 @@ export const defaultFormValues: FormValues = {
     title: '',
 };
 
-export type FormValuesEdit = FormValues & {
+export type FormValuesWithCheck = FormValues & {
     checked: boolean,
 };
