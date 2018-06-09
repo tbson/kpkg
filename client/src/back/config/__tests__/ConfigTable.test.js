@@ -490,7 +490,7 @@ describe('ConfigTable methods', () => {
             it('Fail', async () => {
                 // Prepare data
                 const originalData = seeding(1, true)[0];
-                const data = seeding(2, true)[0];
+                const data = {...seeding(2, true)[0], id: originalData.id};
                 const formValues = {...data};
                 const response = {
                     success: false,
@@ -528,9 +528,8 @@ describe('ConfigTable methods', () => {
 
             it('Success', async () => {
                 // Prepare data
-                const data = seeding(1, true)[0];
-                data.uid = 'test-uid';
-                data.value = 'test-value';
+                const originalData = seeding(1, true)[0];
+                const data = {...seeding(2, true)[0], id: originalData.id};
                 const formValues = {...data};
                 const response = {
                     success: true,
