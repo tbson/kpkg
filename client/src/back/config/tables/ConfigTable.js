@@ -44,7 +44,8 @@ export class ConfigTable extends React.Component<Props, States> {
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
         const {list} = nextProps;
-        if (nextProps.list) return {list};
+        const dataLoaded = true;
+        if (list) return {list, dataLoaded};
         return null;
     }
 

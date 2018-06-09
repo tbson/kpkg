@@ -27,8 +27,6 @@ describe('ConfigTable component', () => {
     });
 
     it('Init data', done => {
-        // This function run right after component init -> declare it's mock before render
-
         const wrapper = shallow(<ConfigTable />);
         const instance = wrapper.instance();
         const setInitData = jest.spyOn(instance, 'setInitData');
@@ -46,38 +44,37 @@ describe('ConfigTable component', () => {
         }, 100);
     });
 
-    it('Check all', done => {
-        const wrapper = shallow(<ConfigTable />);
+    it('Check all', () => {
+        // Spy/mock static methods
+        jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+
+        const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
         const instance = wrapper.instance();
         const handleToggleCheckAll = jest.spyOn(instance, 'handleToggleCheckAll');
-        setTimeout(() => {
-            // After loading data done
-            wrapper.update();
-            wrapper
-                .find('.check-all-button')
-                .first()
-                .simulate('click');
-            expect(handleToggleCheckAll).toHaveBeenCalled();
-            done();
-        }, 100);
+
+        wrapper
+            .find('.check-all-button')
+            .first()
+            .simulate('click');
+
+        expect(handleToggleCheckAll).toHaveBeenCalled();
     });
 
-    it('Add', done => {
-        const wrapper = shallow(<ConfigTable />);
+    it('Add', () => {
+        // Spy/mock static methods
+        jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+
+        const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
         const instance = wrapper.instance();
         const toggleModal = jest.spyOn(instance, 'toggleModal');
-        setTimeout(() => {
-            // After loading data done
-            wrapper.update();
-            wrapper
-                .find('.add-button')
-                .first()
-                .simulate('click');
 
-            expect(toggleModal).toHaveBeenCalled();
-            expect(toggleModal.mock.calls[0][0]).toEqual('modal');
-            done();
-        }, 100);
+        wrapper
+            .find('.add-button')
+            .first()
+            .simulate('click');
+
+        expect(toggleModal).toHaveBeenCalled();
+        expect(toggleModal.mock.calls[0][0]).toEqual('modal');
     });
 
     describe('Bulk remove', () => {
@@ -85,49 +82,43 @@ describe('ConfigTable component', () => {
             jest.restoreAllMocks();
         });
 
-        it('No check', done => {
-            const wrapper = shallow(<ConfigTable />);
+        it('No check', () => {
+            // Spy/mock static methods
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+
+            const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
             const instance = wrapper.instance();
             const handleRemove = jest.spyOn(instance, 'handleRemove').mockImplementation(() => null);
 
-            setTimeout(() => {
-                // After loading data done
-                wrapper.update();
-                wrapper
-                    .find('.bulk-remove-button')
-                    .first()
-                    .simulate('click');
+            wrapper
+                .find('.bulk-remove-button')
+                .first()
+                .simulate('click');
 
-                expect(handleRemove).toHaveBeenCalled();
-                expect(handleRemove.mock.calls[0][0]).toEqual('');
-
-                done();
-            }, 100);
+            expect(handleRemove).toHaveBeenCalled();
+            expect(handleRemove.mock.calls[0][0]).toEqual('');
         });
 
-        it('Check all', done => {
-            const wrapper = shallow(<ConfigTable />);
+        it('Check all', () => {
+            // Spy/mock static methods
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+
+            const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
             const instance = wrapper.instance();
             const handleRemove = jest.spyOn(instance, 'handleRemove').mockImplementation(() => null);
 
-            setTimeout(() => {
-                // After loading data done
-                wrapper.update();
+            wrapper
+                .find('.check-all-button')
+                .first()
+                .simulate('click');
 
-                wrapper
-                    .find('.check-all-button')
-                    .first()
-                    .simulate('click');
+            wrapper
+                .find('.bulk-remove-button')
+                .first()
+                .simulate('click');
 
-                wrapper
-                    .find('.bulk-remove-button')
-                    .first()
-                    .simulate('click');
-
-                expect(handleRemove).toHaveBeenCalled();
-                expect(handleRemove.mock.calls[0][0]).toEqual('1,2,3,4,5,6,7,8,9,10');
-                done();
-            }, 100);
+            expect(handleRemove).toHaveBeenCalled();
+            expect(handleRemove.mock.calls[0][0]).toEqual('1,2,3,4,5,6,7,8,9,10');
         });
     });
 });
