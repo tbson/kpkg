@@ -10,7 +10,6 @@ Enzyme.configure({adapter: new Adapter()});
 describe('ConfigTable Row component', () => {
     let wrapper;
     const props = {
-        _key: 0,
         data: seeding(1, true)[0],
         toggleModal: jest.fn(),
         handleRemove: jest.fn(),

@@ -14,19 +14,25 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export function seeding(numberOfItems: number, single:boolean = false): Array<FormValuesWithCheck> {
+export function seeding(numberOfItems: number, single: boolean = false): Array<FormValuesWithCheck> {
     let result = [];
     for (let i = 1; i <= numberOfItems; i++) {
         result.push({
             id: i,
-            uid: 'key' + String(i),
-            value: 'value ' + String(i),
+            uid: `key${i}`,
+            value: `value ${i}`,
             checked: false,
         });
     }
     if (!single) return result;
     return [result[numberOfItems - 1]];
 }
+
+export const emptySeed = {
+    id: 0,
+    uid: '',
+    value: '',
+};
 
 export type FormValues = {
     id?: number,

@@ -4,7 +4,7 @@ import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 import 'src/__mocks__/FormData';
 import {ConfigTable} from '../tables/ConfigTable';
-import {seeding} from '../_data';
+import {seeding, emptySeed} from '../_data';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import Tools from 'src/utils/helpers/Tools';
 
@@ -249,7 +249,7 @@ describe('ConfigTable methods', () => {
             result = await instance.toggleModal(modalName);
             expect(result).toEqual({
                 formErrors: {},
-                formValues: {id: 0, uid: '', value: ''},
+                formValues: emptySeed,
                 modal: true,
             });
         });
@@ -489,10 +489,8 @@ describe('ConfigTable methods', () => {
         describe('Editing', () => {
             it('Fail', async () => {
                 // Prepare data
-                const data = seeding(1, true)[0];
                 const originalData = seeding(1, true)[0];
-                data.uid = 'test-uid';
-                data.value = 'test-value';
+                const data = seeding(2, true)[0];
                 const formValues = {...data};
                 const response = {
                     success: false,
