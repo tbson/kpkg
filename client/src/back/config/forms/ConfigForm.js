@@ -30,9 +30,10 @@ export default class ConfigForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
         return {
-            formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues,
-            actionName: nextProps.formValues.id ? 'Update' : 'Add new',
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new',
         };
     }
 

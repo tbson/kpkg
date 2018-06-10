@@ -10,6 +10,7 @@ import Tools from 'src/utils/helpers/Tools';
 
 Enzyme.configure({adapter: new Adapter()});
 
+/*
 describe('ConfigTable component', () => {
     beforeAll(() => {
         const response = {
@@ -78,7 +79,7 @@ describe('ConfigTable component', () => {
     });
 
     describe('Bulk remove', () => {
-        afterEach(() => {
+        beforeEach(() => {
             jest.restoreAllMocks();
         });
 
@@ -123,28 +124,48 @@ describe('ConfigTable component', () => {
     });
 });
 
+*/
 describe('ConfigTable methods', () => {
-    afterEach(() => {
+    beforeEach(() => {
         jest.restoreAllMocks();
+    });
+
+    describe('toggleModal', () => {
+        let wrapper, instance;
+        beforeEach(() => {
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            wrapper = shallow(<ConfigTable />);
+            instance = wrapper.instance();
+        });
+
+        it('Not defined modal', () => {
+            const modalName = 'newThing';
+            instance.toggleModal(modalName);
+            expect(wrapper.state('modal')).toEqual(false);
+        });
+
+        it('Empty modal name', () => {
+            const modalName = '';
+            instance.toggleModal(modalName);
+            expect(wrapper.state('modal')).toEqual(false);
+        });
+
+        it('Correct modal name then toggle again', () => {
+            let modalName = 'modal';
+
+            instance.toggleModal(modalName);
+            expect(wrapper.state('modal')).toEqual(true);
+
+            instance.toggleModal(modalName);
+            expect(wrapper.state('modal')).toEqual(false);
+        });
     });
 
     describe('getList', () => {
         it('fail', async () => {
-            const response = {
-                status: 400,
-                success: false,
-                data: {
-                    detail: 'error',
-                },
-            };
-            const params = {
-                key1: 'value 1',
-                key2: 'value 2',
-            };
-
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            let apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
+            let getList = jest.spyOn(Tools, 'getList').mockImplementation(async () => null);
 
             // Init component
             const wrapper = shallow(<ConfigTable />);
@@ -154,36 +175,23 @@ describe('ConfigTable methods', () => {
             const setInitData = jest.spyOn(instance, 'setInitData');
 
             // Execute
-            const result = await wrapper.instance().getList(params);
+            await wrapper.instance().getList();
 
             // setInitData will call after ConfigTable mount
-            expect(apiCall.mock.calls[0][0]).toEqual('about:///api/v1/config/');
-            expect(apiCall.mock.calls[0][1]).toEqual('GET');
-            expect(apiCall.mock.calls[0][2]).toEqual(params);
+            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/config/');
+            expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData).not.toHaveBeenCalled();
-            expect(result).toEqual(null);
         });
 
         it('success', async () => {
             const response = {
-                status: 200,
-                success: true,
-                data: {
-                    count: 1,
-                    pages: 1,
-                    page_size: 10,
-                    links: {next: 'nextUrl', previous: 'prevUrl'},
-                    items: seeding(10),
-                },
-            };
-            const params = {
-                key1: 'value 1',
-                key2: 'value 2',
+                links: {next: 'nextUrl', previous: 'prevUrl'},
+                items: seeding(10),
             };
 
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            let apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
+            let getList = jest.spyOn(Tools, 'getList').mockImplementation(async () => response);
 
             // Init component
             const wrapper = shallow(<ConfigTable />);
@@ -193,368 +201,166 @@ describe('ConfigTable methods', () => {
             const setInitData = jest.spyOn(instance, 'setInitData');
 
             // Execute
-            const result = await wrapper.instance().getList(params);
+            await wrapper.instance().getList();
 
             // setInitData will call after ConfigTable mount
-            expect(apiCall.mock.calls[0][0]).toEqual('about:///api/v1/config/');
-            expect(apiCall.mock.calls[0][1]).toEqual('GET');
-            expect(apiCall.mock.calls[0][2]).toEqual(params);
+            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/config/');
+            expect(getList.mock.calls[0][1]).toEqual({});
+            expect(setInitData.mock.calls[0][0]).toEqual(response);
             expect(setInitData).toHaveBeenCalled();
-            expect(result).toEqual(response.data.items);
         });
     });
 
-    describe('toggleModal', () => {
-        it('Not defined modalName or null ID', async () => {
-            // Mock apiCall function
-            const response = {
-                status: 200,
-                success: true,
-                data: seeding(1, true)[0],
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component
-            let wrapper = shallow(<ConfigTable />);
-            let instance = wrapper.instance();
-
-            // State not pre-defined
-            let modalName = 'newThing';
-            let result = await instance.toggleModal(modalName);
-            expect(result).toEqual({});
-
-            // State not pre-defined
-            modalName = null;
-            result = await instance.toggleModal(modalName);
-            expect(result).toEqual({});
-
-            // State not pre-defined
-            result = await instance.toggleModal();
-            expect(result).toEqual({});
-
-            // State defined
-            modalName = 'modal';
-            result = await instance.toggleModal(modalName);
-            expect(result).toEqual({
-                formErrors: {},
-                formValues: defaultFormValues,
-                modal: true,
-            });
-        });
-
-        it('Not null ID', async () => {
-            // Mock apiCall function
-            const response = {
-                status: 200,
-                success: true,
-                data: seeding(1, true),
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component again
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-
-            // State defined
-            const modalName = 'modal';
-            const id = 1;
-            const result = await instance.toggleModal(modalName, id);
-            expect(result).toEqual({
-                formErrors: {},
-                formValues: seeding(id, true),
-                modal: true,
-            });
-        });
-    });
-
-    describe('handleAdd', () => {
-        it('Fail', async () => {
-            // Prepare data
-            const data = seeding(1, true)[0];
-            const formValues = {...data};
-            delete formValues.id;
-            const error = {
-                status: 400,
-                success: false,
-                data: {
-                    uid: 'Duplicate',
-                },
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => error);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-
-            // Spy/mock instance methods
-            const handleAdd = jest.spyOn(instance, 'handleAdd');
-
-            // Execute tested method
-            const result = await instance.handleAdd(formValues);
-
-            // Compare result
-            expect(result).toEqual(error);
-        });
-
-        it('Success', async () => {
-            // Prepare data
-            const data = seeding(1, true)[0];
-            const formValues = {...data};
-            delete formValues.id;
-            const response = {
-                status: 200,
-                success: true,
-                data: data,
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-
-            // Spy/mock instance methods
-            const handleAdd = jest.spyOn(instance, 'handleAdd');
-
-            // Execute tested method
-            const result = await instance.handleAdd(formValues);
-
-            // Compare result
-            expect(result).toEqual(response);
-        });
-    });
-
-    describe('handleEdit', () => {
-        it('Fail', async () => {
-            // Prepare data
-            const data = seeding(1, true)[0];
-            const formValues = {...data};
-            const error = {
-                status: 400,
-                success: false,
-                data: {
-                    uid: 'Duplicate',
-                },
-            };
-
-            // Spy/mock static methods
-            const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => error);
-
-            // Init component
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-
-            // Spy/mock instance methods
-            const handleEdit = jest.spyOn(instance, 'handleEdit');
-
-            // Execute tested method
-            const result = await instance.handleEdit(formValues);
-
-            // Compare result
-            expect(result).toEqual(error);
-        });
-
-        it('Success', async () => {
-            // Prepare data
-            const data = seeding(1, true)[0];
-            const formValues = {...data};
-            const response = {
-                status: 200,
-                success: true,
-                data: data,
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-
-            // Spy/mock instance methods
-            const handleEdit = jest.spyOn(instance, 'handleEdit');
-
-            // Execute tested method
-            const result = await instance.handleEdit(formValues);
-
-            // Compare result
-            expect(result).toEqual(response);
-        });
-    });
-
-    describe('handleSubmit', () => {
+    describe('getSearchList', () => {
         const event = {
             preventDefault: () => {},
-            target: null,
+            target: {},
         };
+        it('Empty string', async () => {
+            const data = {search: ''};
 
-        describe('Adding', () => {
-            it('Fail', async () => {
-                // Prepare data
-                const data = seeding(1, true)[0];
-                delete data.id;
-                const formValues = {...data};
-                const response = {
-                    success: false,
-                    data: {
-                        detail: 'error',
-                    },
-                };
-                const event = {
-                    preventDefault: () => {},
-                };
+            // Spy/mock static methods
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
 
-                // Spy/mock static methods
-                jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-                jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-                const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
+            // Init component
+            const wrapper = shallow(<ConfigTable />);
+            const instance = wrapper.instance();
+            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => {});
 
-                // Init component
-                const wrapper = shallow(<ConfigTable />);
-                const instance = wrapper.instance();
+            // Execute tested method
+            await instance.searchList(event);
 
-                // Spy/mock instance methods
-                const handleAdd = jest.spyOn(instance, 'handleAdd').mockImplementation(() => response);
-                const handleEdit = jest.spyOn(instance, 'handleEdit').mockImplementation(() => response);
-
-                // Execute tested method
-                const result = await instance.handleSubmit(event);
-
-                // Compare result
-                expect(result).toEqual(response.data);
-                expect(handleAdd).toHaveBeenCalled();
-                expect(handleEdit).not.toHaveBeenCalled();
-                expect(wrapper.state().list.length).toEqual(0);
-            });
-
-            it('Success', async () => {
-                // Prepare data
-                const data = seeding(1, true)[0];
-                delete data.id;
-                const formValues = {...data};
-                const response = {
-                    success: true,
-                    data: data,
-                };
-                const event = {
-                    preventDefault: () => {},
-                };
-
-                // Spy/mock static methods
-                jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-                jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-                const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-                // Init component
-                const wrapper = shallow(<ConfigTable />);
-                const instance = wrapper.instance();
-
-                // Spy/mock instance methods
-                const handleAdd = jest.spyOn(instance, 'handleAdd').mockImplementation(() => response);
-                const handleEdit = jest.spyOn(instance, 'handleEdit').mockImplementation(() => response);
-
-                // Execute tested method
-                const result = await instance.handleSubmit(event);
-
-                // Compare result
-                expect(result).toEqual(response.data);
-                expect(handleAdd).toHaveBeenCalled();
-                expect(handleEdit).not.toHaveBeenCalled();
-                expect(wrapper.state().list.length).toEqual(1);
-            });
+            // Checking result
+            expect(getList).toHaveBeenCalled();
+            expect(getList.mock.calls[0][0]).toBe(undefined);
         });
+        it('2 character', async () => {
+            const data = {search: 'ab'};
 
-        describe('Editing', () => {
-            it('Fail', async () => {
-                // Prepare data
-                const originalData = seeding(1, true)[0];
-                const data = {...seeding(2, true)[0], id: originalData.id};
-                const formValues = {...data};
-                const response = {
-                    success: false,
-                    data: {
-                        detail: 'error',
-                    },
-                };
-                const event = {
-                    preventDefault: () => {},
-                };
+            // Spy/mock static methods
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
 
-                // Spy/mock static methods
-                jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-                jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-                const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
+            // Init component
+            const wrapper = shallow(<ConfigTable />);
+            const instance = wrapper.instance();
+            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => {});
 
-                // Init component
-                const wrapper = shallow(<ConfigTable list={seeding(10)} />);
-                const instance = wrapper.instance();
+            // Execute tested method
+            await instance.searchList(event);
 
-                // Spy/mock instance methods
-                const handleAdd = jest.spyOn(instance, 'handleAdd').mockImplementation(() => response);
-                const handleEdit = jest.spyOn(instance, 'handleEdit').mockImplementation(() => response);
+            // Checking result
+            expect(getList).not.toHaveBeenCalled();
+        });
+        it('3 characters', async () => {
+            const data = {search: 'abc'};
 
-                // Execute tested method
-                const result = await instance.handleSubmit(event);
+            // Spy/mock static methods
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
 
-                // Compare result
-                expect(result).toEqual(response.data);
-                expect(handleEdit).toHaveBeenCalled();
-                expect(handleAdd).not.toHaveBeenCalled();
-                expect(wrapper.state().list.length).toEqual(10);
-                expect(wrapper.state().list[0]).toEqual(originalData);
-            });
+            // Init component
+            const wrapper = shallow(<ConfigTable />);
+            const instance = wrapper.instance();
+            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => {});
 
-            it('Success', async () => {
-                // Prepare data
-                const originalData = seeding(1, true)[0];
-                const data = {...seeding(2, true)[0], id: originalData.id};
-                const formValues = {...data};
-                const response = {
-                    success: true,
-                    data: data,
-                };
-                const event = {
-                    preventDefault: () => {},
-                };
+            // Execute tested method
+            await instance.searchList(event);
 
-                // Spy/mock static methods
-                jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-                jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-                const apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-                // Init component
-                const wrapper = shallow(<ConfigTable list={seeding(10)} />);
-                const instance = wrapper.instance();
-
-                // Spy/mock instance methods
-                const handleAdd = jest.spyOn(instance, 'handleAdd').mockImplementation(() => response);
-                const handleEdit = jest.spyOn(instance, 'handleEdit').mockImplementation(() => response);
-
-                // Execute tested method
-                const result = await instance.handleSubmit(event);
-
-                // Compare result
-                expect(result).toEqual(response.data);
-                expect(handleEdit).toHaveBeenCalled();
-                expect(handleAdd).not.toHaveBeenCalled();
-                expect(wrapper.state().list.length).toEqual(10);
-                expect(wrapper.state().list[0]).toEqual(data);
-            });
+            // Checking result
+            expect(getList).toHaveBeenCalled();
+            expect(getList.mock.calls[0][0]).toEqual('');
+            expect(getList.mock.calls[0][1]).toEqual(data);
         });
     });
+
+    describe('onSubmitSuccess', () => {
+        let wrapper;
+        let instance;
+        beforeEach(() => {
+            const list = seeding(3);
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            wrapper = shallow(<ConfigTable list={list} />);
+            instance = wrapper.instance();
+        });
+
+        it('Adding', async () => {
+            const isEdit = false;
+            const data = seeding(4, true);
+            const list = seeding(3)
+            instance.onSubmitSuccess(isEdit, data);
+            expect(wrapper.state('list')).toEqual([data, ...list]);
+        });
+
+        it('Editing', async () => {
+            const isEdit = true;
+            const data = {...seeding(4, true), id: seeding(2, true).id};
+            const list = seeding(3)
+            list[1] = data;
+            instance.onSubmitSuccess(isEdit, data);
+            expect(wrapper.state('list')).toEqual([...list]);
+        });
+    });
+
+    describe('handleRemove', () => {
+        let wrapper;
+        let instance;
+        beforeEach(() => {
+            const list = seeding(5);
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            wrapper = shallow(<ConfigTable list={list} />);
+            instance = wrapper.instance();
+        });
+
+        it('Fail', async () => {
+            jest.spyOn(Tools, 'handleRemove').mockImplementation(() => null);
+            const ids = '2,3';
+            const list = seeding(5)
+            instance.handleRemove(ids);
+            expect(wrapper.state('list')).toEqual(list);
+        });
+
+        it('Success', async () => {
+            const ids = '2,3';
+            jest.spyOn(Tools, 'handleRemove').mockImplementation(() => ([2, 3]));
+            const list = [
+                seeding(1, true), seeding(4, true), seeding(5, true)
+            ];
+            await instance.handleRemove(ids);
+            expect(wrapper.state('list')).toEqual(list);
+        });
+    });
+
+    describe('handleCheck', () => {
+        let wrapper;
+        let instance;
+        beforeEach(() => {
+            const list = seeding(1);
+            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
+            wrapper = shallow(<ConfigTable list={list} />);
+            instance = wrapper.instance();
+        });
+
+        it('False to True and vice versa', () => {
+            const list = seeding(1);
+
+            let event = {
+                target: {id: 1, checked: true},
+            };
+            instance.handleCheck(event);
+            expect(wrapper.state('list')).toEqual([{...list[0], checked: true}]);
+
+            event = {
+                target: {id: 1, checked: false},
+            };
+            instance.handleCheck(event);
+            expect(wrapper.state('list')).toEqual([{...list[0], checked: false}]);
+        });
+    });
+
+
+    /*
 
     describe('handleToggleCheckAll', () => {
         it('Empty list', () => {
@@ -601,200 +407,5 @@ describe('ConfigTable methods', () => {
             expect(result).toEqual(seeding(10));
         });
     });
-    describe('handleCheck', () => {
-        it('False to True', () => {
-            const list = seeding(1);
-            const event = {
-                target: {id: 1, checked: true},
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const result = instance.handleCheck(event);
-            expect(result).toEqual({...list[0], checked: true});
-        });
-        it('True to False', () => {
-            const list = seeding(1);
-            list[0].checked = true;
-            const event = {
-                target: {id: 1, checked: false},
-            };
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const result = instance.handleCheck(event);
-            expect(result).toEqual({...list[0], checked: false});
-        });
-    });
-    describe('handleRemove', () => {
-        it('No confirm', async () => {
-            jest.spyOn(window, 'confirm').mockImplementation(() => false);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const result = await instance.handleRemove('1');
-
-            // Checking result
-            expect(result).toEqual([]);
-        });
-        it('Single ID', async () => {
-            const list = seeding(3);
-            const response = {
-                success: true,
-            };
-            const eput = seeding(2);
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            jest.spyOn(window, 'confirm').mockImplementation(() => true);
-            let apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const output = await instance.handleRemove('3');
-
-            // Checking result
-            expect(output).toEqual(eput);
-        });
-        it('List ID', async () => {
-            const list = seeding(3);
-            const response = {
-                success: true,
-            };
-            const eput = seeding(1);
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            jest.spyOn(window, 'confirm').mockImplementation(() => true);
-            let apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const output = await instance.handleRemove('2,3');
-
-            // Checking result
-            expect(output).toEqual(eput);
-        });
-        it('Fail', async () => {
-            const list = seeding(3);
-            const response = {
-                success: false,
-            };
-            const eput = [];
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            jest.spyOn(window, 'confirm').mockImplementation(() => true);
-            let apiCall = jest.spyOn(Tools, 'apiCall').mockImplementation(async () => response);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const output = await instance.handleRemove('1');
-
-            // Checking result
-            expect(output).toEqual(eput);
-        });
-    });
-
-    describe('handleSearch', () => {
-        it('Empty string', async () => {
-            const data = {searchStr: ''};
-            const list = seeding(10);
-            const event = {
-                preventDefault: () => {},
-                target: {},
-            };
-            const eput = list;
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => list);
-
-            // Execute tested method
-            const output = await instance.handleSearch(event);
-
-            // Checking result
-            expect(output).toEqual(list);
-            expect(getList.mock.calls[0][0]).toBe(undefined);
-        });
-        it('2 character', async () => {
-            const data = {searchStr: 'ab'};
-            const list = seeding(10);
-            const event = {
-                preventDefault: () => {},
-                target: {},
-            };
-            const eput = [];
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => list);
-
-            // Execute tested method
-            const output = await instance.handleSearch(event);
-
-            // Checking result
-            expect(output).toEqual(null);
-            expect(getList).not.toHaveBeenCalled();
-        });
-        it('3 characters', async () => {
-            const data = {searchStr: 'abc'};
-            const list = seeding(10);
-            const event = {
-                preventDefault: () => {},
-                target: {},
-            };
-            const eput = list;
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-            jest.spyOn(Tools, 'formDataToObj').mockImplementation(() => data);
-
-            // Init component
-            const wrapper = shallow(<ConfigTable />);
-            const instance = wrapper.instance();
-            const getList = jest.spyOn(instance, 'getList').mockImplementation(() => list);
-
-            // Execute tested method
-            const output = await instance.handleSearch(event);
-
-            // Checking result
-            expect(output).toEqual(list);
-            expect(getList.mock.calls[0][0]).toEqual({search: data.searchStr});
-        });
-    });
+    */
 });

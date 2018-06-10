@@ -50,7 +50,7 @@ describe('ConfigForm', () => {
     });
 
     it('Editing form', () => {
-        const formValues = seeding(1, true)[0];
+        let formValues = seeding(1, true);
         const props = {
             formName,
             formValues,
@@ -59,15 +59,15 @@ describe('ConfigForm', () => {
         };
 
         const wrapper = shallow(<ConfigForm {...props} />);
-
-        expect(wrapper.find('[name="id"]').props().defaultValue).toEqual(props.formValues.id);
-        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual(props.formValues.uid);
-        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual(props.formValues.value);
+        formValues = wrapper.state('formValues');
+        expect(wrapper.find('[name="id"]').props().defaultValue).toEqual(formValues.id);
+        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual(formValues.uid);
+        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual(formValues.value);
         expect(wrapper.find('.main-action .label').text()).toEqual("Update");
     });
 
     it('Adding form', () => {
-        const formValues = seeding(1, true)[0];
+        let formValues = seeding(1, true);
         formValues.id = 0;
         const props = {
             formName,
@@ -77,10 +77,10 @@ describe('ConfigForm', () => {
         };
 
         const wrapper = shallow(<ConfigForm {...props} />);
-
+        formValues = wrapper.state('formValues');
         expect(wrapper.find('[name="id"]').props().defaultValue).toEqual(0);
-        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual(props.formValues.uid);
-        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual(props.formValues.value);
+        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual(formValues.uid);
+        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual(formValues.value);
         expect(wrapper.find('.main-action .label').text()).toEqual("Add new");
     });
 
@@ -96,7 +96,6 @@ describe('ConfigForm', () => {
         };
 
         const wrapper = shallow(<ConfigForm {...props} />);
-
         // Error messages
         expect(wrapper.find('.uid-field .invalid-feedback').text()).toEqual(props.formErrors.uid);
         expect(wrapper.find('.value-field .invalid-feedback').text()).toEqual(props.formErrors.value);

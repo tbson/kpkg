@@ -612,7 +612,12 @@ describe('checkOrUncheckAll', () => {
     test('Full', () => {
         const input = [{id: 1, checked: true}, {id: 2, checked: true}, {id: 3, checked: true}, {id: 4, checked: true}];
 
-        const eput = false;
+        const eput = [
+            {id: 1, checked: false},
+            {id: 2, checked: false},
+            {id: 3, checked: false},
+            {id: 4, checked: false},
+        ];
         const output = Tools.checkOrUncheckAll(input);
         expect(output).toEqual(eput);
     });
@@ -625,7 +630,12 @@ describe('checkOrUncheckAll', () => {
             {id: 4, checked: false},
         ];
 
-        const eput = true;
+        const eput = [
+            {id: 1, checked: true},
+            {id: 2, checked: true},
+            {id: 3, checked: true},
+            {id: 4, checked: true},
+        ];
         const output = Tools.checkOrUncheckAll(input);
         expect(output).toEqual(eput);
     });
@@ -638,8 +648,41 @@ describe('checkOrUncheckAll', () => {
             {id: 4, checked: false},
         ];
 
-        const eput = true;
+        const eput = [
+            {id: 1, checked: true},
+            {id: 2, checked: true},
+            {id: 3, checked: true},
+            {id: 4, checked: true},
+        ];
         const output = Tools.checkOrUncheckAll(input);
         expect(output).toEqual(eput);
     });
+});
+
+test('updateListOnSuccessAdding', () => {
+    const list = [{id: 1, value: 1, checked: true}, {id: 2, value: 2, checked: true}];
+    const data = {id: 3, value: 3};
+    const eput = [
+        {id: 3, value: 3, checked: false},
+        {id: 1, value: 1, checked: true},
+        {id: 2, value: 2, checked: true},
+    ];
+    const output = Tools.updateListOnSuccessAdding(list, data);
+    expect(output).toEqual(eput);
+});
+
+test('updateListOnSuccessEditing', () => {
+    const list = [
+        {id: 3, value: 3, checked: false},
+        {id: 1, value: 1, checked: true},
+        {id: 2, value: 2, checked: true},
+    ];
+    const data = {id: 1, value: 9};
+    const eput = [
+        {id: 3, value: 3, checked: false},
+        {id: 1, value: 9, checked: true},
+        {id: 2, value: 2, checked: true},
+    ];
+    const output = Tools.updateListOnSuccessEditing(list, data);
+    expect(output).toEqual(eput);
 });

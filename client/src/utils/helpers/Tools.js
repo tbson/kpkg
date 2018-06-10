@@ -30,14 +30,14 @@ type ApiUrl = {
 
 type RawApiUrls = Array<ApiUrl>;
 
-type GetListResponseData = {
+export type GetListResponseData = {
     links: {
         next: ?string,
         previous: ?string,
     },
     items: Array<Object>,
 };
-type GetListResponse = Promise<?GetListResponseData>;
+export type GetListResponse = Promise<?GetListResponseData>;
 
 type GetItemResponse = Promise<?Object>;
 
@@ -93,6 +93,7 @@ export default class Tools {
     }
 
     static isEmpty(obj: Object): boolean {
+        if (!obj) return true;
         return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
 
@@ -500,6 +501,21 @@ export default class Tools {
         return {data, error};
     }
 
+    static updateListOnSuccessAdding (list: Array<Object>, data: Object): Array<Object> {
+        const newItem = {...data, checked: false};
+        list.unshift(newItem);
+        return list;
+    }
+
+    static updateListOnSuccessEditing (list: Array<Object>, data: Object): Array<Object> {
+        const {id} = data;
+        const index = list.findIndex(item => item.id === id);
+        const oldItem = list[index];
+        const newItem = {...data, checked: oldItem.checked};
+        list[index] = newItem;
+        return list;
+    }
+
     static async handleRemove(url: string, ids: string): Promise<?Array<number>> {
         const listId = ids.split(',');
         if (!ids || !listId.length) return null;
@@ -515,7 +531,7 @@ export default class Tools {
         return result.success ? listId.map(item => parseInt(item)) : null;
     }
 
-    static checkOrUncheckAll(list: Array<Object>): boolean {
+    static checkOrUncheckAll(list: Array<Object>): Array<Object> {
         let checkAll = false;
         const checkedItem = list.filter(item => item.checked);
         if (checkedItem.length) {
@@ -523,6 +539,6 @@ export default class Tools {
         } else {
             checkAll = true;
         }
-        return checkAll;
+        return list.map(value => ({...value, checked: checkAll}));
     }
 }

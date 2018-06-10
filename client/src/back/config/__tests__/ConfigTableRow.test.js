@@ -11,7 +11,7 @@ Enzyme.configure({adapter: new Adapter()});
 let wrapper;
 let instance;
 const props = {
-    data: seeding(1, true)[0],
+    data: seeding(1, true),
     toggleModal: jest.fn(),
     handleRemove: jest.fn(),
     onCheck: jest.fn(),

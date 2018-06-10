@@ -5,6 +5,7 @@ import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesWithCheck} from '../_data';
+import type {GetListResponseData} from 'src/utils/helpers/Tools';
 import ConfigForm from '../forms/ConfigForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import DefaultModal from 'src/utils/components/DefaultModal';
@@ -49,6 +50,15 @@ export class ConfigTable extends React.Component<Props, States> {
         return null;
     }
 
+    setInitData = (initData: GetListResponseData) => {
+        this.nextUrl = initData.links.next;
+        this.prevUrl = initData.links.previous;
+        this.setState({
+            dataLoaded: true,
+            list: [...initData.items],
+        });
+    };
+
     toggleModal = async (modalName: string, formValues: Object = {}) => {
         const formErrors = {};
         const modalState = this.state[modalName];
@@ -62,15 +72,6 @@ export class ConfigTable extends React.Component<Props, States> {
         this.setState(state);
     };
 
-    setInitData = (initData: Object) => {
-        this.nextUrl = initData.links.next;
-        this.prevUrl = initData.links.previous;
-        this.setState({
-            dataLoaded: true,
-            list: [...initData.items],
-        });
-    };
-
     getList = async (url: string = '', params: Object = {}) => {
         const result = await Tools.getList(url ? url : apiUrls.crud, params);
         if (result) {
@@ -78,7 +79,7 @@ export class ConfigTable extends React.Component<Props, States> {
         }
     };
 
-    handleSearch = async (event: Object) => {
+    searchList = async (event: Object) => {
         event.preventDefault();
         const {search} = Tools.formDataToObj(new FormData(event.target));
         if (search.length > 2) {
@@ -98,36 +99,33 @@ export class ConfigTable extends React.Component<Props, States> {
 
         const {data, error} = await Tools.handleSubmit(url, params);
         const isSuccess = Tools.isEmpty(error);
-        isSuccess ? this.onSuccessSubmit(isEdit, data) : this.setState({formErrors: error});
+        if (isSuccess) {
+            this.onSubmitSuccess(isEdit, data);
+        } else {
+            this.onSubmitFail(error)
+        }
     };
 
-    onSuccessSubmit = (isEdit: boolean, data: FormValues) => {
-        const list = isEdit ? this.onSuccessEditing(data) : this.onSuccessAdding(data);
+    onSubmitSuccess = (isEdit: boolean, data: FormValues) => {
+        let {list} = this.state;
+        const args = [list, data];
+        if (isEdit) {
+            list = Tools.updateListOnSuccessEditing(...args);
+        } else {
+            list = Tools.updateListOnSuccessAdding(...args);
+        }
         this.setState({list});
         this.toggleModal('modal');
     };
 
-    onSuccessAdding = (data: FormValues): Array<FormValuesWithCheck> => {
-        const {list} = this.state;
-        const newItem = {...data, checked: false};
-        list.unshift(newItem);
-        return list;
-    };
+    onSubmitFail = (formErrors: Object) => {
+        this.setState({formErrors});
+    }
 
-    onSuccessEditing = (data: FormValues): Array<FormValuesWithCheck> => {
-        const {id} = data;
-        const {list} = this.state;
-        const index = list.findIndex(item => item.id === id);
-        const oldItem = list[index];
-        const newItem = {...data, checked: oldItem.checked};
-        list[index] = newItem;
-        return list;
-    };
-
-    handleRemove = async (id: string) => {
+    handleRemove = async (ids: string) => {
         let {list} = this.state;
         const url = apiUrls.crud;
-        const deletedIds = await Tools.handleRemove(url, id);
+        const deletedIds = await Tools.handleRemove(url, ids);
         if (deletedIds && deletedIds.length) {
             list = list.filter(item => !deletedIds.includes(item.id));
             this.setState({list});
@@ -135,8 +133,8 @@ export class ConfigTable extends React.Component<Props, States> {
     };
 
     handleCheck = (event: Object) => {
-        const {id, checked} = event.target;
         const {list} = this.state;
+        const {id, checked} = event.target;
         const index = list.findIndex(item => item.id === parseInt(id));
         list[index].checked = checked;
         this.setState({list});
@@ -144,8 +142,7 @@ export class ConfigTable extends React.Component<Props, States> {
 
     handleToggleCheckAll = () => {
         let {list} = this.state;
-        const checked = Tools.checkOrUncheckAll(list);
-        list = list.map(value => ({...value, checked}));
+        list = Tools.checkOrUncheckAll(list);
         this.setState({list});
     };
 
@@ -157,7 +154,7 @@ export class ConfigTable extends React.Component<Props, States> {
         const modalTitle = formValues.id ? 'Update config' : 'Add new config';
         return (
             <div>
-                <SearchInput onSearch={this.handleSearch} />
+                <SearchInput onSearch={this.searchList} />
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
@@ -235,13 +232,12 @@ type RowPropTypes = {
 };
 
 export class Row extends React.Component<RowPropTypes> {
-
     getItem = async (id: number) => {
         const result = await Tools.getItem(apiUrls.crud, id);
         if (result) {
             this.props.toggleModal('modal', result);
         }
-    }
+    };
 
     render() {
         const {data, toggleModal, handleRemove, onCheck} = this.props;

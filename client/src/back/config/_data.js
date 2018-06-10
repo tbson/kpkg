@@ -14,7 +14,7 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export function seeding(numberOfItems: number, single: boolean = false): Array<FormValuesWithCheck> {
+export function seeding(numberOfItems: number, single: boolean = false): any {
     let result = [];
     for (let i = 1; i <= numberOfItems; i++) {
         result.push({
@@ -25,7 +25,7 @@ export function seeding(numberOfItems: number, single: boolean = false): Array<F
         });
     }
     if (!single) return result;
-    return [result[numberOfItems - 1]];
+    return result[numberOfItems - 1];
 }
 
 export type FormValues = {
