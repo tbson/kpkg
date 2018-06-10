@@ -10,7 +10,6 @@ import Tools from 'src/utils/helpers/Tools';
 
 Enzyme.configure({adapter: new Adapter()});
 
-/*
 describe('ConfigTable component', () => {
     beforeAll(() => {
         const response = {
@@ -124,7 +123,6 @@ describe('ConfigTable component', () => {
     });
 });
 
-*/
 describe('ConfigTable methods', () => {
     beforeEach(() => {
         jest.restoreAllMocks();
@@ -358,54 +356,4 @@ describe('ConfigTable methods', () => {
             expect(wrapper.state('list')).toEqual([{...list[0], checked: false}]);
         });
     });
-
-
-    /*
-
-    describe('handleToggleCheckAll', () => {
-        it('Empty list', () => {
-            const list = seeding(10);
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const result = instance.handleToggleCheckAll();
-            expect(result).toEqual(list.map(item => ({...item, checked: true})));
-        });
-        it('Half empty list', () => {
-            const list = seeding(10);
-            list[0].checked = true;
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const result = instance.handleToggleCheckAll();
-            expect(result).toEqual(list.map(item => ({...item, checked: true})));
-        });
-        it('Full list', () => {
-            const list = seeding(10).map(item => ({...item, checked: true}));
-
-            // Spy/mock static methods
-            jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
-
-            // Init component
-            const wrapper = shallow(<ConfigTable list={list} />);
-            const instance = wrapper.instance();
-
-            // Execute tested method
-            const result = instance.handleToggleCheckAll();
-            expect(result).toEqual(seeding(10));
-        });
-    });
-    */
 });
