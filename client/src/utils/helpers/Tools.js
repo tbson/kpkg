@@ -380,17 +380,6 @@ export default class Tools {
         return false;
     }
 
-    static activeWhen(prefix: string): string {
-        const url = window.location.href;
-        if (!prefix || !url) {
-            return '';
-        }
-        if (url.indexOf(prefix) === 0) {
-            return 'active';
-        }
-        return '';
-    }
-
     static uuid4(): string {
         let cryptoObj = window.crypto || window.msCrypto;
         // $FlowFixMe: allow bitwise operations
@@ -399,7 +388,7 @@ export default class Tools {
         );
     }
 
-    static dateFormat(date: any, locale: string = 'FR-FR'): string {
+    static dateFormat(date: any, format: string = 'dd/mm/yyyy'): string {
         try {
             if (typeof date === 'string') {
                 try {
@@ -408,8 +397,23 @@ export default class Tools {
                     date = new Date();
                 }
             }
-            var formater = new window.Intl.DateTimeFormat(locale);
-            return formater.format(date);
+
+            let dd = date.getDate();
+            let mm = date.getMonth() + 1;
+            const yyyy = date.getFullYear().toString();
+            const yy = yyyy.slice(-2);
+
+            if (dd < 10) {
+                dd = [0, dd].join('');
+            }
+            if (mm < 10) {
+                mm = [0, mm].join('');
+            }
+            return format
+                .replace('dd', `${dd}`)
+                .replace('mm', `${mm}`)
+                .replace('yyyy', `${yyyy}`)
+                .replace('yy', `${yy}`);
         } catch (error) {
             return String(date);
         }
@@ -428,10 +432,11 @@ export default class Tools {
     }
 
     static commonErrorResponse(error: Object): Object {
+        const detail = error.message ? error.message : 'Undefined error';
         return {
             success: false,
             data: {
-                detail: error.message,
+                detail,
             },
         };
     }
@@ -495,9 +500,9 @@ export default class Tools {
         return {data, error};
     }
 
-    static async handleRemove(url: string, id: string): Promise<?Array<number>> {
-        const listId = id.split(',');
-        if (!id || !listId.length) return null;
+    static async handleRemove(url: string, ids: string): Promise<?Array<number>> {
+        const listId = ids.split(',');
+        if (!ids || !listId.length) return null;
         let message = '';
         if (listId.length === 1) {
             message = 'Do you want to remove this item?';
@@ -506,8 +511,8 @@ export default class Tools {
         }
         const decide = window.confirm(message);
         if (!decide) return null;
-        const result = await Tools.apiCall(url + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
-        return result.success ? id.split(',').map(item => parseInt(item)) : null;
+        const result = await Tools.apiCall(url + (listId.length === 1 ? ids : '?ids=' + ids), 'DELETE');
+        return result.success ? listId.map(item => parseInt(item)) : null;
     }
 
     static checkOrUncheckAll(list: Array<Object>): boolean {
