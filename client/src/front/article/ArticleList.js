@@ -52,14 +52,14 @@ class ArticleList extends React.Component<Props, State> {
         this.list = this.list.bind(this);
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
         if (nextProps.location.pathname !== prevState.pathname) {
             return {pathname: nextProps.location.pathname};
         }
         return null;
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: Props, prevState: State) {
         const {pathname} = this.props.location;
         if (prevProps.location.pathname != pathname) {
             this.list();

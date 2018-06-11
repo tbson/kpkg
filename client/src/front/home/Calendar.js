@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
-import {Link} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 // $FlowFixMe: do not complain about importing node_modules
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 // $FlowFixMe: do not complain about importing node_modules
@@ -16,33 +16,54 @@ import {apiUrls} from '../common/_data';
 import type {FormValues as EventType} from 'src/back/ccalendar/_data';
 import type {FormValues as ArticleType} from 'src/back/article/_data';
 
-type Props = {};
+type Props = {
+    location: Object,
+};
 type State = {
     events: Array<EventType>,
     otherEvents: Array<ArticleType>,
     calendarLoaded: boolean,
     otherEventsLoaded: boolean,
+    pathname: ?string,
 };
 
-export default class Calendar extends React.Component<Props, State> {
+class Calendar extends React.Component<Props, State> {
     static defaultProps = {};
     state: State = {
         events: [],
         otherEvents: [],
         calendarLoaded: false,
         otherEventsLoaded: false,
+        pathname: null,
     };
     constructor(props: Props) {
         super(props);
         BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
     }
 
-    componentDidMount() {
-        const events = Tools.getGlobalState('events');
-        const otherEvents = Tools.getGlobalState('events');
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.location.pathname !== prevState.pathname) {
+            return {pathname: nextProps.location.pathname};
+        }
+        return null;
+    }
 
+    componentDidUpdate(prevProps: Props, prevState: State) {
+        const {pathname} = this.props.location;
+        if (prevProps.location.pathname != pathname) {
+            this.initData();
+        }
+    }
+
+    componentDidMount() {
+        this.initData();
+    }
+
+    initData = () => {
+        const events = Tools.getGlobalState('events');
+        const otherEvents = Tools.getGlobalState('other_events');
         if (events) {
-            return this.setState({
+            this.setState({
                 events,
                 calendarLoaded: true,
             });
@@ -51,7 +72,7 @@ export default class Calendar extends React.Component<Props, State> {
         }
 
         if (otherEvents) {
-            return this.setState({
+            this.setState({
                 otherEvents,
                 otherEventsLoaded: true,
             });
@@ -148,3 +169,5 @@ export default class Calendar extends React.Component<Props, State> {
         );
     }
 }
+
+export default withRouter(Calendar);
