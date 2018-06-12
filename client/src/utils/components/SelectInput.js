@@ -15,11 +15,13 @@ type Props = {
 };
 
 type States = {
+    localChange: boolean,
     value: string,
 };
 
 class SelectInput extends React.Component<Props, States> {
     state = {
+        localChange: false,
         value: '',
     };
     static defaultProps = {
@@ -34,18 +36,25 @@ class SelectInput extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const {defaultValue, options} = nextProps;
+        const {defaultValue} = nextProps;
+        if (prevState.localChange) {
+            return {
+                localChange: false
+            }
+        }
         return {
-            value: defaultValue ? defaultValue : ''
+            value: defaultValue ? defaultValue : '',
+            localChange: false
         };
     }
 
     handleChange = (result:any) => {
+        const localChange = true;
         if (result.length) {
             const value = result.map(item => item.value).join(this.props.delimiter);
-            this.setState({value});
+            this.setState({value, localChange});
         } else {
-            this.setState({value: result.value});
+            this.setState({value: result.value, localChange});
         }
     };
 
