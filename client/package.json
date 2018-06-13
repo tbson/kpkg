@@ -72,7 +72,7 @@
         "medium-draft": "^0.5.6",
         "moment": "^2.22.1",
         "open-iconic": "^1.1.1",
-        "react": "^16.3.0",
+        "react": "^16.4.0",
         "react-big-calendar": "^0.19.1",
         "react-dom": "^16.3.0",
         "react-draft-wysiwyg": "^1.12.13",

@@ -35,4 +35,4 @@ class TagBaseSerializer(ModelSerializer):
 
 class TagConsumeSerializer(TagBaseSerializer):
     class Meta(TagBaseSerializer.Meta):
-        exclude = ('created_at', 'updated_at', 'uid')
+        exclude = ('created_at', 'updated_at')

@@ -45,7 +45,7 @@ class ArticleListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = Article.objects.all()
     serializer_class = ArticleLandingSerializer
-    filter_fields = ('category__uid', 'pin', )
+    filter_fields = ('category__uid', 'pin', 'tags')
 
 class ArticleNewsListView(ListAPIView):
     permission_classes = (AllowAny, )

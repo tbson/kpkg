@@ -25,14 +25,13 @@ class ArticleBaseSerializer(ModelSerializer):
             return obj.category.title
         return obj.article.category.title
 
+
 class ArticleRetrieveSerializer(ArticleBaseSerializer):
+
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
     category = CategoryBaseSerializer()
-    # tag_source = SerializerMethodField()
 
-    # def get_tag_source(self, obj):
-    #    return TagConsumeSerializer(Tag.objects.all(), many=True).data
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
 
@@ -78,16 +77,27 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
 
 
 class ArticleLandingSerializer(ArticleBaseSerializer):
-    related_articles = ArticleBaseSerializer(many=True, read_only=True)
+    class Meta(ArticleBaseSerializer.Meta):
+        exclude = ('content', 'tags')
+ 
 
+class ArticleLandingRetrieveSerializer(ArticleLandingSerializer):
+    class Meta(ArticleBaseSerializer.Meta):
+        exclude = ()
+    related_articles = ArticleBaseSerializer(many=True, read_only=True)
+    category = CategoryBaseSerializer()
+    same_tag_articles = SerializerMethodField()
     attaches = SerializerMethodField()
+    tag_list = SerializerMethodField()
+
+    def get_tag_list(self, obj):
+        return TagConsumeSerializer(Tag.objects.all(), many=True).data
 
     def get_attaches(self, obj):
         result = Attach.objects.filter(parent_uuid=obj.uuid, richtext_image=False)
         return AttachBaseSerializer(result, many=True).data
 
-class ArticleLandingRetrieveSerializer(ArticleLandingSerializer):
-    class Meta(ArticleBaseSerializer.Meta):
-        exclude = ()
-    category = CategoryBaseSerializer()
+    def get_same_tag_articles(self, obj):
+        result = Article.objects.exclude(pk=obj.pk).filter(tags__in=obj.tags.all()).order_by('-id')
+        return ArticleBaseSerializer(result, many=True).data
 

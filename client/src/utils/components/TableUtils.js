@@ -82,11 +82,11 @@ export class FrontPagination extends React.Component<FrontPaginationPropTypes> {
 
     renderNext(next: ?string) {
         if (!next) return null;
-        return [
+        return (
             <a className="pointer" onClick={() => this.props.onNavigate(next)}>
                 <span className="oi oi-chevron-bottom" />
-            </a>,
-        ];
+            </a>
+        );
     }
 
     render() {

@@ -29,11 +29,6 @@ type State = {
 };
 
 class ArticleList extends React.Component<Props, State> {
-    setInitData: Function;
-    renderFirstItem: Function;
-    renderOtherItem: Function;
-    list: Function;
-
     nextUrl: ?string;
     prevUrl: ?string;
 
@@ -47,8 +42,6 @@ class ArticleList extends React.Component<Props, State> {
     };
     constructor(props: Props) {
         super(props);
-        this.renderFirstItem = this.renderFirstItem.bind(this);
-        this.renderOtherItem = this.renderOtherItem.bind(this);
         this.list = this.list.bind(this);
     }
 
@@ -70,7 +63,7 @@ class ArticleList extends React.Component<Props, State> {
         this.list();
     }
 
-    setTitle(uid) {
+    setTitle = (uid: string) => {
         switch (uid) {
             case 'tin-tuc':
                 document.title = 'Tin tức';
@@ -130,11 +123,11 @@ class ArticleList extends React.Component<Props, State> {
         return <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title} />;
     };
 
-    renderFirstItem(item: ArticleType) {
+    renderFirstItem = (item: ArticleType) => {
         const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
         return (
             <div className="content-container" key={item.id}>
-                <div className="col-xl-12" key={item.id}>
+                <div className="col-xl-12">
                     <h2>
                         <Link to={detailUrl}>{item.title}</Link>
                     </h2>
@@ -152,12 +145,13 @@ class ArticleList extends React.Component<Props, State> {
         );
     }
 
-    renderOtherItem(item: ArticleType) {
+    renderOtherItem = (item: ArticleType) => {
         if (this.props.alwaysFirst) return this.renderFirstItem(item);
+        if (!item.image) return this.renderFirstItem(item);
         const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
         return (
             <div className="content-container" key={item.id}>
-                <div className="col-xl-12" key={item.id}>
+                <div className="col-xl-12">
                     <div className="row">
                         <div className="col-md-4">{this.renderThumbnail(item)}</div>
                         <div className="col-md-8 article-description">

@@ -19,7 +19,7 @@
     }
 }
 
-.content-container figure{
+.content-container figure {
     text-align: center;
 }
 
@@ -31,9 +31,13 @@ h2 {
     font-size: 27px;
 }
 
-
-h1, h2 {
+h1,
+h2 {
     font-family: georgia;
+}
+
+.relative {
+    position: relative;
 }
 
 .gallery-thumbnail {
@@ -75,4 +79,18 @@ h1, h2 {
 
 .right {
     text-align: right;
+}
+
+.tags-container {
+    position: relative;
+}
+
+.breadcrumb {
+    background-color: white;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    content: "|"
 }

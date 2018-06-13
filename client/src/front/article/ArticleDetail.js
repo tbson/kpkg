@@ -5,8 +5,10 @@ import {withRouter, Link} from 'react-router-dom';
 
 import {apiUrls} from '../common/_data';
 import Wrapper from '../common/Wrapper';
+import Tags from '../common/Tags';
 import Carousel from 'src/utils/components/Carousel';
 import Tools from 'src/utils/helpers/Tools';
+import type {FormValues as ArticleType} from 'src/back/article/_data';
 
 type Props = {
     match: Object,
@@ -20,14 +22,6 @@ type State = {
 };
 
 class ArticleDetail extends React.Component<Props, State> {
-    getArticleFromId: Function;
-    getArticleFromCategoryUid: Function;
-    setInitData: Function;
-    renderBanner: Function;
-    renderStaff: Function;
-    getListStaff: Function;
-    setTitle: Function;
-
     static defaultProps = {};
     state: State = {
         pathname: null,
@@ -37,11 +31,6 @@ class ArticleDetail extends React.Component<Props, State> {
     };
     constructor(props: Props) {
         super(props);
-        this.getArticleFromId = this.getArticleFromId.bind(this);
-        this.getArticleFromCategoryUid = this.getArticleFromCategoryUid.bind(this);
-        this.renderBanner = this.renderBanner.bind(this);
-        this.renderStaff = this.renderStaff.bind(this);
-        this.getListStaff = this.getListStaff.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -75,7 +64,7 @@ class ArticleDetail extends React.Component<Props, State> {
         }
     }
 
-    setTitle(uid) {
+    setTitle = (uid: string) => {
         switch (uid) {
             case 'gioi-thieu':
                 document.title = 'Giới thiệu';
@@ -92,9 +81,9 @@ class ArticleDetail extends React.Component<Props, State> {
             default:
                 document.title = uid;
         }
-    }
+    };
 
-    setInitData() {
+    setInitData = () => {
         const {id, uid} = this.props.match.params;
         const {pathname} = this.props.location;
         const article = Tools.getGlobalState(pathname);
@@ -116,9 +105,9 @@ class ArticleDetail extends React.Component<Props, State> {
         } else {
             this.getArticleFromCategoryUid(uid);
         }
-    }
+    };
 
-    async getArticleFromId(id: number) {
+    getArticleFromId = async (id: number) => {
         const {pathname} = this.props.location;
         const result = await Tools.apiCall(apiUrls.article + id.toString(), 'GET', {}, false, false);
         if (result.success) {
@@ -129,9 +118,9 @@ class ArticleDetail extends React.Component<Props, State> {
             });
             Tools.setGlobalState(pathname, result.data);
         }
-    }
+    };
 
-    async getArticleFromCategoryUid(uid: string) {
+    getArticleFromCategoryUid = async (uid: string) => {
         const {pathname} = this.props.location;
         const params = {
             category__uid: uid,
@@ -144,9 +133,9 @@ class ArticleDetail extends React.Component<Props, State> {
             });
             Tools.setGlobalState(pathname, result.data.items[0]);
         }
-    }
+    };
 
-    async getListStaff(uid: string) {
+    getListStaff = async (uid: string) => {
         const params = {};
         const result = await Tools.apiCall(apiUrls.staff, 'GET', params, false, false);
         if (result.success) {
@@ -155,16 +144,16 @@ class ArticleDetail extends React.Component<Props, State> {
             });
             Tools.setGlobalState('listStaff', result.data.items);
         }
-    }
+    };
 
-    renderBanner(article: Object) {
+    renderBanner = (article: Object) => {
         if (!article.thumbnail_in_content) return null;
         const {attaches} = article;
         const widthRatio = article.category ? article.category.width_ratio : 100;
         if (article.use_slide && attaches.length) {
             return (
                 <div className="center">
-                    <div style={{width: widthRatio + '%', margin: "auto"}}>
+                    <div style={{width: widthRatio + '%', margin: 'auto'}}>
                         <Carousel listItem={attaches} imageKey="attachment" />
                         <br />
                     </div>
@@ -184,9 +173,9 @@ class ArticleDetail extends React.Component<Props, State> {
                 </div>
             );
         }
-    }
+    };
 
-    renderStaff() {
+    renderStaff = () => {
         if (this.props.match.url != '/bai-viet/ai-thien-van') return null;
         return (
             <div className="row">
@@ -214,10 +203,69 @@ class ArticleDetail extends React.Component<Props, State> {
                 ))}
             </div>
         );
+    };
+
+    renderThumbnail = (item: ArticleType) => {
+        if (!item.image) return null;
+        return <img src={item.image} className="img-thumbnail" width="100%" title={item.title} alt={item.title} />;
+    };
+
+    renderFirstItem = (item: ArticleType) => {
+        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        return (
+            <div className="col-xl-6" key={item.id}>
+                <div className="content-container">
+                    <h2>
+                        <Link to={detailUrl}>{item.title}</Link>
+                    </h2>
+                    {this.renderThumbnail(item)}
+                    <div className="date-time">
+                        <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12 article-description">
+                            <p>{Tools.getText(item.description)}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
+
+    renderOtherItem = (item: ArticleType) => {
+        if (!item.image) return this.renderFirstItem(item);
+        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        return (
+            <div className="col-xl-6" key={item.id}>
+                <div className="content-container">
+                    <div className="row">
+                        <div className="col-md-4">{this.renderThumbnail(item)}</div>
+                        <div className="col-md-8 article-description">
+                            <h2>
+                                <Link to={detailUrl}>{item.title}</Link>
+                            </h2>
+                            <div className="date-time">
+                                <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
+                            </div>
+                            <p>{Tools.getText(item.description)}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    renderRelatedArticle = (article: ArticleType) => {
+        let listItem = article.same_tag_articles;
+        if (article.related_articles.length) {
+            listItem = article.related_articles;
+        }
+        return listItem.map(this.renderOtherItem);
+    };
 
     render() {
         const {article} = this.state;
+        if (Tools.isEmpty(article)) return null;
         return (
             <Wrapper>
                 <div className="content-container">
@@ -225,27 +273,10 @@ class ArticleDetail extends React.Component<Props, State> {
                     <hr />
                     {this.renderBanner(article)}
                     <div dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
+                    <Tags list={article.tag_list} />
                 </div>
                 <div className="row">
-                    {article.related_articles &&
-                        article.related_articles.map(item => (
-                            <div className="col-xl-6" key={item.id}>
-                                <div className="content-container">
-                                    <h2>
-                                        <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
-                                    </h2>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-md-4">
-                                            <img src={item.image} className="img-thumbnail" width="100%" />
-                                        </div>
-                                        <div className="col-md-8 article-description">
-                                            <p>{Tools.getText(item.description)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                    {this.renderRelatedArticle(article)}
                 </div>
                 {this.renderStaff()}
             </Wrapper>

@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'ccalendar',
     'tag',
     'staff',
-    'landing',
+    'server_rendering',
 ]
 
 MIDDLEWARE = [
