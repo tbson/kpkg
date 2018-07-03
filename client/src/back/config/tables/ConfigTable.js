@@ -13,14 +13,14 @@ import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
-    list?: Array<FormValuesWithCheck>,
+    list?: Array<FormValuesWithCheck>
 };
 type States = {
     dataLoaded: boolean,
     modal: boolean,
     list: Array<FormValuesWithCheck>,
     formValues: FormValues,
-    formErrors: Object,
+    formErrors: Object
 };
 
 export class ConfigTable extends React.Component<Props, States> {
@@ -32,7 +32,7 @@ export class ConfigTable extends React.Component<Props, States> {
         modal: false,
         list: [],
         formValues: defaultFormValues,
-        formErrors: {},
+        formErrors: {}
     };
 
     constructor(props: Props) {
@@ -46,6 +46,7 @@ export class ConfigTable extends React.Component<Props, States> {
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
         const {list} = nextProps;
         const dataLoaded = true;
+        if (prevState.dataLoaded) return null;
         if (list) return {list, dataLoaded};
         return null;
     }
@@ -55,7 +56,7 @@ export class ConfigTable extends React.Component<Props, States> {
         this.prevUrl = initData.links.previous;
         this.setState({
             dataLoaded: true,
-            list: [...initData.items],
+            list: [...initData.items]
         });
     };
 
@@ -67,7 +68,7 @@ export class ConfigTable extends React.Component<Props, States> {
         const state = {
             [modalName]: !modalState,
             formValues,
-            formErrors,
+            formErrors
         };
         this.setState(state);
     };
@@ -102,7 +103,7 @@ export class ConfigTable extends React.Component<Props, States> {
         if (isSuccess) {
             this.onSubmitSuccess(isEdit, data);
         } else {
-            this.onSubmitFail(error)
+            this.onSubmitFail(error);
         }
     };
 
@@ -120,7 +121,7 @@ export class ConfigTable extends React.Component<Props, States> {
 
     onSubmitFail = (formErrors: Object) => {
         this.setState({formErrors});
-    }
+    };
 
     handleRemove = async (ids: string) => {
         let {list} = this.state;
@@ -228,7 +229,7 @@ type RowPropTypes = {
     data: FormValuesWithCheck,
     toggleModal: Function,
     handleRemove: Function,
-    onCheck: Function,
+    onCheck: Function
 };
 
 export class Row extends React.Component<RowPropTypes> {

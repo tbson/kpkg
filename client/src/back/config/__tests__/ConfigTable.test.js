@@ -20,8 +20,8 @@ describe('ConfigTable component', () => {
                 pages: 1,
                 page_size: 10,
                 links: {next: 'nextUrl', previous: 'prevUrl'},
-                items: seeding(10),
-            },
+                items: seeding(10)
+            }
         };
         Tools.apiCall = async (url, method, params = {}) => response;
     });
@@ -48,7 +48,7 @@ describe('ConfigTable component', () => {
         // Spy/mock static methods
         jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
 
-        const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
+        const wrapper = shallow(<ConfigTable list={seeding(10)} />);
         const instance = wrapper.instance();
         const handleToggleCheckAll = jest.spyOn(instance, 'handleToggleCheckAll');
 
@@ -64,7 +64,7 @@ describe('ConfigTable component', () => {
         // Spy/mock static methods
         jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
 
-        const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
+        const wrapper = shallow(<ConfigTable list={seeding(10)} />);
         const instance = wrapper.instance();
         const toggleModal = jest.spyOn(instance, 'toggleModal');
 
@@ -86,7 +86,7 @@ describe('ConfigTable component', () => {
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
 
-            const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
+            const wrapper = shallow(<ConfigTable list={seeding(10)} />);
             const instance = wrapper.instance();
             const handleRemove = jest.spyOn(instance, 'handleRemove').mockImplementation(() => null);
 
@@ -103,7 +103,7 @@ describe('ConfigTable component', () => {
             // Spy/mock static methods
             jest.spyOn(ConfigTable.prototype, 'componentDidMount').mockImplementation(() => {});
 
-            const wrapper = shallow(<ConfigTable list={seeding(10)}/>);
+            const wrapper = shallow(<ConfigTable list={seeding(10)} />);
             const instance = wrapper.instance();
             const handleRemove = jest.spyOn(instance, 'handleRemove').mockImplementation(() => null);
 
@@ -184,7 +184,7 @@ describe('ConfigTable methods', () => {
         it('success', async () => {
             const response = {
                 links: {next: 'nextUrl', previous: 'prevUrl'},
-                items: seeding(10),
+                items: seeding(10)
             };
 
             // Spy/mock static methods
@@ -212,7 +212,7 @@ describe('ConfigTable methods', () => {
     describe('getSearchList', () => {
         const event = {
             preventDefault: () => {},
-            target: {},
+            target: {}
         };
         it('Empty string', async () => {
             const data = {search: ''};
@@ -286,7 +286,7 @@ describe('ConfigTable methods', () => {
         it('Adding', async () => {
             const isEdit = false;
             const data = seeding(4, true);
-            const list = seeding(3)
+            const list = seeding(3);
             instance.onSubmitSuccess(isEdit, data);
             expect(wrapper.state('list')).toEqual([data, ...list]);
         });
@@ -294,7 +294,7 @@ describe('ConfigTable methods', () => {
         it('Editing', async () => {
             const isEdit = true;
             const data = {...seeding(4, true), id: seeding(2, true).id};
-            const list = seeding(3)
+            const list = seeding(3);
             list[1] = data;
             instance.onSubmitSuccess(isEdit, data);
             expect(wrapper.state('list')).toEqual([...list]);
@@ -314,17 +314,15 @@ describe('ConfigTable methods', () => {
         it('Fail', async () => {
             jest.spyOn(Tools, 'handleRemove').mockImplementation(() => null);
             const ids = '2,3';
-            const list = seeding(5)
+            const list = seeding(5);
             instance.handleRemove(ids);
             expect(wrapper.state('list')).toEqual(list);
         });
 
         it('Success', async () => {
             const ids = '2,3';
-            jest.spyOn(Tools, 'handleRemove').mockImplementation(() => ([2, 3]));
-            const list = [
-                seeding(1, true), seeding(4, true), seeding(5, true)
-            ];
+            jest.spyOn(Tools, 'handleRemove').mockImplementation(() => [2, 3]);
+            const list = [seeding(1, true), seeding(4, true), seeding(5, true)];
             await instance.handleRemove(ids);
             expect(wrapper.state('list')).toEqual(list);
         });
@@ -344,13 +342,13 @@ describe('ConfigTable methods', () => {
             const list = seeding(1);
 
             let event = {
-                target: {id: 1, checked: true},
+                target: {id: 1, checked: true}
             };
             instance.handleCheck(event);
             expect(wrapper.state('list')).toEqual([{...list[0], checked: true}]);
 
             event = {
-                target: {id: 1, checked: false},
+                target: {id: 1, checked: false}
             };
             instance.handleCheck(event);
             expect(wrapper.state('list')).toEqual([{...list[0], checked: false}]);
