@@ -38,14 +38,14 @@ class App extends React.Component<Props, State> {
         this.state.mql.removeListener(this.mediaQueryChanged);
     }
 
-    mediaQueryChanged() {
+    mediaQueryChanged = () => {
         console.log('media change');
         this.setState({
             toggled: !this.state.toggled,
         });
     }
 
-    toggleAll(e) {
+    toggleAll = () => {
         this.setState({
             toggled: !this.state.toggled,
         });
@@ -155,7 +155,7 @@ class App extends React.Component<Props, State> {
 
                 <div id="page-content-wrapper">
                     <div id="main-heading">
-                        <span id="nav-toggler" onClick={() => this.toggleAll()}>
+                        <span id="nav-toggler" onClick={this.toggleAll}>
                             &#9776;
                         </span>
                         <span>Tran Bac Son</span>
