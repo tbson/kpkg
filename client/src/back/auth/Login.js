@@ -18,7 +18,7 @@ type States = {
     loginFail: boolean
 };
 
-class Login extends React.Component<Props, States> {
+export class Login extends React.Component<Props, States> {
     navigateTo: Function;
     state = {
         modal: false,
@@ -30,7 +30,14 @@ class Login extends React.Component<Props, States> {
         this.navigateTo = Tools.navigateTo.bind(undefined, this.props.history);
     }
 
-    handleSubmit = async event => {
+    componentDidMount = () => {
+        const authData = Tools.getStorageObj('authData');
+        if (authData.email) {
+            this.navigateTo();
+        }
+    };
+
+    handleSubmit = async (event: Object) => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
         const result = await Tools.apiCall(apiUrls.tokenAuth, 'POST', data);
@@ -44,7 +51,7 @@ class Login extends React.Component<Props, States> {
         }
     };
 
-    handleSubmitResetPassword = async event => {
+    handleSubmitResetPassword = async (event: Object) => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
         const result = await Tools.apiCall(apiUrls.resetPassword, 'POST', data);
@@ -64,13 +71,6 @@ class Login extends React.Component<Props, States> {
                 Wrong username or password!
             </div>
         );
-    };
-
-    componentDidMount = () => {
-        const authData = Tools.getStorageObj('authData');
-        if (authData.email) {
-            this.navigateTo();
-        }
     };
 
     render() {
