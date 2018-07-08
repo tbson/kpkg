@@ -10,27 +10,24 @@ import LoginForm from './forms/LoginForm';
 import ResetPasswordModal from './forms/ResetPasswordModal';
 
 type Props = {
-    history: Object,
-    loginFail: boolean,
+    history: Object
 };
 
-type States = Object;
+type States = {
+    modal: boolean,
+    loginFail: boolean
+};
 
 class Login extends React.Component<Props, States> {
-    handleSubmit: Function;
-    handleSubmitResetPassword: Function;
-    toggleModal: Function;
-    renderErrorMessage: Function;
-
-    static defaultProps = {
-        loginFail: false,
+    navigateTo: Function;
+    state = {
+        modal: false,
+        loginFail: false
     };
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
-        this.state = {
-            modal: false,
-        };
+        this.navigateTo = Tools.navigateTo.bind(undefined, this.props.history);
     }
 
     handleSubmit = async event => {
@@ -39,10 +36,10 @@ class Login extends React.Component<Props, States> {
         const result = await Tools.apiCall(apiUrls.tokenAuth, 'POST', data);
         if (result.success) {
             Tools.setStorage('authData', result.data.user);
-            Tools.navigateTo(this.props.history);
+            this.navigateTo();
         } else {
             this.setState({
-                loginFail: true,
+                loginFail: true
             });
         }
     };
@@ -56,7 +53,7 @@ class Login extends React.Component<Props, States> {
 
     toggleModal = () => {
         this.setState({
-            modal: !this.state.modal,
+            modal: !this.state.modal
         });
     };
 
@@ -72,7 +69,7 @@ class Login extends React.Component<Props, States> {
     componentDidMount = () => {
         const authData = Tools.getStorageObj('authData');
         if (authData.email) {
-            Tools.navigateTo(this.props.history);
+            this.navigateTo();
         }
     };
 

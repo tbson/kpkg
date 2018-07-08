@@ -7,21 +7,27 @@ import {NavLink} from 'react-router-dom';
 import Tools from 'src/utils/helpers/Tools';
 import './NavWrapper.css';
 
-type Props = Object;
+type Props = {
+    history: Object,
+    location: Object,
+    children: React.Node
+};
 
-type State = Object;
+type State = {
+    toggled: boolean,
+    mql: Object
+};
 
 class App extends React.Component<Props, State> {
-    toggleAll: Function;
-    mediaQueryChanged: Function;
+    logout: Function;
+    state = {
+        toggled: true,
+        mql: {}
+    };
 
     constructor(props) {
         super(props);
-        this.state = {
-            toggled: true,
-        };
-        this.toggleAll = this.toggleAll.bind(this);
-        this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
+        this.logout = Tools.logout.bind(Tools, this.props.history);
     }
 
     componentDidMount() {
@@ -30,7 +36,7 @@ class App extends React.Component<Props, State> {
         this.setState({mql: mql});
 
         this.setState({
-            toggled: window.innerWidth >= 800 ? true : false,
+            toggled: window.innerWidth >= 800 ? true : false
         });
     }
 
@@ -41,15 +47,15 @@ class App extends React.Component<Props, State> {
     mediaQueryChanged = () => {
         console.log('media change');
         this.setState({
-            toggled: !this.state.toggled,
+            toggled: !this.state.toggled
         });
-    }
+    };
 
     toggleAll = () => {
         this.setState({
-            toggled: !this.state.toggled,
+            toggled: !this.state.toggled
         });
-    }
+    };
 
     render() {
         return (
@@ -121,9 +127,7 @@ class App extends React.Component<Props, State> {
                             <NavLink
                                 exact
                                 to="/category/banner"
-                                className={
-                                    Tools.matchPrefix('/banner', this.props.location.pathname) ? ' active' : ''
-                                }>
+                                className={Tools.matchPrefix('/banner', this.props.location.pathname) ? ' active' : ''}>
                                 <span className="oi oi-image" />&nbsp;&nbsp;
                                 <span>Banner</span>
                             </NavLink>
@@ -135,7 +139,7 @@ class App extends React.Component<Props, State> {
                                 className={
                                     Tools.matchPrefix('/gallery', this.props.location.pathname) ? ' active' : ''
                                 }>
-                                <span className="oi oi-aperture"></span>&nbsp;&nbsp;
+                                <span className="oi oi-aperture" />&nbsp;&nbsp;
                                 <span>Gallery</span>
                             </NavLink>
                         </li>
@@ -160,10 +164,7 @@ class App extends React.Component<Props, State> {
                         </span>
                         <span>Tran Bac Son</span>
                         &nbsp;&nbsp;
-                        <span
-                            className="oi oi-account-logout pointer"
-                            onClick={() => Tools.logout(this.props.history)}
-                        />
+                        <span className="oi oi-account-logout pointer" onClick={() => this.logout()} />
                     </div>
 
                     <div className="container-fluid">{this.props.children}</div>

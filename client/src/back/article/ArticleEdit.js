@@ -30,7 +30,7 @@ type States = {
 };
 
 class ArticleEdit extends React.Component<Props, States> {
-    static defaultProps = {};
+    navigateTo: Function;
 
     state = {
         dataLoaded: false,
@@ -44,6 +44,7 @@ class ArticleEdit extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
+        this.navigateTo = Tools.navigateTo.bind(undefined, this.props.history);
     }
 
     componentDidMount() {
@@ -122,10 +123,10 @@ class ArticleEdit extends React.Component<Props, States> {
         if (result.success) {
             if (parent == 'category') {
                 // Back to parent list
-                Tools.navigateTo(this.props.history, '/articles', [parent_id]);
+                this.navigateTo('/articles', [parent_id]);
             } else {
                 // Back to parent item
-                Tools.navigateTo(this.props.history, '/article/category', [this.state.categoryId, parent_id]);
+                this.navigateTo('/article/category', [this.state.categoryId, parent_id]);
             }
             return true;
         } else {
@@ -176,9 +177,9 @@ class ArticleEdit extends React.Component<Props, States> {
                         type="button"
                         onClick={() => {
                             if (!this.state.categoryId) {
-                                Tools.navigateTo(this.props.history, '/articles', [parent_id]);
+                                this.navigateTo('/articles', [parent_id]);
                             } else {
-                                Tools.navigateTo(this.props.history, '/article/category', [
+                                this.navigateTo('/article/category', [
                                     this.state.categoryId,
                                     parent_id,
                                 ]);

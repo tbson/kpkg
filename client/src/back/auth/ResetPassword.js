@@ -9,33 +9,37 @@ import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
     history: Object,
-    match: Object,
+    match: Object
 };
 
 type States = {
-    message: string,
+    message: string
 };
 
 class ResetPassword extends React.Component<Props, States> {
+    navigateTo: Function;
+    logout: Function;
+    state = {
+        message: 'Resetting password...'
+    };
 
     constructor(props) {
         super(props);
-        this.state = {
-            message: 'Resetting password...',
-        };
+        this.navigateTo = Tools.navigateTo.bind(undefined, this.props.history);
+        this.logout = Tools.logout.bind(Tools, this.props.history);
     }
 
     async componentDidMount() {
         const result = await Tools.apiCall(apiUrls.resetPassword, 'GET', this.props.match.params);
         if (result.success) {
-            Tools.logout(this.props.history);
+            this.logout();
         } else {
             const message = ['Wrong token or token expired', 'Login page comming in 4 seconds.'].join('. ');
             this.setState({
-                message,
+                message
             });
             setTimeout(() => {
-                Tools.navigateTo(this.props.history, '/login');
+                this.navigateTo('/login');
             }, 4000);
         }
     }
