@@ -224,7 +224,7 @@ type RowPropTypes = {
 };
 
 export class Row extends React.Component<RowPropTypes> {
-    getItem = async (id: number) => {
+    getItemToEdit = async (id: number) => {
         const result = await Tools.getItem(apiUrls.crud, id);
         if (result) {
             this.props.toggleModal('modal', result);
@@ -241,7 +241,7 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="uid">{data.uid}</td>
                 <td className="value">{data.value}</td>
                 <td className="center">
-                    <a className="editBtn" onClick={() => this.getItem(parseInt(data.id))}>
+                    <a className="editBtn" onClick={() => this.getItemToEdit(parseInt(data.id))}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
