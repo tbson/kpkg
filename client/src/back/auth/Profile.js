@@ -13,10 +13,9 @@ type Props = {};
 type States = {
     authData: Object,
     profileModal: boolean,
-    profileDefaultValue: Object,
-    profileErrorMessage: Object,
     changePasswordModal: boolean,
-    changePasswordError: Object
+    formValues: Object,
+    errorMessage: Object
 };
 type ModalProps = {
     show: boolean,
@@ -30,10 +29,9 @@ export class Profile extends React.Component<Props, States> {
     state = {
         authData: Tools.getStorageObj('authData'),
         profileModal: false,
-        profileDefaultValue: {},
-        profileErrorMessage: {},
         changePasswordModal: false,
-        changePasswordError: {}
+        formValues: {},
+        errorMessage: {}
     };
 
     constructor(props: Props) {
@@ -55,7 +53,7 @@ export class Profile extends React.Component<Props, States> {
             this.setState({authData: Tools.getStorageObj('authData')});
             this.toggleModal('profileModal');
         } else {
-            this.setState({profileErrorMessage: result.data});
+            this.setState({errorMessage: result.data});
         }
     };
 
@@ -68,47 +66,30 @@ export class Profile extends React.Component<Props, States> {
             this.toggleModal('changePasswordModal');
         } else {
             this.setState({
-                changePasswordError: result.data
+                errorMessage: result.data
             });
         }
     };
 
-    toggleModal = (modalId: string) => {
-        let state = {};
-        state[modalId] = !this.state[modalId];
-        switch (modalId) {
-            case 'profileModal':
-                if (state[modalId]) {
-                    Tools.apiCall(apiUrls.profile, 'GET').then(result => {
-                        state.profileDefaultValue = result.data;
-                        this.setState(state);
-                    });
-                    return;
-                }
-                break;
-            case 'changePasswordModal':
-                state.changePasswordError = {};
-                break;
-        }
+    toggleModal = (modalName: string, formValues: Object = {}) => {
+        const state = Tools.toggleModal(this.state, modalName, formValues);
         this.setState(state);
     };
 
+    getProfileToEdit = async () => {
+        const result = await Tools.apiCall(apiUrls.profile, 'GET');
+        this.toggleModal('profileModal', result.data);
+    };
+
     render() {
-        const {
-            authData,
-            profileDefaultValue,
-            profileErrorMessage,
-            changePasswordError,
-            profileModal,
-            changePasswordModal
-        } = this.state;
+        const {authData, formValues, errorMessage, profileModal, changePasswordModal} = this.state;
 
         const {email, username, fullname} = authData;
 
         const profileModalProps: ModalProps = {
             show: profileModal,
-            defaultValue: profileDefaultValue,
-            errorMessage: profileErrorMessage,
+            defaultValue: formValues,
+            errorMessage: errorMessage,
             toggleModal: this.toggleModal.bind(this, 'profileModal'),
             handleSubmit: this.updateProfile
         };
@@ -116,7 +97,7 @@ export class Profile extends React.Component<Props, States> {
         const changePasswordModalProps: ModalProps = {
             show: changePasswordModal,
             defaultValue: {},
-            errorMessage: changePasswordError,
+            errorMessage: errorMessage,
             toggleModal: this.toggleModal.bind(this, 'changePasswordModal'),
             handleSubmit: this.changePassword
         };
@@ -129,7 +110,7 @@ export class Profile extends React.Component<Props, States> {
                     <div>Fullname: {fullname}</div>
                 </div>
                 <div>
-                    <button onClick={() => this.toggleModal('profileModal')} className="btn btn-success">
+                    <button onClick={this.getProfileToEdit} className="btn btn-success">
                         Update profile
                     </button>
                     <button onClick={() => this.toggleModal('changePasswordModal')} className="btn btn-primary">
