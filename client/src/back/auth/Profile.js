@@ -49,11 +49,13 @@ export class Profile extends React.Component<Props, States> {
 
         const result = await Tools.apiCall(apiUrls.profile, 'POST', data);
         if (result.success) {
-            Tools.setStorage('authData', result.data);
-            this.setState({authData: Tools.getStorageObj('authData')});
+            const authData = result.data;
+            Tools.setStorageObj({authData});
+            this.setState({authData});
             this.toggleModal('profileModal');
         } else {
-            this.setState({errorMessage: result.data});
+            const errorMessage = result.data;
+            this.setState({errorMessage});
         }
     };
 
@@ -65,9 +67,8 @@ export class Profile extends React.Component<Props, States> {
         if (result.success) {
             this.toggleModal('changePasswordModal');
         } else {
-            this.setState({
-                errorMessage: result.data
-            });
+            const errorMessage = result.data;
+            this.setState({errorMessage});
         }
     };
 
@@ -128,17 +129,15 @@ export const ProfileModal = ({show, defaultValue, errorMessage, toggleModal, han
     if (!show) return null;
     return (
         <CustomModal open={true} close={toggleModal} title="Update profile" size="md">
-            <div>
-                <UpdateProfileForm
-                    defaultValue={defaultValue}
-                    errorMessage={errorMessage}
-                    submitTitle="Update profile"
-                    handleSubmit={handleSubmit}>
-                    <button type="button" onClick={toggleModal} className="btn btn-warning">
-                        <span className="oi oi-x" />&nbsp; Cancel
-                    </button>
-                </UpdateProfileForm>
-            </div>
+            <UpdateProfileForm
+                defaultValue={defaultValue}
+                errorMessage={errorMessage}
+                submitTitle="Update profile"
+                handleSubmit={handleSubmit}>
+                <button type="button" onClick={toggleModal} className="btn btn-warning">
+                    <span className="oi oi-x" />&nbsp; Cancel
+                </button>
+            </UpdateProfileForm>
         </CustomModal>
     );
 };
@@ -153,16 +152,14 @@ export const ChangePasswordModal = ({
     if (!show) return null;
     return (
         <CustomModal open={true} close={toggleModal} title="Change password" size="md">
-            <div>
-                <ChangePasswordForm
-                    errorMessage={errorMessage}
-                    submitTitle="Change password"
-                    handleSubmit={handleSubmit}>
-                    <button type="button" onClick={toggleModal} className="btn btn-warning">
-                        <span className="oi oi-x" />&nbsp; Cancel
-                    </button>
-                </ChangePasswordForm>
-            </div>
+            <ChangePasswordForm
+                errorMessage={errorMessage}
+                submitTitle="Change password"
+                handleSubmit={handleSubmit}>
+                <button type="button" onClick={toggleModal} className="btn btn-warning">
+                    <span className="oi oi-x" />&nbsp; Cancel
+                </button>
+            </ChangePasswordForm>
         </CustomModal>
     );
 };

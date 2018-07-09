@@ -120,7 +120,15 @@ export default class Tools {
             newValue = JSON.stringify(newValue);
             localStorage.setItem(LOCAL_STORAGE_PREFIX + '_' + key, newValue);
         } catch (error) {
-            console.error(error);
+            console.log(error);
+        }
+    }
+
+
+    static setStorageObj(input: Object): void {
+        for (let key in input) {
+            const value = input[key];
+            this.setStorage(key, value);
         }
     }
 
