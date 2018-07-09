@@ -37,13 +37,13 @@ describe('ConfigTable Row component', () => {
     });
 
     it('Open modal to edit', async () => {
-        const getItem = jest.spyOn(instance, 'getItem');
-        jest.spyOn(Tools, 'getItem').mockImplementation(() => {});
+        const getItemToEdit = jest.spyOn(instance, 'getItemToEdit');
+        jest.spyOn(Tools, 'getItemToEdit').mockImplementation(() => {});
         wrapper
             .find('.editBtn')
             .first()
             .simulate('click');
-        expect(getItem).toHaveBeenCalled();
+        expect(getItemToEdit).toHaveBeenCalled();
     });
 
     it('Remove', () => {
@@ -57,15 +57,15 @@ describe('ConfigTable Row component', () => {
 });
 
 describe('ConfigTable Row method', () => {
-    describe('getItem then toggleModal', () => {
+    describe('getItemToEdit then toggleModal', () => {
         it('Fail', async () => {
-            jest.spyOn(Tools, 'getItem').mockImplementation(() => null);
-            await instance.getItem(1);
+            jest.spyOn(Tools, 'getItemToEdit').mockImplementation(() => null);
+            await instance.getItemToEdit(1);
             expect(props.toggleModal.mock.calls.length).toEqual(0);
         });
         it('Success', async () => {
-            jest.spyOn(Tools, 'getItem').mockImplementation(() => ({}));
-            await instance.getItem(1);
+            jest.spyOn(Tools, 'getItemToEdit').mockImplementation(() => ({}));
+            await instance.getItemToEdit(1);
             expect(props.toggleModal.mock.calls.length).toEqual(1);
         });
     });
