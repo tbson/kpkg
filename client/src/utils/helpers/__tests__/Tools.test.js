@@ -686,3 +686,55 @@ test('updateListOnSuccessEditing', () => {
     const output = Tools.updateListOnSuccessEditing(list, data);
     expect(output).toEqual(eput);
 });
+
+test('toggleModal', () => {
+    let state = {
+        modalName: true
+    };
+    let output, eput;
+
+    // Undefined state
+    output = Tools.toggleModal();
+    eput = null;
+    expect(output).toEqual(eput);
+
+    // Null state
+    output = Tools.toggleModal(null);
+    eput = null;
+    expect(output).toEqual(eput);
+
+    // Empty state
+    output = Tools.toggleModal({});
+    eput = null;
+    expect(output).toEqual(eput);
+
+    // Empty modal name
+    output = Tools.toggleModal(state);
+    eput = null;
+    expect(output).toEqual(eput);
+
+    // Not match modal name
+    output = Tools.toggleModal(state, 'hello');
+    eput = null;
+    expect(output).toEqual(eput);
+
+    // Success without form values
+    output = Tools.toggleModal(state, 'modalName');
+    eput = {
+        modalName: false,
+        formValues: {},
+        formErrors: {}
+    };
+    expect(output).toEqual(eput);
+
+    // Success with form values
+    output = Tools.toggleModal(state, 'modalName', {test: 'aaa'});
+    eput = {
+        modalName: false,
+        formValues: {
+            test: 'aaa'
+        },
+        formErrors: {}
+    };
+    expect(output).toEqual(eput);
+});

@@ -60,17 +60,8 @@ export class ConfigTable extends React.Component<Props, States> {
         });
     };
 
-    toggleModal = async (modalName: string, formValues: Object = {}) => {
-        const formErrors = {};
-        const modalState = this.state[modalName];
-        if (!modalName || modalState === undefined) return;
-
-        const state = {
-            [modalName]: !modalState,
-            formValues,
-            formErrors
-        };
-        this.setState(state);
+    toggleModal = (modalName: string, formValues: Object = {}) => {
+        this.setState(Tools.toggleModal(this.state, modalName, formValues));
     };
 
     getList = async (url: string = '', params: Object = {}) => {

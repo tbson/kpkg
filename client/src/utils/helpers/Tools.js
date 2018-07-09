@@ -19,13 +19,13 @@ import {
     DOMAIN,
     FIELD_TYPE,
     URL_PREFIX_STRIP,
-    BASE_URL,
+    BASE_URL
 } from 'src/constants';
 let fingerprint = null;
 
 type ApiUrl = {
     controller: string,
-    endpoints: Object,
+    endpoints: Object
 };
 
 type RawApiUrls = Array<ApiUrl>;
@@ -33,9 +33,9 @@ type RawApiUrls = Array<ApiUrl>;
 export type GetListResponseData = {
     links: {
         next: ?string,
-        previous: ?string,
+        previous: ?string
     },
-    items: Array<Object>,
+    items: Array<Object>
 };
 export type GetListResponse = Promise<?GetListResponseData>;
 
@@ -43,7 +43,7 @@ type GetItemResponse = Promise<?Object>;
 
 type DataErrorPair = {
     data: Object,
-    error: Object,
+    error: Object
 };
 
 export default class Tools {
@@ -194,12 +194,12 @@ export default class Tools {
                 }
                 return {
                     data: formData,
-                    contentType: null,
+                    contentType: null
                 };
             } else {
                 return {
                     data: JSON.stringify(data),
-                    contentType: 'application/json',
+                    contentType: 'application/json'
                 };
             }
         } catch (error) {
@@ -265,7 +265,7 @@ export default class Tools {
 
     static popMessage(description: string | Object, type: string = 'success'): void {
         const toastConfig = {
-            position: toast.POSITION.BOTTOM_RIGHT,
+            position: toast.POSITION.BOTTOM_RIGHT
         };
         const messages = this.errorMessageProcessing(description);
         if (!messages) return;
@@ -286,7 +286,7 @@ export default class Tools {
         method: string,
         payload: Object = {},
         popMessage: boolean = true,
-        usingLoading: boolean = true,
+        usingLoading: boolean = true
     ): Promise<{status: number, success: boolean, data: Object}> {
         try {
             if (usingLoading) {
@@ -296,9 +296,9 @@ export default class Tools {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    fingerprint: await this.getFingerPrint(),
+                    fingerprint: await this.getFingerPrint()
                 },
-                credentials: 'same-origin',
+                credentials: 'same-origin'
             };
             if (this.getToken()) {
                 requestConfig.headers.Authorization = 'JWT ' + this.getToken();
@@ -335,16 +335,16 @@ export default class Tools {
                     items: data,
                     links: {
                         next: null,
-                        previous: null,
+                        previous: null
                     },
                     page_size: data.length,
-                    pages: 1,
+                    pages: 1
                 };
             }
             let result = {
                 status: response.status,
                 success: [200, 201, 204].indexOf(response.status) === -1 ? false : true,
-                data,
+                data
             };
             if ([200, 201, 204].indexOf(result.status) === -1) {
                 this.popMessage(result.data, 'error');
@@ -362,7 +362,7 @@ export default class Tools {
             return {
                 status: 400,
                 success: false,
-                data: error,
+                data: error
             };
         }
     }
@@ -386,7 +386,7 @@ export default class Tools {
         let cryptoObj = window.crypto || window.msCrypto;
         // $FlowFixMe: allow bitwise operations
         return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-            (c ^ (cryptoObj.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
+            (c ^ (cryptoObj.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
         );
     }
 
@@ -438,8 +438,8 @@ export default class Tools {
         return {
             success: false,
             data: {
-                detail,
-            },
+                detail
+            }
         };
     }
 
@@ -502,13 +502,13 @@ export default class Tools {
         return {data, error};
     }
 
-    static updateListOnSuccessAdding (list: Array<Object>, data: Object): Array<Object> {
+    static updateListOnSuccessAdding(list: Array<Object>, data: Object): Array<Object> {
         const newItem = {...data, checked: false};
         list.unshift(newItem);
         return list;
     }
 
-    static updateListOnSuccessEditing (list: Array<Object>, data: Object): Array<Object> {
+    static updateListOnSuccessEditing(list: Array<Object>, data: Object): Array<Object> {
         const {id} = data;
         const index = list.findIndex(item => item.id === id);
         const oldItem = list[index];
@@ -541,5 +541,18 @@ export default class Tools {
             checkAll = true;
         }
         return list.map(value => ({...value, checked: checkAll}));
+    }
+
+    static toggleModal(state: Object, modalName: string, formValues: Object = {}): ?Object {
+        if (!state || this.isEmpty(state)) return null;
+        const formErrors = {};
+        const modalState = state[modalName];
+        if (!modalName || modalState === undefined) return null;
+
+        return {
+            [modalName]: !modalState,
+            formValues,
+            formErrors
+        };
     }
 }
