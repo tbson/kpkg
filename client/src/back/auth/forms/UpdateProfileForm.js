@@ -2,29 +2,27 @@
 import * as React from 'react';
 
 type Props = {
-    handleSubmit: Function,
     children?: React.Node,
-    formId: string,
+    handleSubmit: Function,
     submitTitle: string,
     defaultValue: Object,
-    errorMessage: Object,
+    errorMessage: Object
 };
 type States = {};
 
 class UpdateProfileForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
+    formId: string;
 
+    static formId = 'updateProfile';
     static defaultProps = {
         submitTitle: 'Submit',
         defaultValue: {
             username: null,
             email: null,
             first_name: null,
-            last_name: null,
+            last_name: null
         },
-        errorMessage: {},
+        errorMessage: {}
     };
 
     constructor(props: Props) {
@@ -33,8 +31,8 @@ class UpdateProfileForm extends React.Component<Props, States> {
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=username]').focus();
+        window.document.getElementById(this.formId).reset();
+        window.document.querySelector('#' + this.formId + ' [name=username]').focus();
     };
 
     setClassName = (name: string) => {
@@ -47,7 +45,7 @@ class UpdateProfileForm extends React.Component<Props, States> {
 
     render() {
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
+            <form id={this.formId} onSubmit={this.props.handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="username">Username</label>
                     <input

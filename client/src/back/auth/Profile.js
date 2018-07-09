@@ -9,34 +9,35 @@ import NavWrapper from 'src/utils/components/NavWrapper';
 import UpdateProfileForm from './forms/UpdateProfileForm';
 import ChangePasswordForm from './forms/ChangePasswordForm';
 
-type Props = Object;
+type Props = {};
 type States = {
     authData: Object,
     profileModal: boolean,
     profileDefaultValue: Object,
     profileErrorMessage: Object,
     changePasswordModal: boolean,
-    changePasswordError: string,
+    changePasswordError: Object
+};
+type ModalProps = {
+    show: boolean,
+    defaultValue: Object,
+    errorMessage: Object,
+    toggleModal: Function,
+    handleSubmit: Function
 };
 
-class Profile extends React.Component<Props, States> {
-    toggleModal: Function;
-    renderErrorMessage: Function;
-    renderProfileModal: Function;
-    renderChangePasswordModal: Function;
-    handleUpdateProfile: Function;
-    handleChangePassword: Function;
+export class Profile extends React.Component<Props, States> {
+    state = {
+        authData: Tools.getStorageObj('authData'),
+        profileModal: false,
+        profileDefaultValue: {},
+        profileErrorMessage: {},
+        changePasswordModal: false,
+        changePasswordError: {}
+    };
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
-        this.state = {
-            authData: Tools.getStorageObj('authData'),
-            profileModal: false,
-            profileDefaultValue: {},
-            profileErrorMessage: {},
-            changePasswordModal: false,
-            changePasswordError: '',
-        };
     }
 
     componentDidMount = () => {
@@ -44,7 +45,7 @@ class Profile extends React.Component<Props, States> {
         Tools.apiCall(apiUrls.profile, 'GET');
     };
 
-    handleUpdateProfile = async event => {
+    updateProfile = async (event: Object) => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
 
@@ -58,7 +59,7 @@ class Profile extends React.Component<Props, States> {
         }
     };
 
-    handleChangePassword = async event => {
+    changePassword = async (event: Object) => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
 
@@ -67,7 +68,7 @@ class Profile extends React.Component<Props, States> {
             this.toggleModal('changePasswordModal');
         } else {
             this.setState({
-                changePasswordError: Tools.errorMessageProcessing(result.data),
+                changePasswordError: result.data
             });
         }
     };
@@ -86,78 +87,46 @@ class Profile extends React.Component<Props, States> {
                 }
                 break;
             case 'changePasswordModal':
-                state.changePasswordError = '';
+                state.changePasswordError = {};
                 break;
         }
         this.setState(state);
     };
 
-    renderErrorMessage = (message: ?string = '') => {
-        if (!message) return null;
-        return (
-            <div className="alert alert-danger" role="alert" style={{marginTop: 16}}>
-                {message}
-            </div>
-        );
-    };
-
-    renderProfileModal = (defaultValue, errorMessage) => {
-        // const authData = Tools.getStorageObj('authData');
-        const modalId = 'profileModal';
-        return (
-            <CustomModal
-                open={this.state[modalId]}
-                close={() => this.toggleModal(modalId)}
-                title="Update profile"
-                size="md">
-                <div>
-                    <UpdateProfileForm
-                        formId="updateProfileForm"
-                        defaultValue={defaultValue}
-                        errorMessage={errorMessage}
-                        submitTitle="Update profile"
-                        handleSubmit={this.handleUpdateProfile}>
-                        <button type="button" onClick={() => this.toggleModal(modalId)} className="btn btn-warning">
-                            <span className="oi oi-x" />&nbsp; Cancel
-                        </button>
-                    </UpdateProfileForm>
-                </div>
-            </CustomModal>
-        );
-    };
-
-    renderChangePasswordModal = () => {
-        const authData = Tools.getStorageObj('authData');
-        const modalId = 'changePasswordModal';
-        return (
-            <CustomModal
-                open={this.state[modalId]}
-                close={() => this.toggleModal(modalId)}
-                title="Change password"
-                size="md">
-                <div>
-                    <ChangePasswordForm
-                        formId="changePasswordForm"
-                        submitTitle="Change password"
-                        handleSubmit={this.handleChangePassword}>
-                        <button type="button" onClick={() => this.toggleModal(modalId)} className="btn btn-warning">
-                            <span className="oi oi-x" />&nbsp; Cancel
-                        </button>
-                    </ChangePasswordForm>
-                    {this.renderErrorMessage(this.state.changePasswordError)}
-                </div>
-            </CustomModal>
-        );
-    };
-
     render() {
-        const authData = this.state.authData;
+        const {
+            authData,
+            profileDefaultValue,
+            profileErrorMessage,
+            changePasswordError,
+            profileModal,
+            changePasswordModal
+        } = this.state;
+
+        const {email, username, fullname} = authData;
+
+        const profileModalProps: ModalProps = {
+            show: profileModal,
+            defaultValue: profileDefaultValue,
+            errorMessage: profileErrorMessage,
+            toggleModal: this.toggleModal.bind(this, 'profileModal'),
+            handleSubmit: this.updateProfile
+        };
+
+        const changePasswordModalProps: ModalProps = {
+            show: changePasswordModal,
+            defaultValue: {},
+            errorMessage: changePasswordError,
+            toggleModal: this.toggleModal.bind(this, 'changePasswordModal'),
+            handleSubmit: this.changePassword
+        };
+
         return (
             <NavWrapper>
                 <div>
-                    <div>Email: {authData.email}</div>
-                    <div>Username: {authData.username}</div>
-                    <div>Fullname: {authData.fullname}</div>
+                    <div>Email: {email}</div>
+                    <div>Username: {username}</div>
+                    <div>Fullname: {fullname}</div>
                 </div>
                 <div>
                     <button onClick={() => this.toggleModal('profileModal')} className="btn btn-success">
@@ -167,13 +136,54 @@ class Profile extends React.Component<Props, States> {
                         Change password
                     </button>
                 </div>
-                {this.renderProfileModal(this.state.profileDefaultValue, this.state.profileErrorMessage)}
-                {this.renderChangePasswordModal()}
+                <ProfileModal {...profileModalProps} />
+                <ChangePasswordModal {...changePasswordModalProps} />
             </NavWrapper>
         );
     }
 }
 
-const styles = {};
+export const ProfileModal = ({show, defaultValue, errorMessage, toggleModal, handleSubmit}: ModalProps): React.Node => {
+    if (!show) return null;
+    return (
+        <CustomModal open={true} close={toggleModal} title="Update profile" size="md">
+            <div>
+                <UpdateProfileForm
+                    defaultValue={defaultValue}
+                    errorMessage={errorMessage}
+                    submitTitle="Update profile"
+                    handleSubmit={handleSubmit}>
+                    <button type="button" onClick={toggleModal} className="btn btn-warning">
+                        <span className="oi oi-x" />&nbsp; Cancel
+                    </button>
+                </UpdateProfileForm>
+            </div>
+        </CustomModal>
+    );
+};
+
+export const ChangePasswordModal = ({
+    show,
+    defaultValue,
+    errorMessage,
+    toggleModal,
+    handleSubmit
+}: ModalProps): React.Node => {
+    if (!show) return null;
+    return (
+        <CustomModal open={true} close={toggleModal} title="Change password" size="md">
+            <div>
+                <ChangePasswordForm
+                    errorMessage={errorMessage}
+                    submitTitle="Change password"
+                    handleSubmit={handleSubmit}>
+                    <button type="button" onClick={toggleModal} className="btn btn-warning">
+                        <span className="oi oi-x" />&nbsp; Cancel
+                    </button>
+                </ChangePasswordForm>
+            </div>
+        </CustomModal>
+    );
+};
 
 export default withRouter(Profile);

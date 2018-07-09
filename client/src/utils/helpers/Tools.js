@@ -323,7 +323,8 @@ export default class Tools {
                     data = await response.json();
                 }
             } catch (error) {
-                console.error(error);
+                console.log(error);
+                this.popMessage('Internal server error', 'error');
             }
             if (usingLoading) {
                 this.toggleGlobalLoading(false);
