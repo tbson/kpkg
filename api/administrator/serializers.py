@@ -89,10 +89,6 @@ class AdministratorUpdateSerializer(AdministratorBaseSerializer):
         }
 
     def update(self, instance, validated_data):
-        groups = []
-        for group in self.initial_data['groups'].split(','):
-            if group.isdigit():
-                groups.append(int(group))
         user = instance.user
         data = validated_data.get('user', {})
 
@@ -124,13 +120,19 @@ class AdministratorUpdateSerializer(AdministratorBaseSerializer):
         user.last_name = user.last_name if not data.get('last_name', None) else data['last_name']
         user.save()
 
-        for group in user.groups.all():
-            group.user_set.remove(user)
+        if 'groups' in self.initial_data:
+            groups = []
+            for group in self.initial_data['groups'].split(','):
+                if group.isdigit():
+                    groups.append(int(group))
 
-        if len(list(groups)):
-            groupList = Group.objects.filter(id__in=groups)
-            for group in groupList:
-                group.user_set.add(user)
+            for group in user.groups.all():
+                group.user_set.remove(user)
+
+            if len(list(groups)):
+                groupList = Group.objects.filter(id__in=groups)
+                for group in groupList:
+                    group.user_set.add(user)
 
         instance.user = user
         return instance
