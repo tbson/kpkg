@@ -37,7 +37,13 @@ export class Login extends React.Component<Props, States> {
         }
     };
 
-    handleSubmit = async (event: Object) => {
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    };
+
+    handleSubmitLogin = async (event: Object) => {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
         const result = await Tools.apiCall(apiUrls.tokenAuth, 'POST', data);
@@ -58,34 +64,20 @@ export class Login extends React.Component<Props, States> {
         this.toggleModal();
     };
 
-    toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-    };
-
-    renderErrorMessage = () => {
-        if (!this.state.loginFail) return null;
-        return (
-            <div className="alert alert-danger" role="alert" style={{marginTop: 16}}>
-                Wrong username or password!
-            </div>
-        );
-    };
-
     render() {
+        const {loginFail} = this.state;
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-md-8 offset-md-2">
                         <div className="jumbotron">
-                            <LoginForm formId="loginForm" submitTitle="Login" handleSubmit={this.handleSubmit}>
+                            <LoginForm formId="loginForm" submitTitle="Login" handleSubmit={this.handleSubmitLogin}>
                                 <span className="pointer link" onClick={this.toggleModal}>
                                     Reset password
                                 </span>
                                 &nbsp;&nbsp;
                             </LoginForm>
-                            {this.renderErrorMessage()}
+                            <ErrorMessage loginFail={loginFail} />
                         </div>
                     </div>
                 </div>
@@ -98,5 +90,17 @@ export class Login extends React.Component<Props, States> {
         );
     }
 }
+
+type ErrorMessageProps = {
+    loginFail: boolean
+};
+export const ErrorMessage = ({loginFail}: ErrorMessageProps): React.Node => {
+    if (!loginFail) return null;
+    return (
+        <div className="alert alert-danger" role="alert" style={{marginTop: 16}}>
+            Wrong username or password!
+        </div>
+    );
+};
 
 export default withRouter(Login);
