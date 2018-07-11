@@ -200,10 +200,7 @@ export class ConfigTable extends React.Component<Props, States> {
                     </tfoot>
                 </table>
                 <DefaultModal open={this.state.modal} title={modalTitle} handleClose={() => this.toggleModal('modal')}>
-                    <ConfigForm
-                        formValues={formValues}
-                        formErrors={formErrors}
-                        handleSubmit={this.handleSubmit}>
+                    <ConfigForm formValues={formValues} formErrors={formErrors} handleSubmit={this.handleSubmit}>
                         <button type="button" onClick={() => this.toggleModal('modal')} className="btn btn-warning">
                             <span className="oi oi-x" />&nbsp; Cancel
                         </button>

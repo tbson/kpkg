@@ -5,19 +5,22 @@ import {withRouter} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesWithCheck, RowValues} from '../_data';
+import type {GetListResponseData} from 'src/utils/helpers/Tools';
 import PermissionForm from '../forms/PermissionForm';
-import PermissionModal from '../forms/PermissionModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
+import DefaultModal from 'src/utils/components/DefaultModal';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
-type Props = {};
+type Props = {
+    list?: Array<FormValuesWithCheck>
+};
 type States = {
     dataLoaded: boolean,
     modal: boolean,
     list: Array<FormValuesWithCheck>,
     formValues: FormValues,
-    formErrors: Object,
+    formErrors: Object
 };
 
 export class PermissionTable extends React.Component<Props, States> {
@@ -29,7 +32,7 @@ export class PermissionTable extends React.Component<Props, States> {
         modal: false,
         list: [],
         formValues: defaultFormValues,
-        formErrors: {},
+        formErrors: {}
     };
 
     constructor(props: Props) {
@@ -37,183 +40,97 @@ export class PermissionTable extends React.Component<Props, States> {
     }
 
     componentDidMount() {
-        this.list();
+        this.getList();
     }
 
-    setInitData = (initData: Object) => {
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {list} = nextProps;
+        const dataLoaded = true;
+        if (prevState.dataLoaded) return null;
+        if (list) return {list, dataLoaded};
+        return null;
+    }
+
+    setInitData = (initData: GetListResponseData) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
-        const newData = initData.items.map(item => {
-            item.checked = !!item.checked;
-            return item;
-        });
         this.setState({
             dataLoaded: true,
-            list: [...newData],
+            list: [...initData.items]
         });
     };
 
-    list = async (outerParams: Object = {}, url: ?string = null) => {
-        let params = {};
-        let result = {};
-
-        if (!Tools.isEmpty(outerParams)) {
-            params = {...params, ...outerParams};
-        }
-
-        result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
-        if (result.success) {
-            this.setInitData(result.data);
-            return result;
-        }
-        return result;
+    toggleModal = (modalName: string, formValues: Object = {}) => {
+        this.setState(Tools.toggleModal(this.state, modalName, formValues));
     };
 
-    toggleModal = (modalName: string, id: ?number = null): Object => {
-        // If modalName not defined -> exit here
-        if (typeof this.state[modalName] == 'undefined') return {};
-
-        const state = {
-            [modalName]: !this.state[modalName],
-            formValues: defaultFormValues,
-            formErrors: {},
-        };
-
-        if (id) {
-            switch (modalName) {
-                case 'modal':
-                    Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
-                        if (result.success) {
-                            state.formValues = result.data;
-                        }
-                        this.setState(state);
-                    });
-                    return state;
-            }
-        } else {
-            this.setState(state);
+    getList = async (url: string = '', params: Object = {}) => {
+        const result = await Tools.getList(url ? url : apiUrls.crud, params);
+        if (result) {
+            this.setInitData(result);
         }
-        return state;
     };
 
-    handleSubmit = async (event: Object): Promise<boolean> => {
+    searchList = async (event: Object) => {
         event.preventDefault();
-        let error: ?Object = null;
+        const {search} = Tools.formDataToObj(new FormData(event.target));
+        if (search.length > 2) {
+            await this.getList('', {search});
+        } else if (!search.length) {
+            await this.getList();
+        }
+    };
+
+    handleSubmit = async (event: Object) => {
+        event.preventDefault();
+
         const params = Tools.formDataToObj(new FormData(event.target));
-        params.id = parseInt(params.id);
-        if (!params.id) {
-            error = await this.handleAdd(params);
+        const isEdit = params.id ? true : false;
+        let url = apiUrls.crud;
+        if (isEdit) url += String(params.id);
+
+        const {data, error} = await Tools.handleSubmit(url, params);
+        const isSuccess = Tools.isEmpty(error);
+        if (isSuccess) {
+            this.onSubmitSuccess(isEdit, data);
         } else {
-            error = await this.handleEdit(params);
+            this.onSubmitFail(error);
         }
+    };
 
-        if (!error) {
-            // No error -> close current modal
-            this.toggleModal('modal');
-            return true;
+    onSubmitSuccess = (isEdit: boolean, data: FormValues) => {
+        let {list} = this.state;
+        const args = [list, data];
+        if (isEdit) {
+            list = Tools.updateListOnSuccessEditing(...args);
         } else {
-            // Have error -> update err object
-            this.setState({formErrors: error});
-            return false;
+            list = Tools.updateListOnSuccessAdding(...args);
         }
+        this.setState({list});
+        this.toggleModal('modal');
     };
 
-    handleAdd = async (params: FormValues) => {
-        const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
-        if (result.success) {
-            this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
-            return null;
-        }
-        return result.data;
-    };
-
-    handleEdit = async (params: FormValuesWithCheck) => {
-        const id = String(params.id);
-        const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
-        if (result.success) {
-            const index = this.state.list.findIndex(item => item.id === parseInt(id));
-            const {checked} = this.state.list[index];
-            this.state.list[index] = {...result.data, checked};
-            this.setState({list: this.state.list});
-            return null;
-        }
-        return result.data;
-    };
-
-    handleToggleCheckAll = () => {
-        var newList = [];
-        const checkedItem = this.state.list.filter(item => item.checked);
-        const result = (checked: boolean) => {
-            const list = this.state.list.map(value => {
-                return {...value, checked};
-            });
-            this.setState({list});
-        };
-
-        if (checkedItem) {
-            if (checkedItem.length === this.state.list.length) {
-                // Checked all -> uncheck all
-                return result(false);
-            }
-            // Some item checked -> checke all
-            return result(true);
-        } else {
-            // Nothing checked -> check all
-            return result(true);
-        }
-    };
-
-    handleCheck = (data: FormValuesWithCheck, event: Object) => {
-        data.checked = event.target.checked;
-        const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
-        this.state.list[index] = {...data};
-        this.setState({list: this.state.list});
-    };
-
-    handleRemove = async (id: string) => {
-        const listId = id.split(',');
-        if (!id || !listId.length) return;
-        let message = '';
-        if (listId.length === 1) {
-            message = 'Do you want to remove this item?';
-        } else {
-            message = 'Do you want to remove selected items?';
-        }
-        const decide = confirm(message);
-        if (!decide) return;
-        const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
-        if (result.success) {
-            const listId = id.split(',').map(item => parseInt(item));
-            const list = this.state.list.filter(item => listId.indexOf(item.id) === -1);
-            this.setState({list});
-        } else {
-            this.list();
-        }
-    };
-
-    handleSearch = (event: Object) => {
-        event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
-        if (searchStr.length > 2) {
-            this.list({search: searchStr});
-        } else if (!searchStr.length) {
-            this.list();
-        }
+    onSubmitFail = (formErrors: Object) => {
+        this.setState({formErrors});
     };
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
-        const list = this.state.list;
+        const {list} = this.state;
+        const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
+        const formErrors = this.state.formErrors ? this.state.formErrors : {};
+        const modalTitle = formValues.id ? 'Update permission' : 'Add new permission';
+
         return (
             <div>
-                <SearchInput onSearch={this.handleSearch} />
+                <SearchInput onSearch={this.searchList} />
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
                             <th scope="col">Content type</th>
                             <th scope="col">Code name</th>
                             <th scope="col">Name</th>
-                            <th scope="col" style={{padding: 8}} className="row80"></th>
+                            <th scope="col" style={{padding: 8}} className="row80" />
                         </tr>
                     </thead>
 
@@ -223,48 +140,52 @@ export class PermissionTable extends React.Component<Props, States> {
                                 className="table-row"
                                 data={data}
                                 key={key}
-                                _key={key}
                                 toggleModal={this.toggleModal}
-                                handleRemove={this.handleRemove}
+                                handleRemove={() => {}}
                                 onCheck={this.handleCheck}
                             />
                         ))}
                     </tbody>
                 </table>
-                <PermissionModal
-                    open={this.state.modal}
-                    formValues={this.state.formValues}
-                    formErrors={this.state.formErrors}
-                    handleClose={() => this.setState({modal: false})}
-                    handleSubmit={this.handleSubmit}
-                />
+                <DefaultModal open={this.state.modal} title={modalTitle} handleClose={() => this.toggleModal('modal')}>
+                    <PermissionForm formValues={formValues} formErrors={formErrors} handleSubmit={this.handleSubmit}>
+                        <button type="button" onClick={() => this.toggleModal('modal')} className="btn btn-warning">
+                            <span className="oi oi-x" />&nbsp; Cancel
+                        </button>
+                    </PermissionForm>
+                </DefaultModal>
             </div>
         );
     }
 }
 export default withRouter(PermissionTable);
 
-
 type RowPropTypes = {
     data: RowValues,
-    _key: number,
     toggleModal: Function,
     handleRemove: Function,
-    onCheck: Function,
+    onCheck: Function
 };
+
 export class Row extends React.Component<RowPropTypes> {
+    getItemToEdit = async (id: number) => {
+        const result = await Tools.getItem(apiUrls.crud, id);
+        if (result) {
+            this.props.toggleModal('modal', result);
+        }
+    };
+
     render() {
         const data = this.props.data;
         return (
-            <tr key={this.props._key}>
-                <td className="name">{data.content_type}</td>
-                <td className="name">{data.codename}</td>
+            <tr>
+                <td className="content_type">{data.content_type}</td>
+                <td className="codename">{data.codename}</td>
                 <td className="name">{data.name}</td>
                 <td className="right">
-                    <span
-                        className="editBtn oi oi-pencil text-info pointer"
-                        onClick={() => this.props.toggleModal('modal', data.id)}
-                    />
+                    <a className="editBtn" onClick={() => this.getItemToEdit(parseInt(data.id))}>
+                        <span className="editBtn oi oi-pencil text-info pointer" />
+                    </a>
                 </td>
             </tr>
         );

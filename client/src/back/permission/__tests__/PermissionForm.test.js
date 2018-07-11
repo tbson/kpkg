@@ -3,12 +3,12 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 import {seeding} from '../_data';
-import ConfigForm from '../forms/ConfigForm';
+import PermissionForm from '../forms/PermissionForm';
 
 Enzyme.configure({adapter: new Adapter()});
 
-describe('ConfigForm', () => {
-    const formName = 'config';
+describe('PermissionForm', () => {
+    const formName = 'permission';
 
     beforeEach(() => {
         jest.restoreAllMocks();
@@ -21,19 +21,19 @@ describe('ConfigForm', () => {
             formErrors: {},
             handleSubmit: jest.fn(),
         };
-        const wrapper = shallow(<ConfigForm {...props} />);
+        const wrapper = shallow(<PermissionForm {...props} />);
 
         expect(wrapper.find('[name="id"]').exists()).toEqual(true);
-        expect(wrapper.find('[name="uid"]').exists()).toEqual(true);
-        expect(wrapper.find('[name="value"]').exists()).toEqual(true);
+        expect(wrapper.find('[name="name"]').exists()).toEqual(true);
+        expect(wrapper.find('[name="codename"]').exists()).toEqual(true);
 
         // Labels
-        expect(wrapper.find('.uid-field label').text()).toEqual("Key");
-        expect(wrapper.find('.value-field label').text()).toEqual("Value");
+        expect(wrapper.find('.name-field label').text()).toEqual("Name");
+        expect(wrapper.find('.codename-field label').text()).toEqual("Code name");
 
         // Error messages
-        expect(wrapper.find('.uid-field .invalid-feedback').text()).toEqual("");
-        expect(wrapper.find('.value-field .invalid-feedback').text()).toEqual("");
+        expect(wrapper.find('.name-field .invalid-feedback').text()).toEqual("");
+        expect(wrapper.find('.codename-field .invalid-feedback').text()).toEqual("");
     });
 
     it('Empty form', () => {
@@ -43,11 +43,11 @@ describe('ConfigForm', () => {
             formErrors: {},
             handleSubmit: jest.fn(),
         };
-        const wrapper = shallow(<ConfigForm {...props} />);
+        const wrapper = shallow(<PermissionForm {...props} />);
 
         expect(wrapper.find('[name="id"]').props().defaultValue).toEqual(0);
-        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual("");
-        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual("");
+        expect(wrapper.find('[name="name"]').props().defaultValue).toEqual("");
+        expect(wrapper.find('[name="codename"]').props().defaultValue).toEqual("");
     });
 
     it('Editing form', () => {
@@ -59,11 +59,11 @@ describe('ConfigForm', () => {
             handleSubmit: jest.fn(),
         };
 
-        const wrapper = shallow(<ConfigForm {...props} />);
+        const wrapper = shallow(<PermissionForm {...props} />);
         formValues = wrapper.state('formValues');
         expect(wrapper.find('[name="id"]').props().defaultValue).toEqual(formValues.id);
-        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual(formValues.uid);
-        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual(formValues.value);
+        expect(wrapper.find('[name="name"]').props().defaultValue).toEqual(formValues.name);
+        expect(wrapper.find('[name="codename"]').props().defaultValue).toEqual(formValues.codename);
         expect(wrapper.find('.main-action .label').text()).toEqual("Update");
     });
 
@@ -77,11 +77,11 @@ describe('ConfigForm', () => {
             handleSubmit: jest.fn(),
         };
 
-        const wrapper = shallow(<ConfigForm {...props} />);
+        const wrapper = shallow(<PermissionForm {...props} />);
         formValues = wrapper.state('formValues');
         expect(wrapper.find('[name="id"]').props().defaultValue).toEqual(0);
-        expect(wrapper.find('[name="uid"]').props().defaultValue).toEqual(formValues.uid);
-        expect(wrapper.find('[name="value"]').props().defaultValue).toEqual(formValues.value);
+        expect(wrapper.find('[name="name"]').props().defaultValue).toEqual(formValues.name);
+        expect(wrapper.find('[name="codename"]').props().defaultValue).toEqual(formValues.codename);
         expect(wrapper.find('.main-action .label').text()).toEqual("Add new");
     });
 
@@ -90,15 +90,15 @@ describe('ConfigForm', () => {
             formName,
             formValues: {},
             formErrors: {
-                uid: 'error 1',
-                value: 'error 2',
+                name: 'error 1',
+                codename: 'error 2',
             },
             handleSubmit: jest.fn(),
         };
 
-        const wrapper = shallow(<ConfigForm {...props} />);
+        const wrapper = shallow(<PermissionForm {...props} />);
         // Error messages
-        expect(wrapper.find('.uid-field .invalid-feedback').text()).toEqual(props.formErrors.uid);
-        expect(wrapper.find('.value-field .invalid-feedback').text()).toEqual(props.formErrors.value);
+        expect(wrapper.find('.name-field .invalid-feedback').text()).toEqual(props.formErrors.name);
+        expect(wrapper.find('.codename-field .invalid-feedback').text()).toEqual(props.formErrors.codename);
     });
 });
