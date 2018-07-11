@@ -5,15 +5,14 @@ import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
 
 type Props = {
-    formName: string,
     formValues: FormValues,
     formErrors: Object,
-    children?: React.Node,
     handleSubmit: Function,
+    children?: React.Node
 };
 type States = {
     formValues: FormValues,
-    actionName: string,
+    actionName: string
 };
 
 export default class ConfigForm extends React.Component<Props, States> {
@@ -22,7 +21,7 @@ export default class ConfigForm extends React.Component<Props, States> {
 
     state = {
         formValues: defaultFormValues,
-        actionName: '',
+        actionName: ''
     };
 
     constructor(props: Props) {
@@ -33,14 +32,13 @@ export default class ConfigForm extends React.Component<Props, States> {
         const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
         return {
             formValues,
-            actionName: formValues.id ? 'Update' : 'Add new',
+            actionName: formValues.id ? 'Update' : 'Add new'
         };
     }
 
     resetForm = () => {
-        const {formName} = this.props;
-        window.document.querySelector('form[name=${formName}]').reset();
-        window.document.querySelector('form[name=${formName}] [name=uid]').focus();
+        window.document.querySelector('form[name=${this.form}]').reset();
+        window.document.querySelector('form[name=${this.form}] [name=uid]').focus();
     };
 
     setClassName = (name: string) => {
@@ -52,11 +50,11 @@ export default class ConfigForm extends React.Component<Props, States> {
     };
 
     render() {
-        const {formName, handleSubmit, children} = this.props;
+        const {handleSubmit, children} = this.props;
         const {formValues, actionName} = this.state;
         return (
-            <form name={formName} onSubmit={handleSubmit}>
-                <input defaultValue={formValues.id} name="id" id="${formName}-id" type="hidden" />
+            <form name={this.name} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
                 <div className="form-group uid-field">
                     <label htmlFor="${name}-uid">Key</label>
                     <input

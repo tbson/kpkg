@@ -201,7 +201,6 @@ export class ConfigTable extends React.Component<Props, States> {
                 </table>
                 <DefaultModal open={this.state.modal} title={modalTitle} handleClose={() => this.toggleModal('modal')}>
                     <ConfigForm
-                        formName="config"
                         formValues={formValues}
                         formErrors={formErrors}
                         handleSubmit={this.handleSubmit}>

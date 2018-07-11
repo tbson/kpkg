@@ -4,22 +4,22 @@ import * as React from 'react';
 type Props = {
     options: Object,
     name: string,
-    defaultValue: string,
+    defaultValue: string
 };
 
 type States = {
     value: string,
-    options: Object,
+    options: Object
 };
 
 class PermissionsInput extends React.Component<Props, States> {
     state = {
         options: this.props.options,
-        value: '',
+        value: ''
     };
     static defaultProps = {
         options: [],
-        defaultValue: '',
+        defaultValue: ''
     };
 
     constructor(props: Props) {
@@ -81,7 +81,7 @@ class PermissionsInput extends React.Component<Props, States> {
         }
         result = resultArr.join(',');
         this.setState({
-            value: result,
+            value: result
         });
         return result;
     };
@@ -114,7 +114,7 @@ class PermissionsInput extends React.Component<Props, States> {
                         ))}
                     </div>
                     <hr />
-                </div>,
+                </div>
             );
         }
         return result;

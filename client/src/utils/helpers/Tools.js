@@ -291,7 +291,7 @@ export default class Tools {
 
     static async apiCall(
         url: string,
-        method: string,
+        method: string = 'GET',
         payload: Object = {},
         popMessage: boolean = true,
         usingLoading: boolean = true

@@ -16,7 +16,7 @@ class Group extends React.Component<Props, States> {
         super(props);
     }
 
-    componentDidMount () {
+    componentDidMount() {
         document.title = 'Group manager';
     }
 

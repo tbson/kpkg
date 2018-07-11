@@ -7,9 +7,9 @@ const rawApiUrls = [
     {
         controller: 'config',
         endpoints: {
-            crud: '',
-        },
-    },
+            crud: ''
+        }
+    }
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
@@ -21,7 +21,7 @@ export function seeding(numberOfItems: number, single: boolean = false): any {
             id: i,
             uid: `key${i}`,
             value: `value ${i}`,
-            checked: false,
+            checked: false
         });
     }
     if (!single) return result;
@@ -31,15 +31,15 @@ export function seeding(numberOfItems: number, single: boolean = false): any {
 export type FormValues = {
     id?: number,
     uid: string,
-    value: string,
+    value: string
 };
 
 export const defaultFormValues: FormValues = {
     id: 0,
     uid: '',
-    value: '',
+    value: ''
 };
 
 export type FormValuesWithCheck = FormValues & {
-    checked: boolean,
+    checked: boolean
 };

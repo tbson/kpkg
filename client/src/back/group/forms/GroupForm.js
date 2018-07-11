@@ -7,39 +7,42 @@ import {defaultFormValues} from '../_data';
 import type {FormValues as PermissionType} from 'src/back/permission/_data';
 
 type Props = {
-    handleSubmit: Function,
-    children?: React.Node,
-    formId: string,
-    submitTitle: string,
     formValues: FormValues,
-    permissionList: {[string]: PermissionType},
     formErrors: Object,
+    permissionList: {[string]: PermissionType},
+    handleSubmit: Function,
+    children?: React.Node
 };
 type States = {
     formValues: FormValues,
+    actionName: string
 };
 
 export default class GroupForm extends React.Component<Props, States> {
-
-    static defaultProps = {
-        submitTitle: 'Submit',
-    };
+    static defaultProps = {};
+    name = 'group';
 
     state = {
         formValues: defaultFormValues,
+        actionName: ''
     };
 
     constructor(props: Props) {
         super(props);
+        console.log(props.permissionList);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        return {
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new'
+        };
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=name]').focus();
+        window.document.querySelector('form[name=${this.name}]').reset();
+        window.document.querySelector('form[name=${this.name}] [name=name]').focus();
     };
 
     setClassName = (name: string) => {
@@ -51,13 +54,15 @@ export default class GroupForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
+            <form id={this.name} onSubmit={handleSubmit}>
                 <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
                 <div className="form-group">
                     <label htmlFor="name">Name</label>
                     <input
-                        defaultValue={this.state.formValues.name}
+                        defaultValue={formValues.name}
                         id="name"
                         name="name"
                         type="text"
@@ -72,10 +77,10 @@ export default class GroupForm extends React.Component<Props, States> {
                 <PermissionsInput name="permissions" options={this.props.permissionList} />
 
                 <div className="right">
-                    {this.props.children}
+                    {children}
                     <button className="btn btn-primary">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>
