@@ -29,7 +29,6 @@ export default class GroupForm extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        console.log(props.permissionList);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
@@ -58,9 +57,9 @@ export default class GroupForm extends React.Component<Props, States> {
         const {formValues, actionName} = this.state;
         return (
             <form id={this.name} onSubmit={handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
-                <div className="form-group">
-                    <label htmlFor="name">Name</label>
+                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
+                <div className="form-group name-field">
+                    <label htmlFor="${name}-name">Name</label>
                     <input
                         defaultValue={formValues.name}
                         id="name"
@@ -78,7 +77,7 @@ export default class GroupForm extends React.Component<Props, States> {
 
                 <div className="right">
                     {children}
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
                         <span className="label">{actionName}</span>
                     </button>

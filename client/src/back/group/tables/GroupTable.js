@@ -270,6 +270,7 @@ export class Row extends React.Component<RowPropTypes> {
     getItemToEdit = async (id: number) => {
         const result = await Tools.getItem(apiUrls.crud, id);
         if (result) {
+            result.permissions = result.permissions || '';
             const permissionList = this.props.applyPermission(
                 result.permissions.split(',').map(item => parseInt(item)),
                 this.props.permissionList
