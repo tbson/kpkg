@@ -6,20 +6,20 @@ const rawApiUrls = [
     {
         controller: 'admin',
         endpoints: {
-            crud: '',
-        },
+            crud: ''
+        }
     },
     {
         controller: 'group',
         endpoints: {
-            crud: '',
-        },
-    },
+            crud: ''
+        }
+    }
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
-export function seeding(numberOfItems: number, single: boolean = false): Array<FormValuesWithCheck> {
+export function seeding(numberOfItems: number, single: boolean = false): any {
     let result = [];
     for (let i = 1; i <= numberOfItems; i++) {
         result.push({
@@ -28,24 +28,25 @@ export function seeding(numberOfItems: number, single: boolean = false): Array<F
             username: `username${i}`,
             first_name: `first_name ${i}`,
             last_name: `last_name ${i}`,
-            password: `password ${i}`,
+            fullname: `fullname ${i}`,
+            password: `password${i}`,
             groups: i,
-            checked: false,
+            checked: false
         });
     }
     if (!single) return result;
-    return [result[numberOfItems - 1]];
+    return result[numberOfItems - 1];
 }
 
 export type FormValues = {
-    id: number,
+    id?: number,
     email: string,
     username: string,
     first_name: string,
     last_name: string,
     fullname?: string,
     password?: string,
-    groups: ?number,
+    groups: ?number
 };
 
 export const defaultFormValues: FormValues = {
@@ -55,9 +56,9 @@ export const defaultFormValues: FormValues = {
     first_name: '',
     last_name: '',
     password: '',
-    groups: null,
+    groups: null
 };
 
 export type FormValuesWithCheck = FormValues & {
-    checked: boolean,
+    checked: boolean
 };

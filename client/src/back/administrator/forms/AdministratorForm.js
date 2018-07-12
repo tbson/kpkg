@@ -6,41 +6,41 @@ import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
 
 type Props = {
+    formValues: FormValues,
+    formErrors: Object,
     handleSubmit: Function,
     children?: React.Node,
-    formId: string,
-    submitTitle: string,
-    formValues: FormValues,
-    groupList: Array<Object>,
-    formErrors: Object,
+    groupList: Array<Object>
 };
 type States = {
     formValues: FormValues,
+    actionName: string
 };
 
 export default class AdministratorForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
-
-    static defaultProps = {
-        submitTitle: 'Submit'
-    };
+    static defaultProps = {};
+    name = 'administrator';
 
     state = {
         formValues: defaultFormValues,
+        actionName: ''
     };
+
     constructor(props: Props) {
         super(props);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        return {
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new'
+        };
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=uid]').focus();
+        window.document.querySelector('form[name=${this.form}]').reset();
+        window.document.querySelector('form[name=${this.form}] [name=uid]').focus();
     };
 
     setClassName = (name: string) => {
@@ -52,13 +52,15 @@ export default class AdministratorForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
+            <form name={this.name} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
                 <div className="row">
                     <div className="col-sm">
-                        <div className="form-group">
-                            <label htmlFor="email">Email</label>
+                        <div className="form-group email-field">
+                            <label htmlFor="${name}-email">Email</label>
                             <input
                                 defaultValue={this.state.formValues.email}
                                 id="email"
@@ -73,8 +75,8 @@ export default class AdministratorForm extends React.Component<Props, States> {
                         </div>
                     </div>
                     <div className="col-sm">
-                        <div className="form-group">
-                            <label htmlFor="username">Username</label>
+                        <div className="form-group username-field">
+                            <label htmlFor="${name}-username">Username</label>
                             <input
                                 defaultValue={this.state.formValues.username}
                                 id="username"
@@ -91,8 +93,8 @@ export default class AdministratorForm extends React.Component<Props, States> {
 
                 <div className="row">
                     <div className="col-sm">
-                        <div className="form-group">
-                            <label htmlFor="first_name">First name</label>
+                        <div className="form-group first_name-field">
+                            <label htmlFor="${name}-first_name">First name</label>
                             <input
                                 defaultValue={this.state.formValues.first_name}
                                 id="first_name"
@@ -106,8 +108,8 @@ export default class AdministratorForm extends React.Component<Props, States> {
                         </div>
                     </div>
                     <div className="col-sm">
-                        <div className="form-group">
-                            <label htmlFor="last_name">Last name</label>
+                        <div className="form-group last_name-field">
+                            <label htmlFor="${name}-last_name">Last name</label>
                             <input
                                 defaultValue={this.state.formValues.last_name}
                                 id="last_name"
@@ -122,8 +124,8 @@ export default class AdministratorForm extends React.Component<Props, States> {
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
+                <div className="form-group password-field">
+                    <label htmlFor="${name}-password">Password</label>
                     <input
                         defaultValue={this.state.formValues.password}
                         id="password"
@@ -135,8 +137,8 @@ export default class AdministratorForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('password')}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="groups">Groups</label>
+                <div className="form-group groups-field">
+                    <label htmlFor="${name}-groups">Groups</label>
                     <SelectInput
                         multi={true}
                         name="groups"
@@ -145,11 +147,12 @@ export default class AdministratorForm extends React.Component<Props, States> {
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
                 </div>
+
                 <div className="right">
-                    {this.props.children}
-                    <button className="btn btn-primary">
+                    {children}
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>
