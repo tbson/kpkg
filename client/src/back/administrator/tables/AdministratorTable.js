@@ -58,9 +58,13 @@ export class AdministratorTable extends React.Component<Props, States> {
     setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
+        const list = initData.items.map(item => {
+            item.checked = false;
+            return item;
+        });
         this.setState({
             dataLoaded: true,
-            list: [...initData.items]
+            list
         });
     };
 

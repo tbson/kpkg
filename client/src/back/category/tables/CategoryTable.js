@@ -5,21 +5,23 @@ import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesWithCheck, CatType} from '../_data';
+import type {GetListResponseData} from 'src/utils/helpers/Tools';
 import CategoryForm from '../forms/CategoryForm';
-import CategoryModal from '../forms/CategoryModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
+import DefaultModal from 'src/utils/components/DefaultModal';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
     match: Object,
+    list?: Array<FormValuesWithCheck>
 };
 type States = {
     dataLoaded: boolean,
     modal: boolean,
     list: Array<Object>,
     formValues: FormValues,
-    formErrors: Object,
+    formErrors: Object
 };
 
 export class CategoryTable extends React.Component<Props, States> {
@@ -31,13 +33,13 @@ export class CategoryTable extends React.Component<Props, States> {
         modal: false,
         list: [],
         formValues: defaultFormValues,
-        formErrors: {},
+        formErrors: {}
     };
 
     typeList: Array<CatType> = [
         {value: 'article', label: 'Article'},
         {value: 'banner', label: 'Banner'},
-        {value: 'gallery', label: 'Gallery'},
+        {value: 'gallery', label: 'Gallery'}
     ];
 
     constructor(props: Props) {
@@ -46,190 +48,123 @@ export class CategoryTable extends React.Component<Props, States> {
 
     componentDidMount() {
         const {type} = this.props.match.params;
-        this.list({type}, null, true);
+        this.getList('', {type});
     }
 
     componentDidUpdate = (prevProps: Props, prevState: States) => {
         const {type} = this.props.match.params;
         if (prevProps.match.params.type != type) {
-            this.list({type}, null, true);
+            this.getList('', {type});
         }
     };
 
     setInitData = (initData: Object) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
-        const newData = initData.items.map(item => {
+        const list = initData.items.map(item => {
             item.checked = !!item.checked;
             return item;
         });
         this.setState({
             dataLoaded: true,
-            list: [...newData],
+            list
         });
     };
 
-    list = async (outerParams: Object = {}, url: ?string = null, isQueryString: boolean = false) => {
-        let params = {};
-        let result = {};
-
-        if (!Tools.isEmpty(outerParams)) {
-            params = {...params, ...outerParams};
-        }
-
-        result = await Tools.apiCall(
-            (url ? url : apiUrls.crud) + (isQueryString ? '?' + Tools.urlDataEncode(params) : ''),
-            'GET',
-            isQueryString ? {} : params,
-        );
-        if (result.success) {
-            this.setInitData(result.data);
-            return result;
-        }
-        return result;
+    toggleModal = (modalName: string, formValues: Object = {}) => {
+        this.setState(Tools.toggleModal(this.state, modalName, formValues));
     };
 
-    toggleModal = (modalName: string, id: ?number = null): Object => {
-        // If modalName not defined -> exit here
-        if (typeof this.state[modalName] == 'undefined') return {};
-
-        const state = {
-            [modalName]: !this.state[modalName],
-            formValues: defaultFormValues,
-            formErrors: {},
-        };
-        if (id) {
-            switch (modalName) {
-                case 'modal':
-                    Tools.apiCall(apiUrls.crud + id.toString(), 'GET').then(result => {
-                        if (result.success) {
-                            state.formValues = result.data;
-                        }
-                        this.setState(state);
-                    });
-                    return state;
-            }
-        } else {
-            this.setState(state);
+    getList = async (url: string = '', params: Object = {}) => {
+        const result = await Tools.getList(url ? url : apiUrls.crud, params);
+        if (result) {
+            this.setInitData(result);
         }
-        return state;
     };
 
-    handleSubmit = async (event: Object): Promise<boolean> => {
+    searchList = async (event: Object) => {
         event.preventDefault();
-        let error: ?Object = null;
+        const {search} = Tools.formDataToObj(new FormData(event.target));
+        if (search.length > 2) {
+            await this.getList('', {search});
+        } else if (!search.length) {
+            await this.getList();
+        }
+    };
+
+    handleSubmit = async (event: Object) => {
+        event.preventDefault();
+
         const params = Tools.formDataToObj(new FormData(event.target), ['single']);
-        params.id = parseInt(params.id);
-        if (!params.image_ratio) {
-            delete params.image_ratio;
-        }
-        if (!params.id) {
-            error = await this.handleAdd(params);
-        } else {
-            error = await this.handleEdit(params);
-        }
+        const isEdit = params.id ? true : false;
+        let url = apiUrls.crud;
+        if (isEdit) url += String(params.id);
 
-        if (!error) {
-            // No error -> close current modal
-            this.toggleModal('modal');
-            return true;
+        const {data, error} = await Tools.handleSubmit(url, params);
+        const isSuccess = Tools.isEmpty(error);
+        if (isSuccess) {
+            this.onSubmitSuccess(isEdit, data);
         } else {
-            // Have error -> update err object
-            this.setState({formErrors: error});
-            return false;
+            this.onSubmitFail(error);
         }
     };
 
-    handleAdd = async (params: FormValues) => {
-        const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
-        if (result.success) {
-            this.setState({list: [{...result.data, checked: false}, ...this.state.list]});
-            return null;
+    onSubmitSuccess = (isEdit: boolean, data: FormValues) => {
+        let {list} = this.state;
+        const args = [list, data];
+        if (isEdit) {
+            list = Tools.updateListOnSuccessEditing(...args);
+        } else {
+            list = Tools.updateListOnSuccessAdding(...args);
         }
-        return result.data;
+        this.setState({list});
+        this.toggleModal('modal');
     };
 
-    handleEdit = async (params: FormValuesWithCheck) => {
-        const id = String(params.id);
-        const result = await Tools.apiCall(apiUrls.crud + id, 'PUT', params);
-        if (result.success) {
-            const index = this.state.list.findIndex(item => item.id === parseInt(id));
-            const {checked} = this.state.list[index];
-            this.state.list[index] = {...result.data, checked};
-            this.setState({list: this.state.list});
-            return null;
+    onSubmitFail = (formErrors: Object) => {
+        this.setState({formErrors});
+    };
+
+    handleRemove = async (ids: string) => {
+        let {list} = this.state;
+        const url = apiUrls.crud;
+        const deletedIds = await Tools.handleRemove(url, ids);
+        if (deletedIds && deletedIds.length) {
+            list = list.filter(item => !deletedIds.includes(item.id));
+            this.setState({list});
         }
-        return result.data;
+    };
+
+    handleCheck = (event: Object) => {
+        const {list} = this.state;
+        const {id, checked} = event.target;
+        const index = list.findIndex(item => item.id === parseInt(id));
+        list[index].checked = checked;
+        this.setState({list});
     };
 
     handleToggleCheckAll = () => {
-        var newList = [];
-        const checkedItem = this.state.list.filter(item => item.checked);
-        const result = (checked: boolean) => {
-            const list = this.state.list.map(value => {
-                return {...value, checked};
-            });
-            this.setState({list});
-        };
-
-        if (checkedItem) {
-            if (checkedItem.length === this.state.list.length) {
-                // Checked all -> uncheck all
-                return result(false);
-            }
-            // Some item checked -> checke all
-            return result(true);
-        } else {
-            // Nothing checked -> check all
-            return result(true);
-        }
+        let {list} = this.state;
+        list = Tools.checkOrUncheckAll(list);
+        this.setState({list});
     };
 
-    handleCheck = (data: FormValuesWithCheck, event: Object) => {
-        data.checked = event.target.checked;
-        const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
-        this.state.list[index] = {...data};
-        this.setState({list: this.state.list});
-    };
-
-    handleRemove = async (id: string) => {
-        const listId = id.split(',');
-        if (!id || !listId.length) return;
-        let message = '';
-        if (listId.length === 1) {
-            message = 'Do you want to remove this item?';
-        } else {
-            message = 'Do you want to remove selected items?';
-        }
-        const decide = confirm(message);
-        if (!decide) return;
-        const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
-        if (result.success) {
-            const listId = id.split(',').map(item => parseInt(item));
-            const list = this.state.list.filter(item => listId.indexOf(item.id) === -1);
-            this.setState({list});
-        } else {
-            this.list();
-        }
-    };
-
-    handleSearch = (event: Object) => {
-        event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
-        if (searchStr.length > 2) {
-            this.list({search: searchStr});
-        } else if (!searchStr.length) {
-            this.list();
-        }
+    getTypeList = (type: string, typeList: Array<CatType>): Array<CatType> => {
+        if (!type) return typeList;
+        return typeList.filter(item => item.value === type);
     };
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
-        const list = this.state.list;
+        const {list} = this.state;
         const {type} = this.props.match.params;
+        const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
+        const formErrors = this.state.formErrors ? this.state.formErrors : {};
+        const modalTitle = formValues.id ? 'Update config' : 'Add new config';
+
         return (
             <div>
-                <SearchInput onSearch={this.handleSearch} />
+                <SearchInput onSearch={this.searchList} />
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
@@ -261,7 +196,6 @@ export class CategoryTable extends React.Component<Props, States> {
                                 className="table-row"
                                 data={data}
                                 key={key}
-                                _key={key}
                                 toggleModal={this.toggleModal}
                                 handleRemove={this.handleRemove}
                                 onCheck={this.handleCheck}
@@ -281,20 +215,23 @@ export class CategoryTable extends React.Component<Props, States> {
                                 <Pagination
                                     next={this.nextUrl}
                                     prev={this.prevUrl}
-                                    onNavigate={url => this.list({}, url)}
+                                    onNavigate={url => this.getList(url)}
                                 />
                             </th>
                         </tr>
                     </tfoot>
                 </table>
-                <CategoryModal
-                    open={this.state.modal}
-                    formValues={this.state.formValues}
-                    formErrors={this.state.formErrors}
-                    handleClose={() => this.setState({modal: false})}
-                    handleSubmit={this.handleSubmit}
-                    typeList={!type ? this.typeList : this.typeList.filter(item => item.value === type)}
-                />
+                <DefaultModal open={this.state.modal} title={modalTitle} handleClose={() => this.toggleModal('modal')}>
+                    <CategoryForm
+                        formValues={formValues}
+                        formErrors={formErrors}
+                        typeList={this.getTypeList(type, this.typeList)}
+                        handleSubmit={this.handleSubmit}>
+                        <button type="button" onClick={() => this.toggleModal('modal')} className="btn btn-warning">
+                            <span className="oi oi-x" />&nbsp; Cancel
+                        </button>
+                    </CategoryForm>
+                </DefaultModal>
             </div>
         );
     }
@@ -303,17 +240,23 @@ export default withRouter(CategoryTable);
 
 type RowPropTypes = {
     data: FormValuesWithCheck,
-    _key: number,
     toggleModal: Function,
     handleRemove: Function,
-    onCheck: Function,
+    onCheck: Function
 };
 export class Row extends React.Component<RowPropTypes> {
+    getItemToEdit = async (id: number) => {
+        const result = await Tools.getItem(apiUrls.crud, id);
+        if (result) {
+            this.props.toggleModal('modal', result);
+        }
+    };
+
     render() {
-        const data = this.props.data;
+        const {data, toggleModal, handleRemove, onCheck} = this.props;
         const id = data.id ? data.id : '';
         return (
-            <tr key={this.props._key}>
+            <tr>
                 <th className="row25">
                     <input
                         className="check"
@@ -335,7 +278,7 @@ export class Row extends React.Component<RowPropTypes> {
                     {data.single ? <span className="oi oi-check green" /> : <span className="oi oi-x red" />}
                 </td>
                 <td className="center">
-                    <a onClick={() => this.props.toggleModal('modal', data.id)}>
+                    <a className="editBtn" onClick={() => this.getItemToEdit(parseInt(data.id))}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>

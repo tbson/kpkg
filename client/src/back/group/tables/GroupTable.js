@@ -47,7 +47,9 @@ export class GroupTable extends React.Component<Props, States> {
         this.getList();
         const permissionListResponse = await Tools.apiCall(apiUrls.permissionCrud);
         const permissionList = this.parsePermissionList(permissionListResponse);
-        this.setState({permissionList});
+        if (permissionList) {
+            this.setState({permissionList});
+        }
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
@@ -60,9 +62,13 @@ export class GroupTable extends React.Component<Props, States> {
     setInitData = (initData: GetListResponseData) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
+        const list = initData.items.map(item => {
+            item.checked = false;
+            return item;
+        });
         this.setState({
             dataLoaded: true,
-            list: [...initData.items]
+            list
         });
     };
 

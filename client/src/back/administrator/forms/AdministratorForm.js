@@ -40,7 +40,7 @@ export default class AdministratorForm extends React.Component<Props, States> {
 
     resetForm = () => {
         window.document.querySelector('form[name=${this.form}]').reset();
-        window.document.querySelector('form[name=${this.form}] [name=uid]').focus();
+        window.document.querySelector('form[name=${this.form}] [name=email]').focus();
     };
 
     setClassName = (name: string) => {

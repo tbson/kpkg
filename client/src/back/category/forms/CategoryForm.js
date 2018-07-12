@@ -6,26 +6,26 @@ import type {FormValues, CatType} from '../_data';
 import {defaultFormValues} from '../_data';
 
 type Props = {
-    handleSubmit: Function,
-    children?: React.Node,
-    formId: string,
-    submitTitle: string,
     formValues: FormValues,
     formErrors: Object,
-    typeList: Array<CatType>,
+    handleSubmit: Function,
+    children?: React.Node,
+    typeList: Array<CatType>
 };
 type States = {
     formValues: FormValues,
+    actionName: string
 };
 
 export default class CategoryForm extends React.Component<Props, States> {
     static defaultProps = {
-        submitTitle: 'Submit',
-        typeList: [],
+        typeList: []
     };
+    name = 'category';
 
     state = {
         formValues: defaultFormValues,
+        actionName: ''
     };
 
     constructor(props: Props) {
@@ -33,12 +33,16 @@ export default class CategoryForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        return {
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new'
+        };
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=uid]').focus();
+        window.document.querySelector('form[name=${this.form}]').reset();
+        window.document.querySelector('form[name=${this.form}] [name=title]').focus();
     };
 
     setClassName = (name: string) => {
@@ -50,11 +54,13 @@ export default class CategoryForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
-                <div className="form-group">
-                    <label htmlFor="title">Title</label>
+            <form name={this.name} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
+                <div className="form-group title-field">
+                    <label htmlFor="${name}-title">Title</label>
                     <input
                         defaultValue={this.state.formValues.title}
                         id="title"
@@ -68,8 +74,8 @@ export default class CategoryForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('title')}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="image_ratio">Image ratio</label>
+                <div className="form-group image_ratio-field">
+                    <label htmlFor="${name}-image_ratio">Image ratio</label>
                     <input
                         defaultValue={this.state.formValues.image_ratio}
                         id="image_ratio"
@@ -82,8 +88,8 @@ export default class CategoryForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('image_ratio')}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="width_ratio">Width ratio</label>
+                <div className="form-group width_ratio-field">
+                    <label htmlFor="${name}-width_ratio">Image ratio</label>
                     <div className="input-group">
                         <input
                             defaultValue={this.state.formValues.width_ratio}
@@ -105,14 +111,13 @@ export default class CategoryForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('width_ratio')}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="type">Type</label>
+                <div className="form-group type-field">
+                    <label htmlFor="${name}-type">Type</label>
                     <SelectInput defaultValue={this.state.formValues.type} name="type" options={this.props.typeList} />
-                    <input type="hidden" />
                     <div className="invalid-feedback">{this.setErrorMessage('type')}</div>
                 </div>
 
-                <div className="form-check">
+                <div className="form-check single-field">
                     <input
                         id="single"
                         name="single"
@@ -120,16 +125,16 @@ export default class CategoryForm extends React.Component<Props, States> {
                         defaultChecked={this.state.formValues.single}
                         className="form-check-input"
                     />
-                    <label className="form-check-label" htmlFor="single">
+                    <label className="form-check-label" htmlFor="${name}-single">
                         Single
                     </label>
                 </div>
 
                 <div className="right">
-                    {this.props.children}
-                    <button className="btn btn-primary">
+                    {children}
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>

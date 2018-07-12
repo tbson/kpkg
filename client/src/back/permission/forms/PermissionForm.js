@@ -38,7 +38,7 @@ export default class PermissionForm extends React.Component<Props, States> {
 
     resetForm = () => {
         window.document.querySelector('form[name=${this.form}]').reset();
-        window.document.querySelector('form[name=${this.form}] [name=uid]').focus();
+        window.document.querySelector('form[name=${this.form}] [name=name]').focus();
     };
 
     setClassName = (name: string) => {

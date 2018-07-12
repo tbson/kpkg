@@ -7,16 +7,33 @@ const rawApiUrls = [
     {
         controller: 'category',
         endpoints: {
-            crud: '',
-        },
-    },
+            crud: ''
+        }
+    }
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
+export function seeding(numberOfItems: number, single: boolean = false): any {
+    let result = [];
+    for (let i = 1; i <= numberOfItems; i++) {
+        result.push({
+            id: i,
+            title: `title {i}`,
+            type: `type${i}`,
+            image_ratio: 1.618,
+            width_ratio: 100,
+            single: false,
+            checked: false
+        });
+    }
+    if (!single) return result;
+    return result[numberOfItems - 1];
+}
+
 export type CatType = {
     value: string,
-    label: string,
+    label: string
 };
 
 export type FormValues = {
@@ -26,7 +43,7 @@ export type FormValues = {
     type: string,
     image_ratio: ?number,
     width_ratio: ?number,
-    single: boolean,
+    single: boolean
 };
 
 export const defaultFormValues: FormValues = {
@@ -36,9 +53,8 @@ export const defaultFormValues: FormValues = {
     image_ratio: 1.618,
     width_ratio: 100,
     single: false
-
 };
 
 export type FormValuesWithCheck = FormValues & {
-    checked: boolean,
+    checked: boolean
 };
