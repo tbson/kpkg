@@ -147,7 +147,7 @@ export class CCalendarTable extends React.Component<Props, States> {
         const {list} = this.state;
         const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
         const formErrors = this.state.formErrors ? this.state.formErrors : {};
-        const modalTitle = formValues.id ? 'Update config' : 'Add new config';
+        const modalTitle = formValues.id ? 'Update calendar' : 'Add new calendar';
         return (
             <div>
                 <SearchInput onSearch={this.searchList} />
