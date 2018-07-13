@@ -214,7 +214,7 @@ export class AdministratorTable extends React.Component<Props, States> {
                                 <Pagination
                                     next={this.nextUrl}
                                     prev={this.prevUrl}
-                                    onNavigate={url => this.getList({}, url)}
+                                    onNavigate={url => this.getList(url)}
                                 />
                             </th>
                         </tr>
@@ -263,7 +263,7 @@ export class Row extends React.Component<RowPropTypes> {
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a className="removeBtn" onClick={() => handleRemove(String(data.id))}>
-                        <span className="removeBtn oi oi-x text-danger pointer" />
+                        <span className="oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

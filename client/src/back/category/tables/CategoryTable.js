@@ -51,6 +51,14 @@ export class CategoryTable extends React.Component<Props, States> {
         this.getList('', {type});
     }
 
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {list} = nextProps;
+        const dataLoaded = true;
+        if (prevState.dataLoaded) return null;
+        if (list) return {list, dataLoaded};
+        return null;
+    }
+
     componentDidUpdate = (prevProps: Props, prevState: States) => {
         const {type} = this.props.match.params;
         if (prevProps.match.params.type != type) {
@@ -273,7 +281,7 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="uid">{data.uid}</td>
                 <td className="type">{data.type}</td>
                 <td className="image_ratio">{data.image_ratio}</td>
-                <td className="image_ratio">{data.width_ratio}%</td>
+                <td className="width_ratio">{data.width_ratio}%</td>
                 <td className="single">
                     {data.single ? <span className="oi oi-check green" /> : <span className="oi oi-x red" />}
                 </td>
@@ -282,8 +290,8 @@ export class Row extends React.Component<RowPropTypes> {
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <a onClick={() => this.props.handleRemove(String(data.id))}>
-                        <span className="removeBtn oi oi-x text-danger pointer" />
+                    <a className="removeBtn" onClick={() => this.props.handleRemove(String(data.id))}>
+                        <span className="oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

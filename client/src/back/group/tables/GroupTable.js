@@ -299,7 +299,7 @@ export class Row extends React.Component<RowPropTypes> {
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a className="removeBtn" onClick={() => handleRemove(String(data.id))}>
-                        <span className="removeBtn oi oi-x text-danger pointer" />
+                        <span className="oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

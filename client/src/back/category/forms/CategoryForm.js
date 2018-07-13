@@ -89,7 +89,7 @@ export default class CategoryForm extends React.Component<Props, States> {
                 </div>
 
                 <div className="form-group width_ratio-field">
-                    <label htmlFor="${name}-width_ratio">Image ratio</label>
+                    <label htmlFor="${name}-width_ratio">Width ratio</label>
                     <div className="input-group">
                         <input
                             defaultValue={this.state.formValues.width_ratio}

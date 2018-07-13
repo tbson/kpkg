@@ -19,7 +19,8 @@ export function seeding(numberOfItems: number, single: boolean = false): any {
     for (let i = 1; i <= numberOfItems; i++) {
         result.push({
             id: i,
-            title: `title {i}`,
+            title: `title ${i}`,
+            uid: `title-${i}`,
             type: `type${i}`,
             image_ratio: 1.618,
             width_ratio: 100,
