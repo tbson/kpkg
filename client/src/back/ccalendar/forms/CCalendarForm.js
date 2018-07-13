@@ -5,24 +5,23 @@ import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
 
 type Props = {
-    handleSubmit: Function,
-    children?: React.Node,
-    formId: string,
-    submitTitle: string,
     formValues: FormValues,
     formErrors: Object,
+    handleSubmit: Function,
+    children?: React.Node
 };
 type States = {
     formValues: FormValues,
+    actionName: string
 };
 
 export default class CCalendarForm extends React.Component<Props, States> {
-    static defaultProps = {
-        submitTitle: 'Submit',
-    };
+    static defaultProps = {};
+    name = 'config';
 
     state = {
         formValues: defaultFormValues,
+        actionName: ''
     };
 
     constructor(props: Props) {
@@ -30,12 +29,16 @@ export default class CCalendarForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        return {
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new'
+        };
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
+        window.document.querySelector('form[name=${this.form}]').reset();
+        window.document.querySelector('form[name=${this.form}] [name=title]').focus();
     };
 
     setClassName = (name: string) => {
@@ -47,10 +50,12 @@ export default class CCalendarForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
-                <div className="form-group">
+            <form name={this.name} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
+                <div className="form-group title-field">
                     <label htmlFor="title">Title</label>
                     <input
                         defaultValue={this.state.formValues.title}
@@ -67,7 +72,7 @@ export default class CCalendarForm extends React.Component<Props, States> {
 
                 <div className="row">
                     <div className="col-md-6">
-                        <div className="form-group">
+                        <div className="form-group start-field">
                             <label htmlFor="start">Start date</label>
                             <input
                                 defaultValue={this.state.formValues.start}
@@ -82,7 +87,7 @@ export default class CCalendarForm extends React.Component<Props, States> {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <div className="form-group">
+                        <div className="form-group end-field">
                             <label htmlFor="end">End date</label>
                             <input
                                 defaultValue={this.state.formValues.end}
@@ -98,7 +103,7 @@ export default class CCalendarForm extends React.Component<Props, States> {
                     </div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group url-field">
                     <label htmlFor="url">URL</label>
                     <input
                         defaultValue={this.state.formValues.url}
@@ -112,10 +117,10 @@ export default class CCalendarForm extends React.Component<Props, States> {
                 </div>
 
                 <div className="right">
-                    {this.props.children}
-                    <button className="btn btn-primary">
+                    {children}
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>
