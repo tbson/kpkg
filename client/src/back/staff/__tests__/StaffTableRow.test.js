@@ -1,11 +1,10 @@
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
-import {Link} from 'react-router-dom';
 import {shallow, mount, render} from 'enzyme';
 import Tools from 'src/utils/helpers/Tools';
 import {seeding} from '../_data';
-import {Row} from '../tables/CategoryTable';
+import {Row} from '../tables/StaffTable';
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -16,7 +15,7 @@ const props = {
     data,
     toggleModal: jest.fn(),
     handleRemove: jest.fn(),
-    onCheck: jest.fn()
+    onCheck: jest.fn(),
 };
 
 beforeAll(() => {
@@ -24,28 +23,12 @@ beforeAll(() => {
     instance = wrapper.instance();
 });
 
-describe('CategoryTable Row component', () => {
+describe('StaffTable Row component', () => {
     it('Check output value', () => {
-        expect(
-            wrapper.contains(
-                <td className="title">
-                    <Link to={`/type1s/1`}>
-                        <span>title 1</span>
-                    </Link>
-                </td>
-            )
-        ).toEqual(true);
-        expect(wrapper.contains(<td className="uid">{data.uid}</td>)).toEqual(true);
-        expect(wrapper.contains(<td className="type">{data.type}</td>)).toEqual(true);
-        expect(wrapper.contains(<td className="image_ratio">{data.image_ratio}</td>)).toEqual(true);
-        expect(wrapper.contains(<td className="width_ratio">{data.width_ratio}%</td>)).toEqual(true);
-        expect(
-            wrapper.contains(
-                <td className="single">
-                    <span className="oi oi-x red" />
-                </td>
-            )
-        ).toEqual(true);
+        expect(wrapper.contains(<td className="title">{data.title}</td>)).toEqual(true);
+        expect(wrapper.contains(<td className="fullname">{data.fullname}</td>)).toEqual(true);
+        expect(wrapper.contains(<td className="email">{data.email}</td>)).toEqual(true);
+        expect(wrapper.contains(<td className="order">{data.order}</td>)).toEqual(true);
     });
 
     it('Check', () => {
@@ -76,7 +59,7 @@ describe('CategoryTable Row component', () => {
     });
 });
 
-describe('CategoryTable Row method', () => {
+describe('StaffTable Row method', () => {
     describe('getItemToEdit then toggleModal', () => {
         it('Fail', async () => {
             jest.spyOn(Tools, 'getItem').mockImplementation(() => null);

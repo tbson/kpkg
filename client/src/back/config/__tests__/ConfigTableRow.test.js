@@ -10,8 +10,9 @@ Enzyme.configure({adapter: new Adapter()});
 
 let wrapper;
 let instance;
+const data = seeding(1, true);
 const props = {
-    data: seeding(1, true),
+    data,
     toggleModal: jest.fn(),
     handleRemove: jest.fn(),
     onCheck: jest.fn(),
@@ -24,8 +25,8 @@ beforeAll(() => {
 
 describe('ConfigTable Row component', () => {
     it('Check output value', () => {
-        expect(wrapper.contains(<td className="uid">key1</td>)).toEqual(true);
-        expect(wrapper.contains(<td className="value">value 1</td>)).toEqual(true);
+        expect(wrapper.contains(<td className="uid">{data.uid}</td>)).toEqual(true);
+        expect(wrapper.contains(<td className="value">{data.value}</td>)).toEqual(true);
     });
 
     it('Check', () => {

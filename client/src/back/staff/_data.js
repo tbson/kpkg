@@ -14,6 +14,24 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
+export function seeding(numberOfItems: number, single: boolean = false): any {
+    let result = [];
+    for (let i = 1; i <= numberOfItems; i++) {
+        result.push({
+            id: i,
+            title: `title ${i}`,
+            fullname: `fullname ${i}`,
+            email: `email${i}@gmail.com`,
+            description: `description ${i}`,
+            image: null,
+            order: i,
+            checked: false
+        });
+    }
+    if (!single) return result;
+    return result[numberOfItems - 1];
+}
+
 export type FormValues = {
     id: number,
     title: string,
@@ -21,7 +39,7 @@ export type FormValues = {
     email: string,
     description: string,
     image: ?Blob,
-    order: ?number,
+    order: ?number
 };
 
 export const defaultFormValues: FormValues = {
@@ -31,9 +49,9 @@ export const defaultFormValues: FormValues = {
     email: '',
     description: '',
     image: null,
-    order: null,
+    order: null
 };
 
 export type FormValuesWithCheck = FormValues & {
-    checked: boolean,
+    checked: boolean
 };

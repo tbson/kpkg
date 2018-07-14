@@ -5,30 +5,23 @@ import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
 
 type Props = {
-    handleSubmit: Function,
-    children?: React.Node,
-    formId: string,
-    submitTitle: string,
     formValues: FormValues,
     formErrors: Object,
+    handleSubmit: Function,
+    children?: React.Node
 };
-
 type States = {
     formValues: FormValues,
+    actionName: string
 };
 
 export default class StaffForm extends React.Component<Props, States> {
-    resetForm: Function;
-    setClassName: Function;
-    setErrorMessage: Function;
-    renderPreview: Function;
-
-    static defaultProps = {
-        submitTitle: 'Submit',
-    };
+    static defaultProps = {};
+    name = 'staff';
 
     state = {
         formValues: defaultFormValues,
+        actionName: ''
     };
 
     constructor(props: Props) {
@@ -36,12 +29,16 @@ export default class StaffForm extends React.Component<Props, States> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        return {formValues: !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues};
+        const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
+        return {
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new'
+        };
     }
 
     resetForm = () => {
-        window.document.getElementById(this.props.formId).reset();
-        window.document.querySelector('#' + this.props.formId + ' [name=title]').focus();
+        window.document.querySelector('form[name=${this.form}]').reset();
+        window.document.querySelector('form[name=${this.form}] [name=title]').focus();
     };
 
     setClassName = (name: string) => {
@@ -64,12 +61,14 @@ export default class StaffForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
+            <form name={this.name} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
                 <div className="row">
                     <div className="col-md-3">
-                        <div className="form-group">
+                        <div className="form-group title-field">
                             <label htmlFor="title">Title</label>
                             <input
                                 defaultValue={this.state.formValues.title}
@@ -85,7 +84,7 @@ export default class StaffForm extends React.Component<Props, States> {
                         </div>
                     </div>
                     <div className="col-md-9">
-                        <div className="form-group">
+                        <div className="form-group fullname-field">
                             <label htmlFor="fullname">Fullname</label>
                             <input
                                 defaultValue={this.state.formValues.fullname}
@@ -101,7 +100,7 @@ export default class StaffForm extends React.Component<Props, States> {
                     </div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group email-field">
                     <label htmlFor="email">Email</label>
                     <input
                         defaultValue={this.state.formValues.email}
@@ -115,7 +114,7 @@ export default class StaffForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('email')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group description-field">
                     <label htmlFor="description">Description</label>
                     <textarea
                         defaultValue={this.state.formValues.description}
@@ -128,7 +127,7 @@ export default class StaffForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('description')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group image-field">
                     {this.renderPreview()}
                     <label htmlFor="image" style={{display: this.state.formValues.image ? 'none' : 'block'}}>
                         Image
@@ -143,7 +142,7 @@ export default class StaffForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('image')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group order-field">
                     <label htmlFor="order">Order</label>
                     <input
                         defaultValue={this.state.formValues.order}
@@ -157,10 +156,10 @@ export default class StaffForm extends React.Component<Props, States> {
                 </div>
 
                 <div className="right">
-                    {this.props.children}
-                    <button className="btn btn-primary">
+                    {children}
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>
