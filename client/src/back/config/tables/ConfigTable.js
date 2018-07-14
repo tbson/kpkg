@@ -24,6 +24,7 @@ type States = {
 };
 
 export class ConfigTable extends React.Component<Props, States> {
+    static defaultProps = {};
     nextUrl: ?string;
     prevUrl: ?string;
 

@@ -75,7 +75,7 @@ export class GroupTable extends React.Component<Props, States> {
     toggleModal = (modalName: string, formValues: Object = {}, permissionList: ?PermissionListType = null) => {
         let state = {...Tools.toggleModal(this.state, modalName, formValues)};
         if (permissionList) {
-            Object.assign(state, {permissionList});
+            state = {...state, permissionList};
         }
         this.setState(state);
     };

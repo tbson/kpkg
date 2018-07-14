@@ -7,12 +7,29 @@ const rawApiUrls = [
     {
         controller: 'banner',
         endpoints: {
-            crud: '',
-        },
-    },
+            crud: ''
+        }
+    }
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
+
+export function seeding(numberOfItems: number, single: boolean = false): any {
+    let result = [];
+    for (let i = 1; i <= numberOfItems; i++) {
+        result.push({
+            id: i,
+            title: `title ${i}`,
+            category_title: `category ${i}`,
+            description: `description ${i}`,
+            image: undefined,
+            order: i,
+            checked: false
+        });
+    }
+    if (!single) return result;
+    return result[numberOfItems - 1];
+}
 
 export type FormValues = {
     id: number,
@@ -22,7 +39,7 @@ export type FormValues = {
     title: string,
     description: string,
     image: ?Blob,
-    order: ?number,
+    order: ?number
 };
 
 export const defaultFormValues: FormValues = {
@@ -34,9 +51,8 @@ export const defaultFormValues: FormValues = {
     description: '',
     image: null,
     order: null
-
 };
 
 export type FormValuesWithCheck = FormValues & {
-    checked: boolean,
+    checked: boolean
 };

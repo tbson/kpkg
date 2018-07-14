@@ -168,7 +168,7 @@ export class CategoryTable extends React.Component<Props, States> {
         const {type} = this.props.match.params;
         const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
         const formErrors = this.state.formErrors ? this.state.formErrors : {};
-        const modalTitle = formValues.id ? 'Update config' : 'Add new config';
+        const modalTitle = formValues.id ? 'Update category' : 'Add new category';
 
         return (
             <div>
