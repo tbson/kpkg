@@ -26,7 +26,7 @@ import Staff from './staff/Staff';
 import Category from './category/Category';
 import Banner from './banner/Banner';
 import Article from './article/Article';
-import ArticleEdit from './article/ArticleEdit';
+import ArticleEditWrapper from './article/ArticleEditWrapper';
 
 type Props = {};
 
@@ -57,10 +57,10 @@ class App extends React.Component<Props> {
                     <Route path="/tag" component={Tag} />
                     <Route path="/staff" component={Staff} />
                     <Route path="/category/:type?" component={Category} />
-                    <Route path="/banners/:category_id" component={Banner} />
-                    <Route path="/gallerys/:category_id" component={Banner} />
-                    <Route path="/articles/:parent_id" component={Article} />
-                    <Route path="/article/:parent/:parent_id/:id?" component={ArticleEdit} />
+                    <Route path="/banners/:categoryId" component={Banner} />
+                    <Route path="/gallerys/:categoryId" component={Banner} />
+                    <Route path="/articles/:parentId" component={Article} />
+                    <Route path="/article/:parentType/:parentId/:id?" component={ArticleEditWrapper} />
                 </Switch>
             </div>
         );

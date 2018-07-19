@@ -18,14 +18,17 @@ class Article extends React.Component<Props, States> {
         super(props);
     }
 
-    componentDidMount () {
+    componentDidMount() {
         document.title = 'Article manager';
     }
 
     render() {
+        const type = 'category';
+        const {parentId: id} = this.props.match.params;
+        const parent = {type, id: parseInt(id)};
         return (
             <NavWrapper>
-                <ArticleTable parent="category" parent_id={this.props.match.params.parent_id}/>
+                <ArticleTable parent={parent} />
             </NavWrapper>
         );
     }

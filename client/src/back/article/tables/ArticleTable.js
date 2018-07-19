@@ -4,154 +4,130 @@ import * as React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
-import type {FormValuesWithCheck} from '../_data';
+import type {FormValuesWithCheck, ParentType} from '../_data';
+import type {GetListResponseData} from 'src/utils/helpers/Tools';
 import ArticleForm from '../forms/ArticleForm';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
-    search_form: boolean,
-    match: Object,
-    parent: string,
-    parent_id: number,
+    parent: ParentType,
+    searchForm: boolean,
+    list?: Array<FormValuesWithCheck>
 };
 type States = {
     dataLoaded: boolean,
     modal: boolean,
     list: Array<FormValuesWithCheck>,
-    formValues: Object,
-    formErrors: Object,
+    formErrors: Object
 };
 
 export class ArticleTable extends React.Component<Props, States> {
+    getList: Function;
+    static defaultProps = {
+        searchForm: true
+    };
+
     nextUrl: ?string;
     prevUrl: ?string;
-
-    uuid: string;
-
-    static defaultProps = {
-        parent: 'category',
-        search_form: true,
-    };
 
     state = {
         dataLoaded: false,
         modal: false,
         list: [],
-        formValues: {},
-        formErrors: {},
+        formErrors: {}
     };
 
     constructor(props: Props) {
         super(props);
+        const {parent} = this.props;
+        const defaultParams = {
+            [parent.type]: parent.id
+        };
+        this.getList = this.getList.bind(this, undefined, undefined, defaultParams);
     }
 
     componentDidMount() {
-        this.list();
+        this.getList();
     }
 
-    setInitData = (initData: Object) => {
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {list} = nextProps;
+        const dataLoaded = true;
+        if (prevState.dataLoaded) return null;
+        if (list) return {list, dataLoaded};
+        return null;
+    }
+
+    setInitData = (initData: GetListResponseData) => {
         this.nextUrl = initData.links.next;
         this.prevUrl = initData.links.previous;
-        const newData = initData.items.map(item => {
-            item.checked = !!item.checked;
+        const list = initData.items.map(item => {
+            item.checked = false;
             return item;
         });
         this.setState({
             dataLoaded: true,
-            list: [...newData],
+            list
         });
     };
 
-    list = async (outerParams: Object = {}, url: ?string = null) => {
-        let params = {
-            [this.props.parent]: this.props.parent_id,
-        };
-
-        let result = {};
-
-        if (!Tools.isEmpty(outerParams)) {
-            params = {...params, ...outerParams};
+    async getList(url: string = '', params: Object = {}, defaultParams: Object = {}) {
+        params = {...params, ...defaultParams};
+        const result = await Tools.getList(url ? url : apiUrls.crud, params);
+        if (result) {
+            this.setInitData(result);
         }
+    }
 
-        result = await Tools.apiCall(url ? url : apiUrls.crud, 'GET', params);
-        if (result.success) {
-            this.setInitData(result.data);
-            return result;
+    searchList = async (event: Object) => {
+        event.preventDefault();
+        const {search} = Tools.formDataToObj(new FormData(event.target));
+        if (search.length > 2) {
+            await this.getList('', {search});
+        } else if (!search.length) {
+            await this.getList();
         }
-        return result;
+    };
+
+    handleRemove = async (ids: string) => {
+        let {list} = this.state;
+        const url = apiUrls.crud;
+        const deletedIds = await Tools.handleRemove(url, ids);
+        if (deletedIds && deletedIds.length) {
+            list = list.filter(item => !deletedIds.includes(item.id));
+            this.setState({list});
+        }
+    };
+
+    handleCheck = (event: Object) => {
+        const {list} = this.state;
+        const {id, checked} = event.target;
+        const index = list.findIndex(item => item.id === parseInt(id));
+        list[index].checked = checked;
+        this.setState({list});
     };
 
     handleToggleCheckAll = () => {
-        var newList = [];
-        const checkedItem = this.state.list.filter(item => item.checked);
-        const result = (checked: boolean) => {
-            const list = this.state.list.map(value => {
-                return {...value, checked};
-            });
-            this.setState({list});
-        };
-
-        if (checkedItem) {
-            if (checkedItem.length === this.state.list.length) {
-                // Checked all -> uncheck all
-                return result(false);
-            }
-            // Some item checked -> checke all
-            return result(true);
-        } else {
-            // Nothing checked -> check all
-            return result(true);
-        }
+        let {list} = this.state;
+        list = Tools.checkOrUncheckAll(list);
+        this.setState({list});
     };
 
-    handleCheck = (data: FormValuesWithCheck, event: Object) => {
-        data.checked = event.target.checked;
-        const index = this.state.list.findIndex(item => item.id === parseInt(data.id));
-        this.state.list[index] = {...data};
-        this.setState({list: this.state.list});
-    };
-
-    handleRemove = async (id: string) => {
-        const listId = id.split(',');
-        if (!id || !listId.length) return;
-        let message = '';
-        if (listId.length === 1) {
-            message = 'Do you want to remove this item?';
-        } else {
-            message = 'Do you want to remove selected items?';
-        }
-        const decide = confirm(message);
-        if (!decide) return;
-        const result = await Tools.apiCall(apiUrls.crud + (listId.length === 1 ? id : '?ids=' + id), 'DELETE');
-        if (result.success) {
-            const listId = id.split(',').map(item => parseInt(item));
-            const list = this.state.list.filter(item => listId.indexOf(item.id) === -1);
-            this.setState({list});
-        } else {
-            this.list();
-        }
-    };
-
-    handleSearch = (event: Object) => {
-        event.preventDefault();
-        const {searchStr} = Tools.formDataToObj(new FormData(event.target));
-        if (searchStr.length > 2) {
-            this.list({search: searchStr});
-        } else if (!searchStr.length) {
-            this.list();
-        }
-    };
+    renderSearchForm = () => {
+        const {searchForm} = this.props;
+        if (!searchForm) return null;
+        return <SearchInput onSearch={this.searchList} />
+    }
 
     render() {
-        if (!this.state.dataLoaded) return <LoadingLabel />;
-        const list = this.state.list;
-        const parent = this.props.parent;
-        const parentId = this.props.parent_id;
+        const {dataLoaded, list} = this.state;
+        const {parent} = this.props;
+        if (!dataLoaded || !parent.id) return <LoadingLabel />;
         return (
             <div>
-                <SearchInput show={this.props.search_form} onSearch={this.handleSearch} />
+                {this.renderSearchForm()}
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
@@ -169,7 +145,7 @@ export class ArticleTable extends React.Component<Props, States> {
                             <th scope="col" style={{padding: 8}} className="row80">
                                 <Link
                                     className="btn btn-primary btn-sm btn-block add-button"
-                                    to={`/article/${parent}/${parentId}/`}>
+                                    to={`/article/${parent.type}/${parent.id}/`}>
                                     <span className="oi oi-plus" />&nbsp; Add
                                 </Link>
                             </th>
@@ -181,10 +157,8 @@ export class ArticleTable extends React.Component<Props, States> {
                             <Row
                                 className="table-row"
                                 parent={parent}
-                                parent_id={parentId}
                                 data={data}
                                 key={key}
-                                _key={key}
                                 handleRemove={this.handleRemove}
                                 onCheck={this.handleCheck}
                             />
@@ -200,11 +174,7 @@ export class ArticleTable extends React.Component<Props, States> {
                                 />
                             </th>
                             <th className="row25 right" colSpan="99">
-                                <Pagination
-                                    next={this.nextUrl}
-                                    prev={this.prevUrl}
-                                    onNavigate={url => this.list({}, url)}
-                                />
+                                <Pagination next={this.nextUrl} prev={this.prevUrl} onNavigate={this.getList} />
                             </th>
                         </tr>
                     </tfoot>
@@ -216,21 +186,18 @@ export class ArticleTable extends React.Component<Props, States> {
 export default withRouter(ArticleTable);
 
 type RowPropTypes = {
-    parent: string,
-    parent_id: number,
     data: FormValuesWithCheck,
-    _key: number,
+    parent: ParentType,
     handleRemove: Function,
-    onCheck: Function,
+    onCheck: Function
 };
 export class Row extends React.Component<RowPropTypes> {
     render() {
-        const data = this.props.data;
-        const parentId = this.props.parent_id;
-        const parent = this.props.parent;
+        const {data, parent} = this.props;
         const id = data.id ? data.id : '';
+        if (!parent.id) return null;
         return (
-            <tr key={this.props._key}>
+            <tr>
                 <th className="row25">
                     <input
                         className="check"
@@ -240,7 +207,7 @@ export class Row extends React.Component<RowPropTypes> {
                     />
                 </th>
                 <td className="title">
-                    <Link to={`/article/${parent}/${parentId}/${id}`}>{data.title}</Link>
+                    <Link to={`/article/${parent.type}/${parent.id}/${id}`}>{data.title}</Link>
                 </td>
                 <td className="category_id">{data.category_title}</td>
                 <td className="use_slide">
@@ -251,7 +218,7 @@ export class Row extends React.Component<RowPropTypes> {
                 </td>
                 <td className="order">{data.order}</td>
                 <td className="center">
-                    <Link to={`/article/${parent}/${parentId}/${id}`}>
+                    <Link to={`/article/${parent.type}/${parent.id}/${id}`}>
                         <span className="editBtn oi oi-pencil text-info pointer" />
                     </Link>
                     <span>&nbsp;&nbsp;&nbsp;</span>

@@ -71,7 +71,6 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     render() {
-        console.log('parent rendere');
         return (
             <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
                 <input defaultValue={this.state.formValues.id} name="id" type="hidden" />

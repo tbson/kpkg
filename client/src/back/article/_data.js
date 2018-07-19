@@ -7,21 +7,21 @@ const rawApiUrls = [
     {
         controller: 'article',
         endpoints: {
-            crud: '',
-        },
+            crud: ''
+        }
     },
     {
         controller: 'category',
         endpoints: {
-            crud: '',
-        },
+            crud: ''
+        }
     },
     {
         controller: 'tag',
         endpoints: {
-            crud: '',
-        },
-    },
+            crud: ''
+        }
+    }
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
@@ -41,7 +41,7 @@ export type FormValues = {
     order: ?number,
     tags?: ?string,
     created_at?: ??Date,
-    attaches?: Array<AttachType>,
+    attaches?: Array<AttachType>
 };
 
 export const defaultFormValues: FormValues = {
@@ -55,15 +55,20 @@ export const defaultFormValues: FormValues = {
     use_slide: false,
     pin: false,
     thumbnail_in_content: false,
-    order: 0,
+    order: 0
 };
 
 export type FormValuesWithCheck = FormValues & {
-    checked: boolean,
+    checked: boolean
 };
 
-export type UrlParms = {
-    parent: string,
-    parent_id: number,
-    id: number,
+export type ParentType = {
+    type: string,
+    id: number
+};
+
+export type ParamsType = {
+    parentType: string,
+    parentId: number,
+    id: number
 };

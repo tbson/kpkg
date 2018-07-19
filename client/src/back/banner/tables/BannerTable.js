@@ -42,7 +42,8 @@ export class BannerTable extends React.Component<Props, States> {
 
     constructor(props: Props) {
         super(props);
-        const defaultParams = {category: this.props.match.params.category_id};
+        const {categoryId: category} = this.props.match.params;
+        const defaultParams = {category};
         this.getList = this.getList.bind(this, undefined, undefined, defaultParams);
     }
 
@@ -99,10 +100,9 @@ export class BannerTable extends React.Component<Props, States> {
 
     handleSubmit = async (event: Object) => {
         event.preventDefault();
-
-        const params = Tools.formDataToObj(new FormData(event.target));
-        params.uuid = this.state.uuid;
-        params.category = this.props.match.params.category_id;
+        const {categoryId: category} = this.props.match.params;
+        const uuid = this.state;
+        const params = {...Tools.formDataToObj(new FormData(event.target)), category, uuid};
         const isEdit = params.id ? true : false;
         let url = apiUrls.crud;
         if (isEdit) url += String(params.id);
@@ -159,7 +159,6 @@ export class BannerTable extends React.Component<Props, States> {
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
         const {list} = this.state;
-        const categoryId = this.props.match.params.category_id;
         const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
         const formErrors = this.state.formErrors ? this.state.formErrors : {};
         const modalTitle = formValues.id ? 'Update banner' : 'Add new banner';
@@ -222,10 +221,7 @@ export class BannerTable extends React.Component<Props, States> {
                 </table>
 
                 <DefaultModal open={this.state.modal} title={modalTitle} handleClose={() => this.toggleModal('modal')}>
-                    <BannerForm
-                        formValues={formValues}
-                        formErrors={formErrors}
-                        handleSubmit={this.handleSubmit}>
+                    <BannerForm formValues={formValues} formErrors={formErrors} handleSubmit={this.handleSubmit}>
                         <button type="button" onClick={() => this.toggleModal('modal')} className="btn btn-warning">
                             <span className="oi oi-x" />&nbsp; Cancel
                         </button>
