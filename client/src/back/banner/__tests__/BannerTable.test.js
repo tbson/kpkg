@@ -13,7 +13,7 @@ Enzyme.configure({adapter: new Adapter()});
 const category = 1
 const match = {
     params: {
-        category_id: category
+        categoryId: category
     }
 };
 
