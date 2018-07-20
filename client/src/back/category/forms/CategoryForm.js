@@ -41,8 +41,8 @@ export default class CategoryForm extends React.Component<Props, States> {
     }
 
     resetForm = () => {
-        window.document.querySelector('form[name=${this.form}]').reset();
-        window.document.querySelector('form[name=${this.form}] [name=title]').focus();
+        window.document.querySelector(`form[name=${this.name}]`).reset();
+        window.document.querySelector(`form[name=${this.name}] [name=title]`).focus();
     };
 
     setClassName = (name: string) => {
@@ -58,7 +58,7 @@ export default class CategoryForm extends React.Component<Props, States> {
         const {formValues, actionName} = this.state;
         return (
             <form name={this.name} onSubmit={handleSubmit}>
-                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
+                <input defaultValue={formValues.id} name="id" id={`${this.name}-id`} type="hidden" />
                 <div className="form-group title-field">
                     <label htmlFor="${name}-title">Title</label>
                     <input

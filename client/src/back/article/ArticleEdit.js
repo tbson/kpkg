@@ -185,7 +185,7 @@ class ArticleEdit extends React.Component<Props, States> {
         return (
             <NavWrapper>
                 <ArticleForm
-                    parent_uuid={uuid}
+                    parentUUID={uuid}
                     formId="articleForm"
                     submitTitle="Update"
                     formValues={formValues}
@@ -206,7 +206,7 @@ class ArticleEdit extends React.Component<Props, States> {
                     </button>
                 </ArticleForm>
                 <hr />
-                <AttachTable parent_uuid={uuid} />
+                <AttachTable parentUUID={uuid} />
                 {this.renderRelatedArticle()}
             </NavWrapper>
         );

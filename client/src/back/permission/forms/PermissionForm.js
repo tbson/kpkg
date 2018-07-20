@@ -37,8 +37,8 @@ export default class PermissionForm extends React.Component<Props, States> {
     }
 
     resetForm = () => {
-        window.document.querySelector('form[name=${this.form}]').reset();
-        window.document.querySelector('form[name=${this.form}] [name=name]').focus();
+        window.document.querySelector(`form[name=${this.name}]`).reset();
+        window.document.querySelector(`form[name=${this.name}] [name=name]`).focus();
     };
 
     setClassName = (name: string) => {
@@ -54,7 +54,7 @@ export default class PermissionForm extends React.Component<Props, States> {
         const {formValues, actionName} = this.state;
         return (
             <form name={this.name} onSubmit={handleSubmit}>
-                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
+                <input defaultValue={formValues.id} name="id" id={`${this.name}-id`} type="hidden" />
                 <p>
                     Content type: <strong>{this.state.formValues.content_type}</strong>
                 </p>

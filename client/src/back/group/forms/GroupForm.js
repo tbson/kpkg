@@ -40,8 +40,8 @@ export default class GroupForm extends React.Component<Props, States> {
     }
 
     resetForm = () => {
-        window.document.querySelector('form[name=${this.name}]').reset();
-        window.document.querySelector('form[name=${this.name}] [name=name]').focus();
+        window.document.querySelector(`form[name=${this.name}]`).reset();
+        window.document.querySelector(`form[name=${this.name}] [name=name]`).focus();
     };
 
     setClassName = (name: string) => {
@@ -57,7 +57,7 @@ export default class GroupForm extends React.Component<Props, States> {
         const {formValues, actionName} = this.state;
         return (
             <form id={this.name} onSubmit={handleSubmit}>
-                <input defaultValue={formValues.id} name="id" id="${this.form}-id" type="hidden" />
+                <input defaultValue={formValues.id} name="id" id={`${this.name}-id`} type="hidden" />
                 <div className="form-group name-field">
                     <label htmlFor="${name}-name">Name</label>
                     <input

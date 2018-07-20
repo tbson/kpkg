@@ -8,26 +8,25 @@ import {defaultFormValues} from '../_data';
 import type {DropdownItemType} from 'src/utils/types/CommonTypes';
 
 type Props = {
+    formValues: FormValues,
+    formErrors: Object,
     handleSubmit: Function,
     children?: React.Node,
-    parent_uuid?: string,
-    formId: string,
-    submitTitle: string,
-    formValues: FormValues,
-    tagSource?: Array<DropdownItemType>,
-    formErrors: Object,
+    parentUUID?: string,
+    tagSource?: Array<DropdownItemType>
 };
 type States = {
     formValues: FormValues,
+    actionName: string
 };
 
 export default class ArticleForm extends React.Component<Props, States> {
-    static defaultProps = {
-        submitTitle: 'Submit',
-    };
+    static defaultProps = {};
+    name = 'config';
 
     state = {
         formValues: defaultFormValues,
+        actionName: ''
     };
 
     constructor(props: Props) {
@@ -36,7 +35,10 @@ export default class ArticleForm extends React.Component<Props, States> {
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
         const formValues = !Tools.isEmpty(nextProps.formValues) ? nextProps.formValues : defaultFormValues;
-        return {formValues};
+        return {
+            formValues,
+            actionName: formValues.id ? 'Update' : 'Add new'
+        };
     }
 
     componentDidUpdate(prevProps: Props, prevState: States) {
@@ -44,10 +46,8 @@ export default class ArticleForm extends React.Component<Props, States> {
     }
 
     resetForm = () => {
-        const {formId} = this.props;
-        const firstInputSelector = ['#', formId, ' [name=title]'].join('');
-        window.document.getElementById(formId).reset();
-        window.document.querySelector(firstInputSelector).focus();
+        window.document.querySelector(`form[name=${this.name}]`).reset();
+        window.document.querySelector(`form[name=${this.name}] [name=title]`).focus();
     };
 
     setClassName = (name: string) => {
@@ -55,8 +55,7 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     setErrorMessage = (name: string) => {
-        const result = this.props.formErrors[name];
-        return result;
+        return this.props.formErrors[name];
     };
 
     renderPreview = () => {
@@ -71,10 +70,12 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     render() {
+        const {handleSubmit, children} = this.props;
+        const {formValues, actionName} = this.state;
         return (
-            <form id={this.props.formId} onSubmit={this.props.handleSubmit}>
-                <input defaultValue={this.state.formValues.id} name="id" type="hidden" />
-                <div className="form-group">
+            <form name={this.name} onSubmit={handleSubmit}>
+                <input defaultValue={formValues.id} name="id" id={`${this.name}-id`} type="hidden" />
+                <div className="form-group title-field">
                     <label htmlFor="title">Title</label>
                     <input
                         defaultValue={this.state.formValues.title}
@@ -89,27 +90,27 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('title')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group description-field">
                     <label htmlFor="description">Description</label>
                     <RichTextInputMedium
-                        parent_uuid={this.props.parent_uuid}
+                        parentUUID={this.props.parentUUID}
                         defaultValue={this.state.formValues.description}
                         name="description"
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('description')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group content-field">
                     <label htmlFor="content">Content</label>
                     <RichTextInputMedium
-                        parent_uuid={this.props.parent_uuid}
+                        parentUUID={this.props.parentUUID}
                         defaultValue={this.state.formValues.content}
                         name="content"
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('content')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group image-field">
                     {this.renderPreview()}
                     <label htmlFor="image" style={{display: this.state.formValues.image ? 'none' : 'block'}}>
                         Image
@@ -124,7 +125,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('image')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group order-field">
                     <label htmlFor="order">Order</label>
                     <input
                         defaultValue={this.state.formValues.order}
@@ -137,7 +138,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('order')}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group tags-field">
                     <label htmlFor="groups">Tags</label>
                     <SelectInput
                         multi={true}
@@ -148,7 +149,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
                 </div>
 
-                <div className="form-check">
+                <div className="form-check use_slide-field">
                     <input
                         id="use_slide"
                         name="use_slide"
@@ -161,7 +162,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     </label>
                 </div>
 
-                <div className="form-check">
+                <div className="form-check thumbnail_in_content-field">
                     <input
                         id="thumbnail_in_content"
                         name="thumbnail_in_content"
@@ -174,7 +175,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                     </label>
                 </div>
 
-                <div className="form-check">
+                <div className="form-check pin-field">
                     <input
                         id="pin"
                         name="pin"
@@ -188,10 +189,10 @@ export default class ArticleForm extends React.Component<Props, States> {
                 </div>
 
                 <div className="right">
-                    {this.props.children}
-                    <button className="btn btn-primary">
+                    {children}
+                    <button className="btn btn-primary main-action">
                         <span className="oi oi-check" />&nbsp;
-                        {this.props.submitTitle}
+                        <span className="label">{actionName}</span>
                     </button>
                 </div>
             </form>

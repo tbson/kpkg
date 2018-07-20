@@ -24,7 +24,7 @@ const rawApiUrls: Array<Object> = [
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 type Props = {
-    parent_uuid: string,
+    parentUUID: string,
     name: string,
     defaultValue: any,
 };
@@ -47,7 +47,7 @@ class RichTextInput extends React.Component<Props, States> {
         multi: false,
         delimiter: ',',
         defaultValue: '',
-        parent_uuid: '',
+        parentUUID: '',
         parent: null,
     };
 
@@ -110,7 +110,7 @@ class CustomImageSideButton extends ImageSideButton {
         if (file.type.indexOf('image/') === 0) {
             const params = {
                 attachment: file,
-                parent_uuid: this.props.parent_uuid,
+                parentUUID: this.props.parentUUID,
                 richtext_image: true,
             };
             const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
