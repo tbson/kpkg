@@ -26,6 +26,30 @@ const rawApiUrls = [
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
+export function seeding(numberOfItems: number, single: boolean = false): any {
+    let result = [];
+    for (let i = 1; i <= numberOfItems; i++) {
+        result.push({
+            id: i,
+            category_title: `category_title ${i}`,
+            uuid: `uuid${i}`,
+            uid: `title${i}`,
+            title: `title ${i}`,
+            description: `description ${i}`,
+            content: `content ${i}`,
+            image: null,
+            use_slide: true,
+            pin: false,
+            thumbnail_in_content: true,
+            order: i,
+            tags: '',
+            checked: false
+        });
+    }
+    if (!single) return result;
+    return result[numberOfItems - 1];
+}
+
 export type FormValues = {
     id: number,
     category_title?: ?string,

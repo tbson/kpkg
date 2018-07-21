@@ -209,7 +209,7 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="title">
                     <Link to={`/article/${parent.type}/${parent.id}/${id}`}>{data.title}</Link>
                 </td>
-                <td className="category_id">{data.category_title}</td>
+                <td className="category_title">{data.category_title}</td>
                 <td className="use_slide">
                     {data.use_slide ? <span className="oi oi-check green" /> : <span className="oi oi-x red" />}
                 </td>
@@ -218,12 +218,12 @@ export class Row extends React.Component<RowPropTypes> {
                 </td>
                 <td className="order">{data.order}</td>
                 <td className="center">
-                    <Link to={`/article/${parent.type}/${parent.id}/${id}`}>
-                        <span className="editBtn oi oi-pencil text-info pointer" />
+                    <Link className="editBtn" to={`/article/${parent.type}/${parent.id}/${id}`}>
+                        <span className="oi oi-pencil text-info pointer" />
                     </Link>
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <a onClick={() => this.props.handleRemove(String(data.id))}>
-                        <span className="removeBtn oi oi-x text-danger pointer" />
+                    <a className="removeBtn" onClick={() => this.props.handleRemove(String(data.id))}>
+                        <span className="oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>

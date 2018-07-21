@@ -146,7 +146,7 @@ export default class ArticleForm extends React.Component<Props, States> {
                         options={this.props.tagSource}
                         defaultValue={this.state.formValues.tags}
                     />
-                    <div className="invalid-feedback">{this.setErrorMessage('groups')}</div>
+                    <div className="invalid-feedback">{this.setErrorMessage('tags')}</div>
                 </div>
 
                 <div className="form-check use_slide-field">

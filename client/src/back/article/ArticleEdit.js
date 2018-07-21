@@ -5,7 +5,6 @@ import {withRouter} from 'react-router-dom';
 import {apiUrls, defaultFormValues} from './_data';
 import type {FormValues, FormValuesWithCheck, ParentType} from './_data';
 import type {DropdownItemType} from 'src/utils/types/CommonTypes';
-import NavWrapper from 'src/utils/components/NavWrapper';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import AttachTable from 'src/back/attach/tables/AttachTable';
 import ArticleForm from './forms/ArticleForm';
@@ -15,11 +14,11 @@ import Tools from 'src/utils/helpers/Tools';
 type Props = {
     history: Object,
     parent: ParentType,
-    id: number
+    id: ?number
 };
 type States = {
     dataLoaded: boolean,
-    url: ?string,
+    id: ?number,
     formValues: FormValues,
     formErrors: Object,
     uuid: string,
@@ -27,12 +26,13 @@ type States = {
     tagSource: Array<DropdownItemType>
 };
 
-class ArticleEdit extends React.Component<Props, States> {
+export class ArticleEdit extends React.Component<Props, States> {
     navigateTo: Function;
+    setInitData: Function;
 
     state = {
         dataLoaded: false,
-        url: null,
+        id: null,
         formValues: defaultFormValues,
         formErrors: {},
         uuid: Tools.uuid4(),
@@ -43,14 +43,14 @@ class ArticleEdit extends React.Component<Props, States> {
     constructor(props: Props) {
         super(props);
         this.navigateTo = Tools.navigateTo.bind(undefined, this.props.history);
+        this.setInitData = this.setInitData.bind(this);
     }
 
     componentDidMount() {
-        const {id} = this.props;
         this.setInitData();
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
         const {id} = nextProps;
         if (id !== prevState.id) {
             return {id};
@@ -58,18 +58,18 @@ class ArticleEdit extends React.Component<Props, States> {
         return null;
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: Props, prevState: States) {
         const {id} = this.props;
         if (prevProps.id !== id) {
             this.setInitData();
         }
     }
 
-    setInitData = async () => {
+    async setInitData() {
         const {parent, id} = this.props;
         const {uuid} = this.state;
         const initData = {...defaultFormValues, uuid};
-        let state = await this.prepareFormValues(id, initData);
+        let state = await this.prepareFormValues(id ? id : 0, initData);
         let categoryId;
         if (parent.type == 'article') {
             categoryId = await this.getCategoryId(parent.id);
@@ -82,23 +82,15 @@ class ArticleEdit extends React.Component<Props, States> {
             state = {...state, tagSource};
         }
         this.setState(state);
+    }
+
+    getCategoryId = async (id: number): Promise<?number> => {
+        const result = await Tools.getItem(apiUrls.crud, id);
+        return result ? result.category.id : null;
     };
 
-    getCategoryId = async id => {
-        const result = await Tools.getItem(apiUrls.crud, id);
-        if (result) {
-            return result.category.id;
-        }
-        return null;
-    };
-
-    getItem = async (id): Promise<?FormValues> => {
-        if (!id) return null;
-        const result = await Tools.getItem(apiUrls.crud, id);
-        if (result) {
-            return result;
-        }
-        return null;
+    getItem = async (id: number): Promise<?FormValues> => {
+        return id ? await Tools.getItem(apiUrls.crud, id) : null;
     };
 
     prepareFormValues = async (id: number, formValues: FormValues): Promise<Object> => {
@@ -114,11 +106,8 @@ class ArticleEdit extends React.Component<Props, States> {
     };
 
     getTagSource = async (): Promise<Array<DropdownItemType>> => {
-        const result = await Tools.apiCall(apiUrls.tagCrud + '?limit=20', 'GET');
-        if (result.success) {
-            return result.data.items.map(item => ({value: item.id, label: item.title}));
-        }
-        return [];
+        const result = await Tools.getList(apiUrls.tagCrud, {limit: 20});
+        return result ? result.items.map(item => ({value: item.id, label: item.title})) : [];
     };
 
     handleSubmit = async (event: Object) => {
@@ -136,16 +125,16 @@ class ArticleEdit extends React.Component<Props, States> {
         }
         params[parent.type] = parent.id;
 
-        const {data, error} = await Tools.handleSubmit(url, params);
+        const {error} = await Tools.handleSubmit(url, params);
         const isSuccess = Tools.isEmpty(error);
         if (isSuccess) {
-            this.onSubmitSuccess(isEdit, data);
+            this.onSubmitSuccess();
         } else {
             this.onSubmitFail(error);
         }
     };
 
-    onSubmitSuccess = (isEdit: boolean, data: FormValues) => {
+    onSubmitSuccess = () => {
         const {parent} = this.props;
         const {categoryId} = this.state;
 
@@ -176,14 +165,9 @@ class ArticleEdit extends React.Component<Props, States> {
     render() {
         const {dataLoaded, formValues, formErrors, tagSource, categoryId, uuid} = this.state;
         const {parent} = this.props;
-        if (!dataLoaded)
-            return (
-                <NavWrapper>
-                    <LoadingLabel />
-                </NavWrapper>
-            );
+        if (!dataLoaded) return <LoadingLabel />;
         return (
-            <NavWrapper>
+            <div>
                 <ArticleForm
                     parentUUID={uuid}
                     formId="articleForm"
@@ -208,7 +192,7 @@ class ArticleEdit extends React.Component<Props, States> {
                 <hr />
                 <AttachTable parentUUID={uuid} />
                 {this.renderRelatedArticle()}
-            </NavWrapper>
+            </div>
         );
     }
 }
