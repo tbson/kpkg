@@ -48,7 +48,7 @@ class App extends React.Component<Props> {
                     <Route exact path="/lien-he" component={Contact} />
                     <Route exact path="/bai-viet/:uid" component={ArticleDetail} />
                     <Route exact path="/tag/:id/:uid" component={ArticlesFromTag} />
-                    <Route exact path="/bai-viet/:id/:uid" component={ArticleDetail} />
+                    <Route exact path="/bai-viet/:id/:slug" component={ArticleDetail} />
                     <Route exact path="/tin-tuc" component={NewsSection} />
                     <Route exact path="/kien-thuc" component={KnowledgeSection} />
                 </Switch>

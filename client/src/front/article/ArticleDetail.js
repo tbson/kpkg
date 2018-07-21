@@ -64,8 +64,8 @@ class ArticleDetail extends React.Component<Props, State> {
         }
     }
 
-    setTitle = (uid: string) => {
-        switch (uid) {
+    setTitle = (slug: string) => {
+        switch (slug) {
             case 'gioi-thieu':
                 document.title = 'Giới thiệu';
                 break;
@@ -79,16 +79,16 @@ class ArticleDetail extends React.Component<Props, State> {
                 document.title = 'Chương trình tham quan';
                 break;
             default:
-                document.title = uid;
+                document.title = slug;
         }
     };
 
     setInitData = () => {
-        const {id, uid} = this.props.match.params;
+        const {id, slug, uid} = this.props.match.params;
         const {pathname} = this.props.location;
         const article = Tools.getGlobalState(pathname);
         if (typeof id == 'undefined') {
-            this.setTitle(uid);
+            this.setTitle(slug);
         }
         if (article) {
             if (typeof id != 'undefined') {
@@ -100,7 +100,7 @@ class ArticleDetail extends React.Component<Props, State> {
             });
         }
 
-        if (typeof id != 'undefined' && typeof uid != 'undefined') {
+        if (typeof id != 'undefined' && typeof slug != 'undefined') {
             this.getArticleFromId(id);
         } else {
             this.getArticleFromCategoryUid(uid);
@@ -135,7 +135,7 @@ class ArticleDetail extends React.Component<Props, State> {
         }
     };
 
-    getListStaff = async (uid: string) => {
+    getListStaff = async () => {
         const params = {};
         const result = await Tools.apiCall(apiUrls.staff, 'GET', params, false, false);
         if (result.success) {
@@ -211,7 +211,7 @@ class ArticleDetail extends React.Component<Props, State> {
     };
 
     renderFirstItem = (item: ArticleType) => {
-        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        const detailUrl = ['/bai-viet', item.id, item.slug].join('/');
         return (
             <div className="col-xl-6" key={item.id}>
                 <div className="content-container">
@@ -234,7 +234,7 @@ class ArticleDetail extends React.Component<Props, State> {
 
     renderOtherItem = (item: ArticleType) => {
         if (!item.image) return this.renderFirstItem(item);
-        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        const detailUrl = ['/bai-viet', item.id, item.slug].join('/');
         return (
             <div className="col-xl-6" key={item.id}>
                 <div className="content-container">

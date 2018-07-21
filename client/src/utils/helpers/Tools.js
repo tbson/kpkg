@@ -66,6 +66,12 @@ export default class Tools {
                 // console.log(pair[1] instanceof Blob);
                 data[pair[0]] = pair[1] === 'null' ? null : pair[1];
             }
+            if (pair[1] instanceof Blob) {
+                // Image here
+                if (!pair[1].name || !pair[1].size) {
+                    data[pair[0]] = undefined;
+                }
+            }
         }
         for (let checkbox of checkboxes) {
             if (!data[checkbox]) {
@@ -123,7 +129,6 @@ export default class Tools {
             console.log(error);
         }
     }
-
 
     static setStorageObj(input: Object): void {
         for (let key in input) {

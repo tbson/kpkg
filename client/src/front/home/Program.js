@@ -80,8 +80,8 @@ export default class Program extends React.Component<Props, State> {
         if (!this.state.dataLoaded) return null;
 
         const item = this.state.homeProgram;
-        if (!item.image || !item.id || !item.uid) return null;
-        const detailUrl = ['bai-viet', item.id, item.uid].join('/');
+        if (!item.image || !item.id || !item.slug) return null;
+        const detailUrl = ['bai-viet', item.id, item.slug].join('/');
         return (
             <div className="content-container">
                 <div className="row">

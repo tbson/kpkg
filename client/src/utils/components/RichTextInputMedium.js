@@ -30,6 +30,7 @@ type Props = {
 };
 
 type States = {
+    localChange: boolean,
     value: string,
     editorState: Object,
 };
@@ -39,6 +40,7 @@ class RichTextInput extends React.Component<Props, States> {
     sideButtons: Array<Object>;
 
     state = {
+        localChange: false,
         value: '',
         editorState: createEditorState(convertToRaw(mediumDraftImporter(this.props.defaultValue))),
     };
@@ -54,7 +56,9 @@ class RichTextInput extends React.Component<Props, States> {
     constructor(props: Props) {
         super(props);
         this.onChange = editorState => {
+            const localChange = true;
             this.setState({
+                localChange,
                 editorState,
                 value: mediumDraftExporter(editorState.getCurrentContent()),
             });
@@ -69,11 +73,27 @@ class RichTextInput extends React.Component<Props, States> {
         ];
     }
 
+    /*
     componentWillReceiveProps(nextProps: Props) {
         this.setState({
             value: '',
             editorState: createEditorState(convertToRaw(mediumDraftImporter(nextProps.defaultValue))),
         });
+    }
+    */
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
+        const {defaultValue} = nextProps;
+        if (prevState.localChange) {
+            return {
+                localChange: false
+            }
+        }
+        return {
+            localChange: false,
+            value: defaultValue,
+            editorState: createEditorState(convertToRaw(mediumDraftImporter(defaultValue))),
+        }
     }
 
     render() {

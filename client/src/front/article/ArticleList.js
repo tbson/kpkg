@@ -31,6 +31,7 @@ type State = {
 class ArticleList extends React.Component<Props, State> {
     nextUrl: ?string;
     prevUrl: ?string;
+    list: Function;
 
     static defaultProps = {
         alwaysFirst: false,
@@ -124,7 +125,7 @@ class ArticleList extends React.Component<Props, State> {
     };
 
     renderFirstItem = (item: ArticleType) => {
-        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        const detailUrl = ['/bai-viet', item.id, item.slug].join('/');
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12">
@@ -148,7 +149,7 @@ class ArticleList extends React.Component<Props, State> {
     renderOtherItem = (item: ArticleType) => {
         if (this.props.alwaysFirst) return this.renderFirstItem(item);
         if (!item.image) return this.renderFirstItem(item);
-        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        const detailUrl = ['/bai-viet', item.id, item.slug].join('/');
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12">

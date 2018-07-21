@@ -59,7 +59,8 @@ export default class ArticleForm extends React.Component<Props, States> {
     };
 
     renderPreview = () => {
-        if (!this.state.formValues.image) return null;
+        const {image, id} = this.state.formValues;
+        if (!id || !image) return null;
         return (
             <div className="row">
                 <div className="col col-lg-4">
@@ -88,6 +89,19 @@ export default class ArticleForm extends React.Component<Props, States> {
                         placeholder="Title..."
                     />
                     <div className="invalid-feedback">{this.setErrorMessage('title')}</div>
+                </div>
+
+                <div className="form-group slug-field">
+                    <label htmlFor="slug">Slug</label>
+                    <input
+                        defaultValue={this.state.formValues.slug}
+                        id="slug"
+                        name="slug"
+                        type="text"
+                        className={this.setClassName('slug')}
+                        placeholder="Ex: this-is-slug"
+                    />
+                    <div className="invalid-feedback">{this.setErrorMessage('slug')}</div>
                 </div>
 
                 <div className="form-group description-field">

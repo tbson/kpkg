@@ -25,7 +25,7 @@ class ListView(ListAPIView):
     permission_classes = [CustomPermission]
     queryset = Article.objects.all()
     serializer_class = ArticleBaseSerializer
-    search_fields = ('uid', 'value')
+    search_fields = ('slug', 'value')
     filter_fields = ('category', 'article', )
 
 

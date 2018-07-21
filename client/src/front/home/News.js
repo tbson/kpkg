@@ -50,8 +50,8 @@ export default class News extends React.Component<Props, State> {
     };
 
     renderFirstItem = (item: ArticleType) => {
-        if (!item.id || !item.uid) return null;
-        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        if (!item.id || !item.slug) return null;
+        const detailUrl = ['/bai-viet', item.id, item.slug].join('/');
         return (
             <div className="content-container" key={item.id}>
                 <div className="col-xl-12" key={item.id}>
@@ -73,8 +73,8 @@ export default class News extends React.Component<Props, State> {
     };
 
     renderOtherItem = (item: ArticleType) => {
-        if (!item.id || !item.uid) return null;
-        const detailUrl = ['/bai-viet', item.id, item.uid].join('/');
+        if (!item.id || !item.slug) return null;
+        const detailUrl = ['/bai-viet', item.id, item.slug].join('/');
         return (
             <LazyLoad height={200} key={item.id}>
                 <div className="content-container">

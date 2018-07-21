@@ -20,7 +20,7 @@ class Article(models.Model):
     category = models.ForeignKey(Category, related_name="articles", null=True, on_delete=models.CASCADE)
     article = models.ForeignKey('self', related_name="related_articles", null=True, on_delete=models.CASCADE)
     uuid = models.CharField(max_length=36, blank=True)
-    uid = models.CharField(max_length=256)
+    slug = models.CharField(max_length=256)
     title = models.CharField(max_length=256)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to=image_destination, blank=True)

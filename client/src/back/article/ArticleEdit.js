@@ -124,13 +124,15 @@ export class ArticleEdit extends React.Component<Props, States> {
             params.order = 0;
         }
         params[parent.type] = parent.id;
-
+        if (!params.slug) {
+            params.slug = params.title;
+        }
         const {error} = await Tools.handleSubmit(url, params);
         const isSuccess = Tools.isEmpty(error);
         if (isSuccess) {
             this.onSubmitSuccess();
         } else {
-            this.onSubmitFail(error);
+            this.onSubmitFail(error, params);
         }
     };
 
@@ -147,8 +149,8 @@ export class ArticleEdit extends React.Component<Props, States> {
         }
     };
 
-    onSubmitFail = (formErrors: Object) => {
-        this.setState({formErrors});
+    onSubmitFail = (formErrors: Object, formValues: FormValues) => {
+        this.setState({formErrors, formValues});
     };
 
     renderRelatedArticle = () => {

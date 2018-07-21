@@ -37,9 +37,6 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
 
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
-        extra_kwargs = {
-            'uid': {'required': False},
-        }
 
     def create(self, validated_data):
         if 'category' in validated_data:
@@ -47,7 +44,9 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
             if category.single is True:
                 if Article.objects.filter(category_id=category.id).count() >= 1:
                     raise serializers.ValidationError({'detail': 'Can not add more item.'})
-        validated_data['uid'] = slugify(validated_data['title'])
+        validated_data['slug'] = slugify(validated_data['slug'])
+        if Article.objects.filter(slug=validated_data['slug']).count() >= 1:
+            raise serializers.ValidationError({'slug': 'Duplicate slug.'})
         article = Article(**validated_data)
         article.save()
 
@@ -61,9 +60,6 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
 class ArticleUpdateSerializer(ArticleBaseSerializer):
 
     class Meta(ArticleBaseSerializer.Meta):
-        extra_kwargs = {
-            'uid': {'required': False},
-        }
         exclude = ('uuid',)
 
     def update(self, instance, validated_data):
@@ -71,6 +67,9 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
         for tag in self.initial_data['tags'].split(','):
             if tag.isdigit():
                 instance.tags.add(tag)
+        validated_data['slug'] = slugify(validated_data['slug'])
+        if Article.objects.filter(slug=validated_data['slug']).count() >= 1:
+            raise serializers.ValidationError({'slug': 'Duplicate slug.'})
         instance.__dict__.update(validated_data)
         instance.save()
         return instance
