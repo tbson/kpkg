@@ -154,7 +154,7 @@ class ResetPasswordView(APIView):
         body = "Reset password confirm link: %s" % (url)
         to = user.email
 
-        Tools.sendEmail(subject, body, to)
+        Tools.sendEmailAsync(subject, body, to)
         return Response({"url": url})
 
 class ChangePasswordView(APIView):

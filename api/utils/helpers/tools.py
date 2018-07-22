@@ -2,11 +2,14 @@ import os
 import sys
 import uuid
 import magic
+import asyncio
 from PIL import Image
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
+
+loop = asyncio.get_event_loop()
 
 class Tools():
 
@@ -164,10 +167,17 @@ class Tools():
             email.content_subtype = "html"
             email.attach_alternative(body, "text/html")
             email.send()
-            print('Email sent.....')
         except Exception as e:
             print(e);
             error = Tools.returnException(e)
+
+    @staticmethod
+    def sendEmailAsync(*args):
+        Tools.asyncExec(Tools.sendEmail, *args);
+
+    @staticmethod
+    def asyncExec(func, *args):
+        loop.run_in_executor(None, func, *args)
 
     @staticmethod
     def userFromToken (token):
