@@ -2,7 +2,6 @@
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
 import {withRouter} from 'react-router-dom';
-import CustomModal from 'src/utils/components/CustomModal';
 import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesWithCheck, RowValues} from '../_data';
 import type {GetListResponseData} from 'src/utils/helpers/Tools';
