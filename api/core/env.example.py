@@ -39,6 +39,8 @@ TEST_ADMIN = {
 }
 TEST_FINGERPRINT = 'test-fingerprint'
 
+SLACK_WEBHOOK_URL = ''
+
 DEFAULT_FROM_EMAIL = '"APP_NAME"<admin@gmail.com>'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # 587 - 465 for SSL

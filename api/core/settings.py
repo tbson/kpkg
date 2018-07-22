@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import datetime
+from django.utils.log import DEFAULT_LOGGING
 from .env import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -183,4 +184,17 @@ ERROR_CODES = {
     'NOT_FOUND': 404,
     'METHOD_NOT_ALLOWED': 405,
     'INTERNAL_SERVER_ERROR': 500,
+}
+
+LOGGING = DEFAULT_LOGGING
+
+LOGGING['handlers']['slack_admins'] = {
+    'level': 'ERROR',
+    'filters': ['require_debug_false'],
+    'class': 'utils.helpers.slack_logger.SlackExceptionHandler',
+}
+
+LOGGING['loggers']['django'] = {
+    'handlers': ['console', 'slack_admins'],
+    'level': 'INFO',
 }
