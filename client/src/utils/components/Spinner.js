@@ -6,15 +6,15 @@ import Tools from 'src/utils/helpers/Tools';
 
 type Props = {};
 type State = {
-    spinning: boolean,
+    spinning: boolean
 };
 
 export default class Spinner extends React.Component<Props, State> {
+    state = {
+        spinning: false
+    };
     constructor(props: Props) {
         super(props);
-        this.state = {
-            spinning: false,
-        };
         Tools.emitter.addListener('TOGGLE_SPINNER', spinning => {
             this.setState({spinning});
         });
@@ -29,4 +29,3 @@ export default class Spinner extends React.Component<Props, State> {
         );
     }
 }
-

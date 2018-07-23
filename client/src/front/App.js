@@ -12,8 +12,6 @@ import {ToastContainer} from 'react-toastify';
 import {PUBLIC_URL} from 'src/constants';
 
 import 'src/utils/styles/main-front.css';
-// $FlowFixMe: webp import
-// import mainBg from 'src/assets/images/main-bg.jpg';
 
 import Spinner from 'src/utils/components/Spinner';
 
@@ -23,20 +21,23 @@ import ArticleDetail from './article/ArticleDetail';
 import ArticlesFromTag from './article/ArticlesFromTag';
 import NewsSection from './article/NewsSection';
 import KnowledgeSection from './article/KnowledgeSection';
+import Tools from 'src/utils/helpers/Tools';
+import Trans from 'src/utils/helpers/Trans';
 
 type Props = {};
 
 class App extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
+        Tools.emitter.addListener('CHANGE_LANG', Trans.setLang);
     }
 
     componentDidMount() {
         const mainBg = PUBLIC_URL + 'clients/front/main-bg.jpg';
         const body = window.document.body;
         body.style.backgroundImage = `url('${mainBg}')`;
-        body.style.backgroundAttachment = "fixed";
-        body.style.backgroundSize = "cover";
+        body.style.backgroundAttachment = 'fixed';
+        body.style.backgroundSize = 'cover';
     }
     render() {
         return (
