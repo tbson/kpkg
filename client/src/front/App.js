@@ -23,12 +23,15 @@ import NewsSection from './article/NewsSection';
 import KnowledgeSection from './article/KnowledgeSection';
 import Tools from 'src/utils/helpers/Tools';
 import Trans from 'src/utils/helpers/Trans';
+import translations from 'src/utils/translations.json';
+
 
 type Props = {};
 
 class App extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
+        Trans.initTranslations(translations);
         Tools.emitter.addListener('CHANGE_LANG', Trans.setLang);
     }
 
