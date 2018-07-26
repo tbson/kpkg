@@ -2,10 +2,26 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
-import {Pagination, SearchInput} from '../TableUtils';
+import {Pagination, SearchInput, LangButtons} from '../TableUtils';
 import Tools from 'src/utils/helpers/Tools';
+import Trans from 'src/utils/helpers/Trans';
 
 Enzyme.configure({adapter: new Adapter()});
+
+const translations = {
+    defaultLang: 'vi',
+    translated: [
+        {
+            vi: 'Xin chào',
+            en: 'Hello',
+            fr: 'Bonjour'
+        }
+    ]
+};
+
+Trans.initTranslations(translations);
+
+const langs = Trans.getLangs();
 
 describe('Pagination component', () => {
     it('No page', () => {
@@ -76,5 +92,36 @@ describe('SearchInput component', () => {
         };
         let wrapper = shallow(<SearchInput {...props} />);
         expect(wrapper.find('form').exists()).toEqual(false);
+    });
+});
+
+describe('LangButtons component', () => {
+    const props = {
+        id: 1,
+        getTranslationToEdit: jest.fn()
+    }
+
+    it('No langs', () => {
+        props.langs = [];
+        const wrapper = shallow(<LangButtons {...props} />);
+        expect(wrapper.text()).toEqual('');
+    });
+
+    it('Have langs', () => {
+        props.langs = langs;
+        const wrapper = shallow(<LangButtons {...props} />);
+
+        // Check UI
+        expect(wrapper.find('.pointer').first().text()).toEqual('EN');
+        expect(wrapper.find('.pointer').last().text()).toEqual('FR');
+
+        // Check click event
+        wrapper
+            .find('.pointer')
+            .first()
+            .simulate('click');
+        expect(props.getTranslationToEdit).toHaveBeenCalled();
+        expect(props.getTranslationToEdit.mock.calls[0][0]).toEqual(props.id);
+        expect(props.getTranslationToEdit.mock.calls[0][1]).toEqual('en');
     });
 });

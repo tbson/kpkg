@@ -4,7 +4,8 @@ import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 import Tools from 'src/utils/helpers/Tools';
 import {seeding} from '../_data';
-import {Row, LangButtons} from '../tables/BannerTable';
+import {Row} from '../tables/BannerTable';
+import {LangButtons} from 'src/utils/components/TableUtils';
 import Trans from 'src/utils/helpers/Trans';
 
 Enzyme.configure({adapter: new Adapter()});
@@ -90,37 +91,5 @@ describe('BannerTable Row method', () => {
             await instance.getItemToEdit(1);
             expect(props.toggleModal.mock.calls.length).toEqual(1);
         });
-    });
-});
-
-
-describe('LangButtons component', () => {
-    const props = {
-        id: 1,
-        getTranslationToEdit: jest.fn()
-    }
-
-    it('No langs', () => {
-        props.langs = [];
-        const wrapper = shallow(<LangButtons {...props} />);
-        expect(wrapper.text()).toEqual('');
-    });
-
-    it('Have langs', () => {
-        props.langs = langs;
-        const wrapper = shallow(<LangButtons {...props} />);
-
-        // Check UI
-        expect(wrapper.find('.pointer').first().text()).toEqual('EN');
-        expect(wrapper.find('.pointer').last().text()).toEqual('FR');
-
-        // Check click event
-        wrapper
-            .find('.pointer')
-            .first()
-            .simulate('click');
-        expect(props.getTranslationToEdit).toHaveBeenCalled();
-        expect(props.getTranslationToEdit.mock.calls[0][0]).toEqual(props.id);
-        expect(props.getTranslationToEdit.mock.calls[0][1]).toEqual('en');
     });
 });

@@ -9,7 +9,7 @@ import BannerForm from '../forms/BannerForm';
 import BannerTranslationForm from '../forms/BannerTranslationForm';
 import DefaultModal from 'src/utils/components/DefaultModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
-import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
+import {Pagination, SearchInput, LangButtons} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
 import Trans from 'src/utils/helpers/Trans';
 
@@ -328,30 +328,6 @@ export class Row extends React.Component<RowPropTypes> {
                     </a>
                 </td>
             </tr>
-        );
-    }
-}
-
-type LangButtonsProps = {
-    id: number,
-    langs: Array<string>,
-    getTranslationToEdit: Function
-};
-export class LangButtons extends React.Component<LangButtonsProps> {
-    render() {
-        const {id, langs, getTranslationToEdit} = this.props;
-        if (!langs.length) return null;
-        return (
-            <span>
-                {langs.map(lang => (
-                    <span key={lang}>
-                        &nbsp;&nbsp;&nbsp;
-                        <a className="pointer" onClick={() => getTranslationToEdit(id, lang)}>
-                            {lang.toUpperCase()}
-                        </a>
-                    </span>
-                ))}
-            </span>
         );
     }
 }

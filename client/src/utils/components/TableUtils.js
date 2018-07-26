@@ -3,12 +3,12 @@ import * as React from 'react';
 
 type SearchInputPropTypes = {
     show: boolean,
-    onSearch: Function,
+    onSearch: Function
 };
 
 export class SearchInput extends React.Component<SearchInputPropTypes> {
     static defaultProps = {
-        show: true,
+        show: true
     };
 
     render() {
@@ -31,7 +31,7 @@ export class SearchInput extends React.Component<SearchInputPropTypes> {
 type PaginationPropTypes = {
     next: ?string,
     prev: ?string,
-    onNavigate: Function,
+    onNavigate: Function
 };
 export class Pagination extends React.Component<PaginationPropTypes> {
     renderPrev(prev: ?string) {
@@ -51,7 +51,7 @@ export class Pagination extends React.Component<PaginationPropTypes> {
             <button className="btn btn-primary btn-sm" key="2" onClick={() => this.props.onNavigate(next)}>
                 Next &nbsp;
                 <span className="oi oi-chevron-right pointer" />
-            </button>,
+            </button>
         ];
     }
 
@@ -65,10 +65,34 @@ export class Pagination extends React.Component<PaginationPropTypes> {
     }
 }
 
+type LangButtonsProps = {
+    id: number,
+    langs: Array<string>,
+    getTranslationToEdit: Function
+};
+export class LangButtons extends React.Component<LangButtonsProps> {
+    render() {
+        const {id, langs, getTranslationToEdit} = this.props;
+        if (!langs.length) return null;
+        return (
+            <span>
+                {langs.map(lang => (
+                    <span key={lang}>
+                        &nbsp;&nbsp;&nbsp;
+                        <a className="pointer" onClick={() => getTranslationToEdit(id, lang)}>
+                            {lang.toUpperCase()}
+                        </a>
+                    </span>
+                ))}
+            </span>
+        );
+    }
+}
+
 type FrontPaginationPropTypes = {
     next: ?string,
     prev: ?string,
-    onNavigate: Function,
+    onNavigate: Function
 };
 export class FrontPagination extends React.Component<FrontPaginationPropTypes> {
     renderPrev(prev: ?string) {
@@ -109,6 +133,6 @@ const styles = {
         backgroundColor: 'rgb(38, 38, 38)',
         padding: '5px 0',
         color: 'white',
-        textAlign: 'center',
-    },
+        textAlign: 'center'
+    }
 };
