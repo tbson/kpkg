@@ -3,21 +3,36 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 import {Link} from 'react-router-dom';
-import Tools from 'src/utils/helpers/Tools';
 import {seeding} from '../_data';
 import {Row} from '../tables/ArticleTable';
+import Tools from 'src/utils/helpers/Tools';
+import Trans from 'src/utils/helpers/Trans';
 
 Enzyme.configure({adapter: new Adapter()});
 
 let wrapper;
 let instance;
+const translations = {
+    defaultLang: 'vi',
+    translated: [
+        {
+            vi: 'Xin chào',
+            en: 'Hello',
+            fr: 'Bonjour'
+        }
+    ]
+};
+
+Trans.initTranslations(translations);
 const data = seeding(1, true);
+const langs = Trans.getLangs();
 const parent = {
     id: 1,
     type: 'category'
 };
 const props = {
     data,
+    langs,
     parent,
     handleRemove: jest.fn(),
     onCheck: jest.fn()

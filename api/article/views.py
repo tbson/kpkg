@@ -9,8 +9,9 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Article
+from .models import Article, ArticleTranslation
 from .serializers import (
+    ArticleTranslationSerializer,
     ArticleBaseSerializer,
     ArticleRetrieveSerializer,
     ArticleCreateSerializer,
@@ -48,6 +49,13 @@ class UpdateView(UpdateAPIView):
     permission_classes = [CustomPermission]
     queryset = Article.objects.all()
     serializer_class = ArticleUpdateSerializer
+
+
+class UpdateTranslationView(UpdateAPIView):
+    permissions = ['change_article']
+    permission_classes = [CustomPermission]
+    queryset = ArticleTranslation.objects.all()
+    serializer_class = ArticleTranslationSerializer
 
 
 class DeleteView(DestroyAPIView):
@@ -88,4 +96,9 @@ class PKEndPoint(BaseManageView):
         'GET': DetailView.as_view,
         'PUT': UpdateView.as_view,
         'DELETE': DeleteView.as_view,
+    }
+
+class TranslationPKEndPoint(BaseManageView):
+    VIEWS_BY_METHOD = {
+        'PUT': UpdateTranslationView.as_view,
     }

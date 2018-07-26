@@ -12,8 +12,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 from .models import Banner, BannerTranslation
 from .serializers import (
-    BannerBaseSerializer,
     BannerTranslationSerializer,
+    BannerBaseSerializer,
     BannerRetrieveSerializer,
     BannerCreateSerializer,
     BannerUpdateSerializer,

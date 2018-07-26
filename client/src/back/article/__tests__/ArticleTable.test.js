@@ -7,6 +7,7 @@ import {ArticleTable} from '../tables/ArticleTable';
 import {seeding, defaultFormValues} from '../_data';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import Tools from 'src/utils/helpers/Tools';
+import Trans from 'src/utils/helpers/Trans';
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -16,6 +17,19 @@ const parent = {
 }
 
 const searchForm = true;
+
+const translations = {
+    defaultLang: 'vi',
+    translated: [
+        {
+            vi: 'Xin chào',
+            en: 'Hello',
+            fr: 'Bonjour'
+        }
+    ]
+};
+
+Trans.initTranslations(translations);
 
 describe('ArticleTable component', () => {
     beforeAll(() => {

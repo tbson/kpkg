@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from banner.models import Banner
-from banner.models import Banner, BannerTranslation
 from article.models import Article
 
 
@@ -14,5 +13,9 @@ class Command(BaseCommand):
         listBanner = Banner.objects.all();
         for banner in listBanner:
             Banner.objects.addTranslations(banner)
+
+        listArticle = Article.objects.all();
+        for article in listArticle:
+            Article.objects.addTranslations(article)
 
         self.stdout.write(self.style.SUCCESS('Success!'))

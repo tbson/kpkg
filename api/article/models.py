@@ -6,7 +6,6 @@ from django.conf import settings
 from django.db import models
 from utils.helpers.tools import Tools
 from category.models import Category
-from banner.models import Banner
 from attach.models import Attach
 from tag.models import Tag
 
@@ -14,6 +13,16 @@ def image_destination(instance, filename):
     # ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), 'jpg')
     return os.path.join('article', filename)
+
+class ArticleManager(models.Manager):
+    def addTranslations(self, article):
+        for lang in settings.LANGUAGES:
+            translationData = {
+                    "article": article,
+                    "lang": lang
+            }
+            translation = ArticleTranslation(**translationData)
+            translation.save();
 
 # Create your models here.
 class Article(models.Model):
@@ -32,6 +41,7 @@ class Article(models.Model):
     order = models.IntegerField(default=1)
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = ArticleManager()
 
     def save(self, *args, **kwargs):
 
@@ -72,3 +82,13 @@ class Article(models.Model):
             ("view_article_list", "Can view article list"),
             ("view_article_detail", "Can view article detail"),
         )
+
+class ArticleTranslation(models.Model):
+    article = models.ForeignKey(Article, related_name="article_translations", on_delete=models.CASCADE)
+    lang = models.CharField(max_length=5)
+    title = models.CharField(blank=True, max_length=256)
+    description = models.TextField(blank=True)
+    content = models.TextField(blank=True)
+    class Meta:
+        db_table = "article_translations"
+        ordering = ['-id']

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
-from .models import Article
+from .models import Article, ArticleTranslation
 from category.models import Category
 from attach.models import Attach
 from tag.models import Tag
@@ -31,6 +31,11 @@ class ArticleRetrieveSerializer(ArticleBaseSerializer):
     class Meta(ArticleBaseSerializer.Meta):
         exclude = ()
     category = CategoryBaseSerializer()
+    translations = SerializerMethodField()
+
+    def get_translations(self, obj):
+        result = ArticleTranslation.objects.filter(article=obj.pk)
+        return ArticleTranslationSerializer(result, many=True).data
 
 
 class ArticleCreateSerializer(ArticleBaseSerializer):
@@ -54,6 +59,7 @@ class ArticleCreateSerializer(ArticleBaseSerializer):
             if tag.isdigit():
                 article.tags.add(tag)
 
+        Article.objects.addTranslations(article)
         return article
 
 
@@ -100,3 +106,14 @@ class ArticleLandingRetrieveSerializer(ArticleLandingSerializer):
         result = Article.objects.exclude(pk=obj.pk).filter(tags__in=obj.tags.all()).order_by('-id')
         return ArticleBaseSerializer(result, many=True).data
 
+
+class ArticleTranslationSerializer(ModelSerializer):
+
+    class Meta:
+        model = ArticleTranslation
+        exclude = ()
+        read_only_fields = ('id',)
+        extra_kwargs = {
+            'article': {'required': False},
+            'lang': {'required': False},
+        }
