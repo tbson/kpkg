@@ -11,7 +11,16 @@ def image_destination(instance, filename):
     filename = "%s.%s" % (uuid.uuid4(), 'jpg')
     return os.path.join('banner', filename)
 
-# Create your models here.
+class BannerManager(models.Manager):
+    def addTranslations(self, banner):
+        for lang in settings.LANGUAGES:
+            translationData = {
+                    "banner": banner,
+                    "lang": lang
+            }
+            translation = BannerTranslation(**translationData)
+            translation.save();
+
 class Banner(models.Model):
     category = models.ForeignKey(Category, related_name="banners", on_delete=models.CASCADE)
     uuid = models.CharField(max_length=36, blank=True)
@@ -20,6 +29,7 @@ class Banner(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to=image_destination)
     order = models.IntegerField(default=1)
+    objects = BannerManager()
 
     def save(self, *args, **kwargs):
 
@@ -48,3 +58,13 @@ class Banner(models.Model):
             ("view_banner_list", "Can view banner list"),
             ("view_banner_detail", "Can view banner detail"),
         )
+
+
+class BannerTranslation(models.Model):
+    banner = models.ForeignKey(Banner, related_name="banner_translations", on_delete=models.CASCADE)
+    lang = models.CharField(max_length=5)
+    title = models.CharField(blank=True, max_length=256)
+    description = models.TextField(blank=True)
+    class Meta:
+        db_table = "banner_translations"
+        ordering = ['-id']

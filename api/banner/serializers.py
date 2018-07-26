@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
-from .models import Banner
+from .models import Banner, BannerTranslation
 from category.models import Category
 from category.serializers import CategoryBaseSerializer
 
@@ -24,6 +24,11 @@ class BannerRetrieveSerializer(BannerBaseSerializer):
     class Meta(BannerBaseSerializer.Meta):
         exclude = ()
     category = CategoryBaseSerializer()
+    translations = SerializerMethodField()
+
+    def get_translations(self, obj):
+        result = BannerTranslation.objects.filter(banner=obj.pk)
+        return BannerTranslationSerializer(result, many=True).data
 
 
 class BannerCreateSerializer(BannerBaseSerializer):
@@ -41,6 +46,7 @@ class BannerCreateSerializer(BannerBaseSerializer):
         validated_data['uid'] = slugify(validated_data['title'])
         banner = Banner(**validated_data)
         banner.save()
+        Banner.objects.addTranslations(banner)
         return banner
 
 
@@ -53,3 +59,14 @@ class BannerUpdateSerializer(BannerBaseSerializer):
         }
         exclude = ('uuid',)
 
+
+class BannerTranslationSerializer(ModelSerializer):
+
+    class Meta:
+        model = BannerTranslation
+        exclude = ()
+        read_only_fields = ('id',)
+        extra_kwargs = {
+            'banner': {'required': False},
+            'lang': {'required': False},
+        }

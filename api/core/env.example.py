@@ -27,7 +27,7 @@ DATABASES = {
         },
     },
 }
-
+LANGUAGES = []
 FIRST_USER_USERNAME = 'admin'
 FIRST_USER_PASSWORD = 'admin'
 TEST_ADMIN = {

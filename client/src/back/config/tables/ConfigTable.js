@@ -194,11 +194,7 @@ export class ConfigTable extends React.Component<Props, States> {
                                 />
                             </th>
                             <th className="row25 right" colSpan="99">
-                                <Pagination
-                                    next={this.nextUrl}
-                                    prev={this.prevUrl}
-                                    onNavigate={this.getList}
-                                />
+                                <Pagination next={this.nextUrl} prev={this.prevUrl} onNavigate={this.getList} />
                             </th>
                         </tr>
                     </tfoot>

@@ -10,9 +10,10 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from .models import Banner
+from .models import Banner, BannerTranslation
 from .serializers import (
     BannerBaseSerializer,
+    BannerTranslationSerializer,
     BannerRetrieveSerializer,
     BannerCreateSerializer,
     BannerUpdateSerializer,
@@ -49,6 +50,13 @@ class UpdateView(UpdateAPIView):
     permission_classes = [CustomPermission]
     queryset = Banner.objects.all()
     serializer_class = BannerUpdateSerializer
+
+
+class UpdateTranslationView(UpdateAPIView):
+    permissions = ['change_banner']
+    permission_classes = [CustomPermission]
+    queryset = BannerTranslation.objects.all()
+    serializer_class = BannerTranslationSerializer
 
 
 class DeleteView(DestroyAPIView):
@@ -89,4 +97,9 @@ class PKEndPoint(BaseManageView):
         'GET': DetailView.as_view,
         'PUT': UpdateView.as_view,
         'DELETE': DeleteView.as_view,
+    }
+
+class TranslationPKEndPoint(BaseManageView):
+    VIEWS_BY_METHOD = {
+        'PUT': UpdateTranslationView.as_view,
     }

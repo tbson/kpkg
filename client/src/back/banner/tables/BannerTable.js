@@ -6,18 +6,23 @@ import {apiUrls, defaultFormValues} from '../_data';
 import type {FormValues, FormValuesWithCheck} from '../_data';
 import type {GetListResponseData} from 'src/utils/helpers/Tools';
 import BannerForm from '../forms/BannerForm';
+import BannerTranslationForm from '../forms/BannerTranslationForm';
 import DefaultModal from 'src/utils/components/DefaultModal';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import {Pagination, SearchInput} from 'src/utils/components/TableUtils';
 import Tools from 'src/utils/helpers/Tools';
+import Trans from 'src/utils/helpers/Trans';
 
 type Props = {
     match: Object,
     list?: Array<FormValuesWithCheck>
 };
 type States = {
+    langs: Array<string>,
+    lang: string,
     dataLoaded: boolean,
     modal: boolean,
+    translationModal: boolean,
     list: Array<FormValuesWithCheck>,
     uuid: string,
     formValues: FormValues,
@@ -31,8 +36,11 @@ export class BannerTable extends React.Component<Props, States> {
     prevUrl: ?string;
 
     state = {
+        langs: [],
+        lang: Trans.getDefaultLang(),
         dataLoaded: false,
         modal: false,
+        translationModal: false,
         list: [],
         uuid: '',
         formValues: defaultFormValues,
@@ -48,6 +56,8 @@ export class BannerTable extends React.Component<Props, States> {
 
     componentDidMount() {
         this.getList();
+        const langs = Trans.getLangs();
+        this.setState({langs});
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: States) {
@@ -71,10 +81,10 @@ export class BannerTable extends React.Component<Props, States> {
         });
     };
 
-    toggleModal = (modalName: string, formValues: Object = {}, uuid: string = '') => {
+    toggleModal = (modalName: string, formValues: Object = {}, extra?: Object) => {
         let state = {...Tools.toggleModal(this.state, modalName, formValues)};
-        if (uuid) {
-            state = {...state, uuid};
+        if (extra) {
+            state = {...state, ...extra};
         }
         this.setState(state);
     };
@@ -110,6 +120,22 @@ export class BannerTable extends React.Component<Props, States> {
         const isSuccess = Tools.isEmpty(error);
         if (isSuccess) {
             this.onSubmitSuccess(isEdit, data);
+        } else {
+            this.onSubmitFail(error);
+        }
+    };
+
+    updateTranslation = async (event: Object) => {
+        event.preventDefault();
+        const params = Tools.formDataToObj(new FormData(event.target));
+        const isEdit = params.id ? true : false;
+        let url = apiUrls.crud + 'translation/';
+        if (isEdit) url += String(params.id);
+
+        const {data, error} = await Tools.handleSubmit(url, params);
+        const isSuccess = Tools.isEmpty(error);
+        if (isSuccess) {
+            this.toggleModal('translationModal');
         } else {
             this.onSubmitFail(error);
         }
@@ -157,10 +183,11 @@ export class BannerTable extends React.Component<Props, States> {
 
     render() {
         if (!this.state.dataLoaded) return <LoadingLabel />;
-        const {list} = this.state;
+        const {list, langs} = this.state;
         const formValues = this.state.formValues ? this.state.formValues : defaultFormValues;
         const formErrors = this.state.formErrors ? this.state.formErrors : {};
         const modalTitle = formValues.id ? 'Update banner' : 'Add new banner';
+        const translationModalTitle = `Update translation: ${this.state.lang.toUpperCase()}`;
 
         return (
             <div>
@@ -177,10 +204,10 @@ export class BannerTable extends React.Component<Props, States> {
                             <th scope="col">Title</th>
                             <th scope="col">Category</th>
                             <th scope="col">Order</th>
-                            <th scope="col" style={{padding: 8}} className="row80">
+                            <th scope="col" style={{padding: 8}} className="row150">
                                 <button
                                     className="btn btn-primary btn-sm btn-block add-button"
-                                    onClick={() => this.toggleModal('modal', {}, Tools.uuid4())}>
+                                    onClick={() => this.toggleModal('modal', {}, {uid: Tools.uuid4()})}>
                                     <span className="oi oi-plus" />&nbsp; Add
                                 </button>
                             </th>
@@ -191,6 +218,7 @@ export class BannerTable extends React.Component<Props, States> {
                         {list.map((data, key) => (
                             <Row
                                 className="table-row"
+                                langs={langs}
                                 data={data}
                                 key={key}
                                 toggleModal={this.toggleModal}
@@ -226,6 +254,23 @@ export class BannerTable extends React.Component<Props, States> {
                         </button>
                     </BannerForm>
                 </DefaultModal>
+
+                <DefaultModal
+                    open={this.state.translationModal}
+                    title={translationModalTitle}
+                    handleClose={() => this.toggleModal('translationModal')}>
+                    <BannerTranslationForm
+                        formValues={formValues}
+                        formErrors={formErrors}
+                        handleSubmit={this.updateTranslation}>
+                        <button
+                            type="button"
+                            onClick={() => this.toggleModal('translationModal')}
+                            className="btn btn-warning">
+                            <span className="oi oi-x" />&nbsp; Cancel
+                        </button>
+                    </BannerTranslationForm>
+                </DefaultModal>
             </div>
         );
     }
@@ -233,6 +278,7 @@ export class BannerTable extends React.Component<Props, States> {
 export default withRouter(BannerTable);
 
 type RowPropTypes = {
+    langs: Array<string>,
     data: FormValuesWithCheck,
     toggleModal: Function,
     handleRemove: Function,
@@ -243,12 +289,21 @@ export class Row extends React.Component<RowPropTypes> {
         const result = await Tools.getItem(apiUrls.crud, id);
         if (result) {
             const {uuid} = result;
-            this.props.toggleModal('modal', result, uuid);
+            this.props.toggleModal('modal', result, {uuid});
+        }
+    };
+
+    getTranslationToEdit = async (id: number, lang: string) => {
+        const result = await Tools.getItem(apiUrls.crud, id);
+        if (result) {
+            const {translations} = result;
+            const translation = translations.find(item => item.lang == lang);
+            this.props.toggleModal('translationModal', translation, {lang});
         }
     };
 
     render() {
-        const {data, toggleModal, handleRemove, onCheck} = this.props;
+        const {data, langs, toggleModal, handleRemove, onCheck} = this.props;
         return (
             <tr>
                 <th className="row25">
@@ -264,14 +319,39 @@ export class Row extends React.Component<RowPropTypes> {
                 <td className="order">{data.order}</td>
                 <td className="center">
                     <a className="editBtn" onClick={() => this.getItemToEdit(parseInt(data.id))}>
-                        <span className="editBtn oi oi-pencil text-info pointer" />
+                        <span className="oi oi-pencil text-info pointer" />
                     </a>
+                    <LangButtons langs={langs} getTranslationToEdit={this.getTranslationToEdit} id={data.id} />
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <a className="removeBtn" onClick={() => handleRemove(String(data.id))}>
                         <span className="oi oi-x text-danger pointer" />
                     </a>
                 </td>
             </tr>
+        );
+    }
+}
+
+type LangButtonsProps = {
+    id: number,
+    langs: Array<string>,
+    getTranslationToEdit: Function
+};
+export class LangButtons extends React.Component<LangButtonsProps> {
+    render() {
+        const {id, langs, getTranslationToEdit} = this.props;
+        if (!langs.length) return null;
+        return (
+            <span>
+                {langs.map(lang => (
+                    <span key={lang}>
+                        &nbsp;&nbsp;&nbsp;
+                        <a className="pointer" onClick={() => getTranslationToEdit(id, lang)}>
+                            {lang.toUpperCase()}
+                        </a>
+                    </span>
+                ))}
+            </span>
         );
     }
 }

@@ -89,6 +89,11 @@ input:invalid {
     width: 80px;
 }
 
+.row150 {
+    min-width: 150px;
+    width: 150px;
+}
+
 .md-block-image-inner-container img {
     width: 100%;
 }

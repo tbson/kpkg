@@ -7,15 +7,29 @@ import {BannerTable} from '../tables/BannerTable';
 import {seeding, defaultFormValues} from '../_data';
 import LoadingLabel from 'src/utils/components/LoadingLabel';
 import Tools from 'src/utils/helpers/Tools';
+import Trans from 'src/utils/helpers/Trans';
 
 Enzyme.configure({adapter: new Adapter()});
 
-const category = 1
+const category = 1;
 const match = {
     params: {
         categoryId: category
     }
 };
+
+const translations = {
+    defaultLang: 'vi',
+    translated: [
+        {
+            vi: 'Xin chào',
+            en: 'Hello',
+            fr: 'Bonjour'
+        }
+    ]
+};
+
+Trans.initTranslations(translations);
 
 describe('BannerTable component', () => {
     beforeAll(() => {

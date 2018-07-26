@@ -27,12 +27,16 @@ import Category from './category/Category';
 import Banner from './banner/Banner';
 import Article from './article/Article';
 import ArticleEditWrapper from './article/ArticleEditWrapper';
+import Trans from 'src/utils/helpers/Trans';
+import translations from 'src/utils/translations.json';
+
 
 type Props = {};
 
 class App extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
+        Trans.initTranslations(translations);
     }
 
     componentDidMount() {
