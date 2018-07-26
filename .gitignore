@@ -13,10 +13,11 @@ api/core/env.py
 api/public/static/rest_framework_swagger/
 api/public/static/rest_framework/
 api/public/static/admin/
-api/htmlcov/
+api/public/htmlcov/
 api/public/media/
 api/public/clients/
 client/node_modules/
+client/coverage/
 client/build/
 client/dist/
 client/logfile
