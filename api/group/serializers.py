@@ -41,8 +41,8 @@ class GroupBaseSerializer(ModelSerializer):
             if permission.isdigit():
                 permissions.append(int(permission))
 
-        instance.permissions.clear()
         if len(list(permissions)):
+            instance.permissions.clear()
             instance.permissions.set(permissions)
 
         name = validated_data.get('name', None)
