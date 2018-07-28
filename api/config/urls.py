@@ -1,17 +1,17 @@
 import os
 from django.urls import path
 from .views import (
-    MainViewSet,
+    ConfigViewSet,
 )
 
 
-baseEndPoint = MainViewSet.as_view({
+baseEndPoint = ConfigViewSet.as_view({
     'get': 'list',
     'post': 'create',
-    'delete': 'bulk_destroy'
+    'delete': 'destroy_list'
 })
 
-pkEndpoint = MainViewSet.as_view({
+pkEndpoint = ConfigViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'delete': 'destroy'

@@ -15,20 +15,22 @@ from .models import Config
 from .serializers import (
     ConfigBaseSerializer,
 )
-from utils.common_classes.custom_permission import CustomPermission
+from utils.common_classes.custom_permission import CustomPermissionExp
 from rest_framework.permissions import AllowAny
 
 
-class MainViewSet(GenericViewSet):
+class ConfigViewSet(GenericViewSet):
     permissions = (
-        'view_config_list',
-        'view_config_detail',
-        'add_config',
-        'edit_config',
-        'delete_config',
+        'list_config',
+        'retrieve_config',
+        'create_config',
+        'update_config',
+        'destroy_config',
+        'destroy_list_config',
     )
+    name = 'config'
     serializer_class = ConfigBaseSerializer
-    permission_classes = (CustomPermission, )
+    permission_classes = (CustomPermissionExp, )
     search_fields = ('uid', 'value')
 
     def list(self, request):
@@ -61,7 +63,7 @@ class MainViewSet(GenericViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['delete'], detail=True)
-    def bulk_destroy(self, request):
+    def destroy_list(self, request):
         pk = self.request.query_params.get('ids', '')
         pk = [int(pk)] if pk.isdigit() else map(lambda x: int(x), pk.split(','))
         result = Config.objects.filter(pk__in=pk)
