@@ -1,13 +1,24 @@
 import os
 from django.urls import path
 from .views import (
-    BaseEndPoint,
-    PKEndPoint,
+    MainViewSet,
 )
 
 
+baseEndPoint = MainViewSet.as_view({
+    'get': 'list',
+    'post': 'create',
+    'delete': 'bulk_destroy'
+})
+
+pkEndpoint = MainViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
 app_name = os.getcwd().split(os.sep)[-1]
 urlpatterns = [
-    path('', BaseEndPoint.as_view()),
-    path('<int:pk>', PKEndPoint.as_view()),
+    path('', baseEndPoint),
+    path('<int:pk>', pkEndpoint),
 ]
