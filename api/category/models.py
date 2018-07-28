@@ -29,6 +29,6 @@ class Category(models.Model):
         db_table = "categories"
         ordering = ['-id']
         permissions = (
-            ("view_category_list", "Can view category list"),
-            ("view_category_detail", "Can view category detail"),
+            ("list_category", "Can list category"),
+            ("retrieve_category", "Can retrieve category"),
         )

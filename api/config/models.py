@@ -13,6 +13,6 @@ class Config(models.Model):
         db_table = "configs"
         ordering = ['-id']
         permissions = (
-            ("list_config", "Can view config list"),
-            ("retrieve_config", "Can view config detail"),
+            ("list_config", "Can list config"),
+            ("retrieve_config", "Can retrieve config"),
         )
