@@ -132,7 +132,6 @@ export class GroupTable extends React.Component<Props, States> {
         const isEdit = params.id ? true : false;
         let url = apiUrls.crud;
         if (isEdit) url += String(params.id);
-
         const {data, error} = await Tools.handleSubmit(url, params);
         const isSuccess = Tools.isEmpty(error);
         if (isSuccess) {

@@ -87,7 +87,6 @@ export class PermissionTable extends React.Component<Props, States> {
         const isEdit = params.id ? true : false;
         let url = apiUrls.crud;
         if (isEdit) url += String(params.id);
-
         const {data, error} = await Tools.handleSubmit(url, params);
         const isSuccess = Tools.isEmpty(error);
         if (isSuccess) {
@@ -141,7 +140,6 @@ export class PermissionTable extends React.Component<Props, States> {
                                 key={key}
                                 toggleModal={this.toggleModal}
                                 handleRemove={() => {}}
-                                onCheck={this.handleCheck}
                             />
                         ))}
                     </tbody>
@@ -162,8 +160,7 @@ export default withRouter(PermissionTable);
 type RowPropTypes = {
     data: RowValues,
     toggleModal: Function,
-    handleRemove: Function,
-    onCheck: Function
+    handleRemove: Function
 };
 
 export class Row extends React.Component<RowPropTypes> {
