@@ -266,10 +266,11 @@ export class Row extends React.Component<RowPropTypes> {
             <tr>
                 <th className="row25">
                     <input
+                        id={data.id}
                         className="check"
                         type="checkbox"
                         checked={data.checked}
-                        onChange={event => this.props.onCheck(data, event)}
+                        onChange={this.props.onCheck}
                     />
                 </th>
                 <td className="title">
