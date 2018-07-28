@@ -15,4 +15,5 @@ class Config(models.Model):
         permissions = (
             ("list_config", "Can list config"),
             ("retrieve_config", "Can retrieve config"),
+            ("delete_list_config", "Can delete list config"),
         )

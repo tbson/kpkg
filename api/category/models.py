@@ -31,4 +31,5 @@ class Category(models.Model):
         permissions = (
             ("list_category", "Can list category"),
             ("retrieve_category", "Can retrieve category"),
+            ("delete_list_category", "Can delete list category"),
         )

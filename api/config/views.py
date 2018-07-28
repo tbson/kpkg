@@ -14,10 +14,10 @@ class ConfigViewSet(GenericViewSet):
     permissions = (
         'list_config',
         'retrieve_config',
-        'create_config',
-        'update_config',
-        'destroy_config',
-        'destroy_list_config',
+        'add_config',
+        'change_config',
+        'delete_config',
+        'delete_list_config',
     )
     name = 'config'
     serializer_class = ConfigBaseSerializer
@@ -36,25 +36,28 @@ class ConfigViewSet(GenericViewSet):
         serializer = ConfigBaseSerializer(obj)
         return Response(serializer.data)
 
-    def create(self, request):
+    @action(methods=['post'], detail=True)
+    def add(self, request):
         serializer = ConfigBaseSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
 
-    def update(self, request, pk=None):
+    @action(methods=['put'], detail=True)
+    def change(self, request, pk=None):
         obj = Config.objects.get(pk=pk)
         serializer = ConfigBaseSerializer(obj, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
 
-    def destroy(self, request, pk=None):
+    @action(methods=['delete'], detail=True)
+    def delete(self, request, pk=None):
         Config.objects.get(pk=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['delete'], detail=True)
-    def destroy_list(self, request):
+    @action(methods=['delete'], detail=False)
+    def delete_list(self, request):
         pk = self.request.query_params.get('ids', '')
         pk = [int(pk)] if pk.isdigit() else map(lambda x: int(x), pk.split(','))
         result = Config.objects.filter(pk__in=pk)

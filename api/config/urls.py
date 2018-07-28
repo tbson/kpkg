@@ -7,14 +7,14 @@ from .views import (
 
 baseEndPoint = ConfigViewSet.as_view({
     'get': 'list',
-    'post': 'create',
-    'delete': 'destroy_list'
+    'post': 'add',
+    'delete': 'delete_list'
 })
 
 pkEndpoint = ConfigViewSet.as_view({
     'get': 'retrieve',
-    'put': 'update',
-    'delete': 'destroy'
+    'put': 'change',
+    'delete': 'delete'
 })
 
 app_name = os.getcwd().split(os.sep)[-1]

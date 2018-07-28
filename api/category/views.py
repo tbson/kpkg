@@ -14,10 +14,10 @@ class CategoryViewSet(GenericViewSet):
     permissions = (
         'list_category',
         'retrieve_category',
-        'create_category',
-        'update_category',
-        'destroy_category',
-        'destroy_list_category',
+        'add_category',
+        'change_category',
+        'delete_category',
+        'delete_list_category',
     )
     name = 'category'
     serializer_class = CategoryBaseSerializer
@@ -37,25 +37,28 @@ class CategoryViewSet(GenericViewSet):
         serializer = CategoryBaseSerializer(obj)
         return Response(serializer.data)
 
-    def create(self, request):
+    @action(methods=['post'], detail=True)
+    def add(self, request):
         serializer = CategoryBaseSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
 
-    def update(self, request, pk=None):
+    @action(methods=['put'], detail=True)
+    def change(self, request, pk=None):
         obj = Category.objects.get(pk=pk)
         serializer = CategoryBaseSerializer(obj, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)
 
-    def destroy(self, request, pk=None):
+    @action(methods=['delete'], detail=True)
+    def delete(self, request, pk=None):
         Category.objects.get(pk=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['delete'], detail=True)
-    def destroy_list(self, request):
+    @action(methods=['delete'], detail=False)
+    def delete_list(self, request):
         pk = self.request.query_params.get('ids', '')
         pk = [int(pk)] if pk.isdigit() else map(lambda x: int(x), pk.split(','))
         result = Category.objects.filter(pk__in=pk)

@@ -46,6 +46,7 @@ class Staff(models.Model):
         db_table = "staffs"
         ordering = ['-id']
         permissions = (
-            ("view_staff_list", "Can view staff list"),
-            ("view_staff_detail", "Can view staff detail"),
+            ("list_staff", "Can list staff"),
+            ("retrieve_staff", "Can retrieve staff"),
+            ("delete_list_staff", "Can delete list staff"),
         )
