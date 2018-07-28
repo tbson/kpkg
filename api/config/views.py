@@ -1,22 +1,13 @@
 from django.http import Http404
 from rest_framework.decorators import action
-from rest_framework.viewsets import (ViewSet, GenericViewSet, )
+from rest_framework.viewsets import (GenericViewSet, )
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import (
-    ListAPIView,
-    RetrieveAPIView,
-    CreateAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
-)
 from rest_framework import status
 from .models import Config
 from .serializers import (
     ConfigBaseSerializer,
 )
 from utils.common_classes.custom_permission import CustomPermissionExp
-from rest_framework.permissions import AllowAny
 
 
 class ConfigViewSet(GenericViewSet):
