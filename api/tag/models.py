@@ -14,7 +14,8 @@ class Tag(TimeStampedModel):
         db_table = "tags"
         ordering = ['-id']
         permissions = (
-            ("view_tag_list", "Can view tag list"),
-            ("view_tag_detail", "Can view tag detail"),
+            ("list_tag", "Can list tag"),
+            ("retrieve_tag", "Can retrieve tag"),
+            ("delete_list_tag", "Can delete list tag"),
         )
 
