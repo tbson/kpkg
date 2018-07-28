@@ -3,7 +3,7 @@ from django.urls import path, include
 
 
 app_name = os.getcwd().split(os.sep)[-1]
-urlpatterns = [
+urlpatterns = (
     path(
         'admin/',
         include('administrator.urls', namespace='administrator'),
@@ -52,5 +52,5 @@ urlpatterns = [
         'landing/',
         include('landing_api.urls', namespace='landing_api'),
     ),
-]
+)
 

@@ -138,6 +138,17 @@ REST_FRAMEWORK = {
     ],
 }
 
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': '/dadmin/login',
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    }
+}
+
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=3),
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=3),
