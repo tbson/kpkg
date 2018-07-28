@@ -170,6 +170,10 @@ export default class Tools {
         return token ? token : '';
     }
 
+    static getLang(): string {
+        return this.getStorageStr('lang');
+    }
+
     static getApiBaseUrl(): String {
         return PROTOCOL + DOMAIN + API_PREFIX;
     }
@@ -308,6 +312,7 @@ export default class Tools {
             let requestConfig: Object = {
                 method: method,
                 headers: {
+                    lang: this.getLang() || undefined,
                     'Content-Type': 'application/json',
                     fingerprint: await this.getFingerPrint()
                 },
