@@ -19,6 +19,9 @@ class Staff(models.Model):
     image = models.ImageField(upload_to=image_destination)
     order = models.IntegerField(default=1)
 
+    def __str__(self):
+        return '{} {}'.format(self.title, self.fullname)
+
     def save(self, *args, **kwargs):
 
         if not self._state.adding and self.image:

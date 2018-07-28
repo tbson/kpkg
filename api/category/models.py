@@ -11,6 +11,8 @@ class Category(models.Model):
     width_ratio = models.IntegerField(default=100)
     single = models.BooleanField(default=False)
 
+    def __str__(self):
+        return '{}'.format(self.title)
 
     def save(self, *args, **kwargs):
         self.uid = slugify(self.title);

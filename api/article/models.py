@@ -43,6 +43,9 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = ArticleManager()
 
+    def __str__(self):
+        return '{}'.format(self.title)
+
     def save(self, *args, **kwargs):
 
         if not self._state.adding:

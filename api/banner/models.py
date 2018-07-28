@@ -31,6 +31,9 @@ class Banner(models.Model):
     order = models.IntegerField(default=1)
     objects = BannerManager()
 
+    def __str__(self):
+        return '{}'.format(self.title)
+
     def save(self, *args, **kwargs):
 
         if not self._state.adding and self.image:

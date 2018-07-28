@@ -9,6 +9,9 @@ class CCalendar(TimeStampedModel):
     start = models.DateField()
     end = models.DateField()
 
+    def __str__(self):
+        return '{}'.format(self.title)
+
     class Meta:
         db_table = "ccalendars"
         ordering = ['-start']
