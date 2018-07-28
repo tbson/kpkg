@@ -16,6 +16,7 @@ class CCalendar(TimeStampedModel):
         db_table = "ccalendars"
         ordering = ['-start']
         permissions = (
-            ("view_ccalendar_list", "Can view ccalendar list"),
-            ("view_ccalendar_detail", "Can view ccalendar detail"),
+            ("list_ccalendar", "Can list ccalendar"),
+            ("retrieve_ccalendar", "Can retrieve ccalendar"),
+            ("delete_list_ccalendar", "Can delete list ccalendar"),
         )
