@@ -1,86 +1,69 @@
+
 from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.generics import (
-    ListAPIView,
-    RetrieveAPIView,
-    CreateAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
-)
+from rest_framework.decorators import action
+from rest_framework.viewsets import (GenericViewSet, )
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Permission
 from .serializers import (
     PermissionBaseSerializer,
 )
-from utils.common_classes.custom_permission import CustomPermission
-from utils.common_classes.base_manage_view import BaseManageView
+from utils.common_classes.custom_permission import CustomPermissionExp
 
 
-class ListView(ListAPIView):
-    permissions = ['view_permission_list']
-    queryset = Permission.objects.all()
+class PermissionViewSet(GenericViewSet):
+    permissions = (
+        'list_permission',
+        'retrieve_permission',
+        'add_permission',
+        'change_permission',
+        'delete_permission',
+        'delete_list_permission',
+    )
+    name = 'permission'
     serializer_class = PermissionBaseSerializer
-    pagination_class = None
+    permission_classes = (CustomPermissionExp, )
     search_fields = ('codename', 'name')
     ordering_fields = ('codename', 'name')
     ordering = ('content_type__app_label',)
 
+    def list(self, request):
+        queryset = Permission.objects.all()
+        queryset = self.filter_queryset(queryset)
+        serializer = PermissionBaseSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-class DetailView(RetrieveAPIView):
-    permissions = ['view_permission_detail']
-    queryset = Permission.objects.all()
-    serializer_class = PermissionBaseSerializer
+    def retrieve(self, request, pk=None):
+        obj = Permission.objects.get(pk=pk)
+        serializer = PermissionBaseSerializer(obj)
+        return Response(serializer.data)
 
+    @action(methods=['post'], detail=True)
+    def add(self, request):
+        serializer = PermissionBaseSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data)
 
-class CreateView(CreateAPIView):
-    permissions = ['add_permission']
-    queryset = Permission.objects.all()
-    serializer_class = PermissionBaseSerializer
+    @action(methods=['put'], detail=True)
+    def change(self, request, pk=None):
+        obj = Permission.objects.get(pk=pk)
+        serializer = PermissionBaseSerializer(obj, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data)
 
+    @action(methods=['delete'], detail=True)
+    def delete(self, request, pk=None):
+        Permission.objects.get(pk=pk).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-class UpdateView(UpdateAPIView):
-    permissions = ['change_permission']
-    queryset = Permission.objects.all()
-    serializer_class = PermissionBaseSerializer
-
-
-class DeleteView(DestroyAPIView):
-    permissions = ['delete_permission']
-    queryset = Permission.objects.all()
-    serializer_class = PermissionBaseSerializer
-
-
-class BulkDeleteView(DestroyAPIView):
-    permissions = ['delete_permission']
-    queryset = Permission.objects.all()
-    serializer_class = PermissionBaseSerializer
-
-    def get_object(self):
+    @action(methods=['delete'], detail=False)
+    def delete_list(self, request):
         pk = self.request.query_params.get('ids', '')
         pk = [int(pk)] if pk.isdigit() else map(lambda x: int(x), pk.split(','))
         result = Permission.objects.filter(pk__in=pk)
-        if result.count():
-            return result
-        raise Http404
-
-    def delete(self, request, pk, format=None):
-        object = self.get_object(pk)
-        object.delete()
+        if result.count() == 0:
+            raise Http404
+        result.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class BaseEndPoint(BaseManageView):
-    VIEWS_BY_METHOD = {
-        'GET': ListView.as_view,
-        'POST': CreateView.as_view,
-        'DELETE': BulkDeleteView.as_view,
-    }
-
-
-class PKEndPoint(BaseManageView):
-    VIEWS_BY_METHOD = {
-        'GET': DetailView.as_view,
-        'PUT': UpdateView.as_view,
-        'DELETE': DeleteView.as_view,
-    }
