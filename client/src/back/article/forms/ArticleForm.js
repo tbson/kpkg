@@ -76,6 +76,7 @@ export default class ArticleForm extends React.Component<Props, States> {
         return (
             <form name={this.name} onSubmit={handleSubmit}>
                 <input defaultValue={formValues.id} name="id" id={`${this.name}-id`} type="hidden" />
+                <input defaultValue={formValues.uuid} name="uuid" id={`${this.name}-uuid`} type="hidden" />
                 <div className="form-group title-field">
                     <label htmlFor="title">Title</label>
                     <input

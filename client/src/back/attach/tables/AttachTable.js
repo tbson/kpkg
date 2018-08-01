@@ -12,14 +12,14 @@ import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
     match: Object,
-    parent_uuid: string,
+    parentUUID: string
 };
 type States = {
     dataLoaded: boolean,
     modal: boolean,
     list: Array<FormValuesWithCheck>,
     formValues: FormValues,
-    formErrors: Object,
+    formErrors: Object
 };
 
 export class AttachTable extends React.Component<Props, States> {
@@ -33,7 +33,7 @@ export class AttachTable extends React.Component<Props, States> {
         modal: false,
         list: [],
         formValues: defaultFormValues,
-        formErrors: {},
+        formErrors: {}
     };
 
     constructor(props: Props) {
@@ -53,14 +53,14 @@ export class AttachTable extends React.Component<Props, States> {
         });
         this.setState({
             dataLoaded: true,
-            list: [...newData],
+            list: [...newData]
         });
     };
 
     list = async (outerParams: Object = {}, url: ?string = null) => {
         let params = {
-            parent_uuid: this.props.parent_uuid,
-            richtext_image: false,
+            parent_uuid: this.props.parentUUID,
+            richtext_image: false
         };
         let result = {};
 
@@ -83,7 +83,7 @@ export class AttachTable extends React.Component<Props, States> {
         const state = {
             [modalName]: !this.state[modalName],
             formValues: defaultFormValues,
-            formErrors: {},
+            formErrors: {}
         };
 
         if (id) {
@@ -132,7 +132,7 @@ export class AttachTable extends React.Component<Props, States> {
     };
 
     handleAdd = async (params: FormValues) => {
-        params.parent_uuid = this.props.parent_uuid;
+        params.parent_uuid = this.props.parentUUID;
         params.richtext_image = false;
         const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
         if (result.success) {
@@ -294,7 +294,7 @@ type RowPropTypes = {
     _key: number,
     toggleModal: Function,
     handleRemove: Function,
-    onCheck: Function,
+    onCheck: Function
 };
 export class Row extends React.Component<RowPropTypes> {
     render() {
