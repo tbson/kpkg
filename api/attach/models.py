@@ -69,8 +69,9 @@ class Attach(models.Model):
         db_table = "attaches"
         ordering = ['-id']
         permissions = (
-            ("view_attach_list", "Can view attach list"),
-            ("view_attach_detail", "Can view attach detail"),
+            ("list_attach", "Can list attach"),
+            ("retrieve_attach", "Can retrieve attach"),
+            ("delete_list_attach", "Can delete list attach"),
         )
 
 '''

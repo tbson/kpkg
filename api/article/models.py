@@ -75,7 +75,8 @@ class Article(models.Model):
 
     def delete(self, *args, **kwargs):
         Attach.objects.removeByUUID(self.uuid)
-        Tools.removeFile(self.image.path, True)
+        if self.image:
+            Tools.removeFile(self.image.path, True)
         super(Article, self).delete(*args, **kwargs)
 
     class Meta:
