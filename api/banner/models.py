@@ -58,8 +58,10 @@ class Banner(models.Model):
         db_table = "banners"
         ordering = ['-id']
         permissions = (
-            ("view_banner_list", "Can view banner list"),
-            ("view_banner_detail", "Can view banner detail"),
+            ("list_banner", "Can list banner"),
+            ("retrieve_banner", "Can retrieve banner"),
+            ("delete_list_banner", "Can delete list banner"),
+            ("change_translation_banner", "Can change translation banner"),
         )
 
 
@@ -71,3 +73,4 @@ class BannerTranslation(models.Model):
     class Meta:
         db_table = "banner_translations"
         ordering = ['-id']
+        default_permissions = ()
