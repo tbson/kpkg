@@ -74,7 +74,7 @@ class ArticleUpdateSerializer(ArticleBaseSerializer):
             if tag.isdigit():
                 instance.tags.add(tag)
         validated_data['slug'] = slugify(validated_data['slug'])
-        if Article.objects.filter(slug=validated_data['slug']).count() >= 1:
+        if Article.objects.exclude(pk=instance.pk).filter(slug=validated_data['slug']).count() >= 1:
             raise serializers.ValidationError({'slug': 'Duplicate slug.'})
         instance.__dict__.update(validated_data)
         instance.save()

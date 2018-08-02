@@ -83,8 +83,9 @@ class Article(models.Model):
         db_table = "articles"
         ordering = ['-order']
         permissions = (
-            ("view_article_list", "Can view article list"),
-            ("view_article_detail", "Can view article detail"),
+            ("list_article", "Can list article"),
+            ("retrieve_article", "Can retrieve article"),
+            ("delete_list_article", "Can delete list article"),
         )
 
 class ArticleTranslation(models.Model):
@@ -96,3 +97,4 @@ class ArticleTranslation(models.Model):
     class Meta:
         db_table = "article_translations"
         ordering = ['-id']
+        default_permissions = ()
