@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from banner.models import Banner
-from article.models import Article
+from apps.banner.models import Banner
+from apps.article.models import Article
 
 
 class Command(BaseCommand):

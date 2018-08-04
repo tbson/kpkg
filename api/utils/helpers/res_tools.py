@@ -1,5 +1,5 @@
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
-from administrator.serializers import (
+from apps.administrator.serializers import (
     AdministratorBaseSerializer,
 )
 

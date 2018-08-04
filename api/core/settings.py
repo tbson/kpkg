@@ -28,7 +28,7 @@ APPEND_SLASH = True
 
 # Application definition
 
-INSTALLED_APPS = [
+REQUIRED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,22 +38,24 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
-    'rest_auth',
-    'utils',
-    'api_versioning',
-    'config',
-    'administrator',
-    'permission',
-    'group',
-    'category',
-    'banner',
-    'article',
-    'attach',
-    'ccalendar',
-    'tag',
-    'staff',
-    'server_rendering',
+    'rest_auth',    
 ]
+
+PROJECT_APPS = [
+    'apps.config',
+    'apps.administrator',
+    'apps.permission',
+    'apps.group',
+    'apps.category',
+    'apps.banner',
+    'apps.article',
+    'apps.attach',
+    'apps.ccalendar',
+    'apps.tag',
+    'apps.staff',
+]
+
+INSTALLED_APPS = REQUIRED_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

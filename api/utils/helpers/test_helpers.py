@@ -8,7 +8,7 @@ class TestHelpers():
 
     @staticmethod
     def testSetup(self):
-        from administrator.models import Administrator
+        from apps.administrator.models import Administrator
         # Add original user
         user = User.objects.create_superuser(
             username=settings.TEST_ADMIN['username'],

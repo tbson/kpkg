@@ -6,51 +6,51 @@ app_name = os.getcwd().split(os.sep)[-1]
 urlpatterns = (
     path(
         'admin/',
-        include('administrator.urls', namespace='administrator'),
+        include('apps.administrator.urls', namespace='administrator'),
     ),
     path(
         'permission/',
-        include('permission.urls', namespace='permission'),
+        include('apps.permission.urls', namespace='permission'),
     ),
     path(
         'group/',
-        include('group.urls', namespace='group'),
+        include('apps.group.urls', namespace='group'),
     ),
     path(
         'config/',
-        include('config.urls', namespace='config'),
+        include('apps.config.urls', namespace='config'),
     ),
     path(
         'category/',
-        include('category.urls', namespace='category'),
+        include('apps.category.urls', namespace='category'),
     ),
     path(
         'banner/',
-        include('banner.urls', namespace='banner'),
+        include('apps.banner.urls', namespace='banner'),
     ),
     path(
         'article/',
-        include('article.urls', namespace='article'),
+        include('apps.article.urls', namespace='article'),
     ),
     path(
         'attach/',
-        include('attach.urls', namespace='attach'),
+        include('apps.attach.urls', namespace='attach'),
     ),
     path(
         'ccalendar/',
-        include('ccalendar.urls', namespace='ccalendar'),
+        include('apps.ccalendar.urls', namespace='ccalendar'),
     ),
     path(
         'tag/',
-        include('tag.urls', namespace='tag'),
+        include('apps.tag.urls', namespace='tag'),
     ),
     path(
         'staff/',
-        include('staff.urls', namespace='staff'),
+        include('apps.staff.urls', namespace='staff'),
     ),
     path(
         'landing/',
-        include('landing_api.urls', namespace='landing_api'),
+        include('apps.landing_api.urls', namespace='landing_api'),
     ),
 )
 

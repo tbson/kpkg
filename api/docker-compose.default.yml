@@ -24,8 +24,8 @@ services:
         container_name: kpkg_api
         build:
             context: ./
-#       command: bash -c "./utils/wait-for-it.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
-        command: bash -c "./utils/wait-for-it.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && gunicorn core.wsgi -b 0.0.0.0:8001"
+#       command: bash -c "./wait-for-it.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
+        command: bash -c "./wait-for-it.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && gunicorn core.wsgi -b 0.0.0.0:8001"
         volumes:
             - .:/code:cached
         ports:
