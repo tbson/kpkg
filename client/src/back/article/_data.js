@@ -64,8 +64,10 @@ export type FormValues = {
     thumbnail_in_content: boolean,
     order: ?number,
     tags?: ?string,
-    created_at?: ??Date,
-    attaches?: Array<AttachType>
+    created_at?: ?Date,
+    attaches?: Array<AttachType>,
+    same_tag_articles?: Array<Object>,
+    related_articles?: Array<Object>
 };
 
 export const defaultFormValues: FormValues = {

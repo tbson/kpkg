@@ -12,13 +12,13 @@ import type {FormValues as ArticleType} from 'src/back/article/_data';
 
 type Props = {
     match: Object,
-    location: Object,
+    location: Object
 };
 type State = {
     article: Object,
     dataLoaded: boolean,
     pathname: ?string,
-    listStaff: Array<Object>,
+    listStaff: Array<Object>
 };
 
 class ArticleDetail extends React.Component<Props, State> {
@@ -27,7 +27,7 @@ class ArticleDetail extends React.Component<Props, State> {
         pathname: null,
         article: {},
         dataLoaded: false,
-        listStaff: [],
+        listStaff: []
     };
     constructor(props: Props) {
         super(props);
@@ -96,7 +96,7 @@ class ArticleDetail extends React.Component<Props, State> {
             }
             return this.setState({
                 article,
-                dataLoaded: true,
+                dataLoaded: true
             });
         }
 
@@ -114,7 +114,7 @@ class ArticleDetail extends React.Component<Props, State> {
             this.setTitle(result.data.title);
             this.setState({
                 article: result.data,
-                dataLoaded: true,
+                dataLoaded: true
             });
             Tools.setGlobalState(pathname, result.data);
         }
@@ -123,13 +123,13 @@ class ArticleDetail extends React.Component<Props, State> {
     getArticleFromCategoryUid = async (uid: string) => {
         const {pathname} = this.props.location;
         const params = {
-            category__uid: uid,
+            category__uid: uid
         };
         const result = await Tools.apiCall(apiUrls.articleSingle, 'GET', params, false, false);
         if (result.success) {
             this.setState({
                 article: result.data.items[0],
-                dataLoaded: true,
+                dataLoaded: true
             });
             Tools.setGlobalState(pathname, result.data.items[0]);
         }
@@ -140,7 +140,7 @@ class ArticleDetail extends React.Component<Props, State> {
         const result = await Tools.apiCall(apiUrls.staff, 'GET', params, false, false);
         if (result.success) {
             this.setState({
-                listStaff: result.data.items,
+                listStaff: result.data.items
             });
             Tools.setGlobalState('listStaff', result.data.items);
         }
@@ -230,7 +230,7 @@ class ArticleDetail extends React.Component<Props, State> {
                 </div>
             </div>
         );
-    }
+    };
 
     renderOtherItem = (item: ArticleType) => {
         if (!item.image) return this.renderFirstItem(item);
@@ -253,12 +253,13 @@ class ArticleDetail extends React.Component<Props, State> {
                 </div>
             </div>
         );
-    }
+    };
 
     renderRelatedArticle = (article: ArticleType) => {
-        let listItem = article.same_tag_articles;
-        if (article.related_articles.length) {
-            listItem = article.related_articles;
+        let listItem = article.same_tag_articles || [];
+        let relatedArticles = article.related_articles || [];
+        if (relatedArticles.length) {
+            listItem = relatedArticles;
         }
         return listItem.map(this.renderOtherItem);
     };
@@ -275,9 +276,7 @@ class ArticleDetail extends React.Component<Props, State> {
                     <div dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
                     <Tags list={article.tag_list} />
                 </div>
-                <div className="row">
-                    {this.renderRelatedArticle(article)}
-                </div>
+                <div className="row">{this.renderRelatedArticle(article)}</div>
                 {this.renderStaff()}
             </Wrapper>
         );

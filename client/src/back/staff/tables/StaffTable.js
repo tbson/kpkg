@@ -145,7 +145,7 @@ export class StaffTable extends React.Component<Props, States> {
         event.preventDefault();
         const {searchStr} = Tools.formDataToObj(new FormData(event.target));
         if (searchStr.length > 2) {
-            this.getList(null, {search: searchStr});
+            this.getList('', {search: searchStr});
         } else if (!searchStr.length) {
             this.getList();
         }

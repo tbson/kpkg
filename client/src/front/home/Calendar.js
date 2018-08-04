@@ -17,14 +17,14 @@ import type {FormValues as EventType} from 'src/back/ccalendar/_data';
 import type {FormValues as ArticleType} from 'src/back/article/_data';
 
 type Props = {
-    location: Object,
+    location: Object
 };
 type State = {
     events: Array<EventType>,
     otherEvents: Array<ArticleType>,
     calendarLoaded: boolean,
     otherEventsLoaded: boolean,
-    pathname: ?string,
+    pathname: ?string
 };
 
 class Calendar extends React.Component<Props, State> {
@@ -34,7 +34,7 @@ class Calendar extends React.Component<Props, State> {
         otherEvents: [],
         calendarLoaded: false,
         otherEventsLoaded: false,
-        pathname: null,
+        pathname: null
     };
     constructor(props: Props) {
         super(props);
@@ -65,7 +65,7 @@ class Calendar extends React.Component<Props, State> {
         if (events) {
             this.setState({
                 events,
-                calendarLoaded: true,
+                calendarLoaded: true
             });
         } else {
             this.getCalendar();
@@ -74,19 +74,19 @@ class Calendar extends React.Component<Props, State> {
         if (otherEvents) {
             this.setState({
                 otherEvents,
-                otherEventsLoaded: true,
+                otherEventsLoaded: true
             });
         } else {
             this.getOtherEvents();
         }
-    }
+    };
 
     getCalendar = async () => {
         const result = await Tools.apiCall(apiUrls.ccalendar, 'GET', {}, false, false);
         if (result.success) {
             this.setState({
                 events: result.data.items,
-                calendarLoaded: true,
+                calendarLoaded: true
             });
             Tools.setGlobalState('events', result.data.items);
         }
@@ -98,12 +98,12 @@ class Calendar extends React.Component<Props, State> {
             'GET',
             {},
             false,
-            false,
+            false
         );
         if (result.success) {
             this.setState({
                 otherEvents: result.data.items,
-                otherEventsLoaded: true,
+                otherEventsLoaded: true
             });
             Tools.setGlobalState('other_events', result.data.items);
         }
@@ -141,12 +141,12 @@ class Calendar extends React.Component<Props, State> {
         if (!this.state.otherEventsLoaded) return null;
         const listItem = this.state.otherEvents;
         return listItem.map((item, index) => {
-            if (!item.id || !item.uid) return null;
+            if (!item.id || !item.slug) return null;
             return (
                 <div className="content-container" key={index}>
                     <div className="col-xl-12">
                         <h2>
-                            <Link to={`/bai-viet/${item.id}/${item.uid}`}>{item.title}</Link>
+                            <Link to={`/bai-viet/${item.id}/${item.slug}`}>{item.title}</Link>
                         </h2>
                         <div className="date-time">
                             <em>Ngày đăng: {Tools.dateFormat(item.created_at)}</em>
