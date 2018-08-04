@@ -1,6 +1,6 @@
 import {createBrowserHistory} from 'history';
 
-export const APP_TITLE = 'Kpkg';
+export const APP_TITLE = 'KPKG';
 export const APP_NAMESPACE = 'kpkg';
 let APP_RAW =
     window.location.href !== 'about:blank' ? window.location.href.split('://')[1].split('/')[1] : 'blank';
