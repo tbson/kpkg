@@ -176,7 +176,7 @@ describe('ConfigTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after ConfigTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/config/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/config/');
             expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData).not.toHaveBeenCalled();
         });
@@ -202,7 +202,7 @@ describe('ConfigTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after ConfigTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/config/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/config/');
             expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData.mock.calls[0][0]).toEqual(response);
             expect(setInitData).toHaveBeenCalled();

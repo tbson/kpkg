@@ -11,9 +11,8 @@
         "tdd": "karma start --auto-watch --no-single-run"
     },
     "jest": {
-        "modulePaths": [
-            "."
-        ],
+        "modulePaths": ["."],
+        "testURL": "http://localhost",
         "transform": {
             "^.+\\.js?$": "babel-jest",
             "^.+\\.jsx?$": "babel-jest"
@@ -25,7 +24,7 @@
     "devDependencies": {
         "babel-cli": "^6.26.0",
         "babel-eslint": "^8.0.3",
-        "babel-jest": "^23.0.1",
+        "babel-jest": "^23.4.2",
         "babel-loader": "7.1.2",
         "babel-plugin-import": "1.6.2",
         "babel-plugin-react-css-modules": "3.3.2",
@@ -47,9 +46,8 @@
         "file-loader": "1.1.5",
         "flow-bin": "^0.72.0",
         "identity-obj-proxy": "^3.0.0",
-        "jest": "^23.1.0",
-        "jest-enzyme": "^6.0.1",
-        "jest-webpack": "^0.4.0",
+        "jest": "^23.4.2",
+        "jest-enzyme": "^6.0.2",
         "style-loader": "0.19.0",
         "stylus": "0.54.5",
         "stylus-loader": "3.0.1",

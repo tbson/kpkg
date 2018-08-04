@@ -181,7 +181,7 @@ describe('CategoryTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after CategoryTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/category/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/category/');
             expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData).not.toHaveBeenCalled();
         });
@@ -207,7 +207,7 @@ describe('CategoryTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after CategoryTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/category/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/category/');
             expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData.mock.calls[0][0]).toEqual(response);
             expect(setInitData).toHaveBeenCalled();

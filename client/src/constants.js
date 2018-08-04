@@ -2,9 +2,8 @@ import {createBrowserHistory} from 'history';
 
 export const APP_TITLE = 'KPKG';
 export const APP_NAMESPACE = 'kpkg';
-let APP_RAW =
-    window.location.href !== 'about:blank' ? window.location.href.split('://')[1].split('/')[1] : 'blank';
-export const APP = ['blank', 'admin', 'user'].indexOf(APP_RAW) !== -1 ? APP_RAW : '';
+const APP_RAW = window.location.href.split('://')[1].split('/')[1];
+export const APP = ['admin', 'user'].includes(APP_RAW) ? APP_RAW : '';
 export const URL_PREFIX = APP ? '/' + APP + '/' : '/';
 export const URL_PREFIX_STRIP = APP === 'blank' ? APP : APP ? '/' + APP : '/';
 export const LOCAL_STORAGE_PREFIX = APP_NAMESPACE + '_' + APP;
@@ -29,7 +28,7 @@ export const FIELD_TYPE = {
     DATE: 'DATE',
     DATETIME: 'DATETIME',
     IMAGE: 'IMAGE',
-    FILE: 'FILE',
+    FILE: 'FILE'
 };
 
 export const ADMIN_ROLES = ['quan-tri-vien'];

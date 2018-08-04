@@ -198,7 +198,7 @@ describe('BannerTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after BannerTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/banner/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/banner/');
             expect(getList.mock.calls[0][1]).toEqual({category});
             expect(setInitData).not.toHaveBeenCalled();
         });
@@ -224,7 +224,7 @@ describe('BannerTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after BannerTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/banner/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/banner/');
             expect(getList.mock.calls[0][1]).toEqual({category});
             expect(setInitData.mock.calls[0][0]).toEqual(response);
             expect(setInitData).toHaveBeenCalled();

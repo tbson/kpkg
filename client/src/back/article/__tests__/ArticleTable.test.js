@@ -158,7 +158,7 @@ describe('ArticleTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after ArticleTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/article/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/article/');
             expect(getList.mock.calls[0][1]).toEqual({category: parent.id});
             expect(setInitData).not.toHaveBeenCalled();
         });
@@ -184,7 +184,7 @@ describe('ArticleTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after ArticleTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/article/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/article/');
             expect(getList.mock.calls[0][1]).toEqual({category: parent.id});
             expect(setInitData.mock.calls[0][0]).toEqual(response);
             expect(setInitData).toHaveBeenCalled();

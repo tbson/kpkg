@@ -98,7 +98,7 @@ describe('PermissionTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after PermissionTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/permission/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/permission/');
             expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData).not.toHaveBeenCalled();
         });
@@ -124,7 +124,7 @@ describe('PermissionTable methods', () => {
             await wrapper.instance().getList();
 
             // setInitData will call after PermissionTable mount
-            expect(getList.mock.calls[0][0]).toEqual('about:///api/v1/permission/');
+            expect(getList.mock.calls[0][0]).toEqual('http://localhost/api/v1/permission/');
             expect(getList.mock.calls[0][1]).toEqual({});
             expect(setInitData.mock.calls[0][0]).toEqual(response);
             expect(setInitData).toHaveBeenCalled();
