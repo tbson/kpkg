@@ -312,7 +312,7 @@ export default class Tools {
             let requestConfig: Object = {
                 method: method,
                 headers: {
-                    lang: this.getLang() || undefined,
+                    lang: this.getLang(),
                     'Content-Type': 'application/json',
                     fingerprint: await this.getFingerPrint()
                 },

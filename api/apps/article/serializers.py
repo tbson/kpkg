@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
+from django.conf import settings
 from utils.helpers.tools import Tools
 from .models import Article, ArticleTranslation
 from apps.category.models import Category
@@ -129,21 +130,21 @@ class ArticleTranslationListSerializer(ArticleBaseSerializer):
 
     def get_title(self, obj):
         lang = Tools.langFromContext(self.context)
-        if lang is None:
+        if lang not in settings.LANGUAGES:
             return obj.title
         translation = ArticleTranslation.objects.filter(article=obj.pk, lang=lang).first()
         return translation.title
 
     def get_description(self, obj):
         lang = Tools.langFromContext(self.context)
-        if lang is None:
+        if lang not in settings.LANGUAGES:
             return obj.description
         translation = ArticleTranslation.objects.filter(article=obj.pk, lang=lang).first()
         return translation.description
 
     def get_content(self, obj):
         lang = Tools.langFromContext(self.context)
-        if lang is None:
+        if lang not in settings.LANGUAGES:
             return obj.content
         translation = ArticleTranslation.objects.filter(article=obj.pk, lang=lang).first()
         return translation.content

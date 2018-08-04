@@ -42,6 +42,7 @@ REQUIRED_APPS = [
 ]
 
 PROJECT_APPS = [
+    'utils',
     'apps.config',
     'apps.administrator',
     'apps.permission',
