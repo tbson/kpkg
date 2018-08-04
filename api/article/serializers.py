@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
+from utils.helpers.tools import Tools
 from .models import Article, ArticleTranslation
 from category.models import Category
 from attach.models import Attach
@@ -117,3 +118,32 @@ class ArticleTranslationSerializer(ModelSerializer):
             'article': {'required': False},
             'lang': {'required': False},
         }
+
+class ArticleTranslationListSerializer(ArticleBaseSerializer):
+
+    class Meta(ArticleBaseSerializer.Meta):
+        exclude = ()
+    title = SerializerMethodField()
+    description = SerializerMethodField()
+    content = SerializerMethodField()
+
+    def get_title(self, obj):
+        lang = Tools.langFromContext(self.context)
+        if lang is None:
+            return obj.title
+        translation = ArticleTranslation.objects.filter(article=obj.pk, lang=lang).first()
+        return translation.title
+
+    def get_description(self, obj):
+        lang = Tools.langFromContext(self.context)
+        if lang is None:
+            return obj.description
+        translation = ArticleTranslation.objects.filter(article=obj.pk, lang=lang).first()
+        return translation.description
+
+    def get_content(self, obj):
+        lang = Tools.langFromContext(self.context)
+        if lang is None:
+            return obj.content
+        translation = ArticleTranslation.objects.filter(article=obj.pk, lang=lang).first()
+        return translation.content

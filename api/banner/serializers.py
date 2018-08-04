@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
 from django.utils.text import slugify
+from utils.helpers.tools import Tools
 from .models import Banner, BannerTranslation
 from category.models import Category
 from category.serializers import CategoryBaseSerializer
@@ -70,3 +71,24 @@ class BannerTranslationSerializer(ModelSerializer):
             'banner': {'required': False},
             'lang': {'required': False},
         }
+
+class BannerTranslationListSerializer(BannerBaseSerializer):
+
+    class Meta(BannerBaseSerializer.Meta):
+        exclude = ()
+    title = SerializerMethodField()
+    description = SerializerMethodField()
+
+    def get_title(self, obj):
+        lang = Tools.langFromContext(self.context)
+        if lang is None:
+            return obj.title
+        translation = BannerTranslation.objects.filter(banner=obj.pk, lang=lang).first()
+        return translation.title
+
+    def get_description(self, obj):
+        lang = Tools.langFromContext(self.context)
+        if lang is None:
+            return obj.description
+        translation = BannerTranslation.objects.filter(banner=obj.pk, lang=lang).first()
+        return translation.description

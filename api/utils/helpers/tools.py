@@ -187,3 +187,7 @@ class Tools():
             return valid_data['user']
         except Exception as e:
             return None
+
+    @staticmethod
+    def langFromContext (context):
+        return context['request'].META.get('HTTP_LANG', None)

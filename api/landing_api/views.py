@@ -10,10 +10,16 @@ from rest_framework.permissions import AllowAny
 from utils.common_classes.custom_pagination import CustomLimitOffsetPagination
 
 from banner.models import Banner
-from banner.serializers import BannerBaseSerializer
+from banner.serializers import (
+    BannerBaseSerializer,
+    BannerTranslationListSerializer
+)
 
 from article.models import Article
-from article.serializers import ArticleLandingSerializer, ArticleLandingRetrieveSerializer
+from article.serializers import (
+    ArticleLandingSerializer,
+    ArticleLandingRetrieveSerializer
+)
 
 from ccalendar.models import CCalendar
 from ccalendar.serializers import CCalendarBaseSerializer
@@ -25,7 +31,7 @@ from staff.serializers import StaffBaseSerializer
 class BannerListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = Banner.objects.all()
-    serializer_class = BannerBaseSerializer
+    serializer_class = BannerTranslationListSerializer
     filter_fields = ('category__uid', 'category__type', )
 
 class HomeArticleListView(ListAPIView):
