@@ -11,24 +11,24 @@ type Props = {
     multi: boolean,
     delimiter: string,
     name: string,
-    defaultValue: any,
+    defaultValue: any
 };
 
 type States = {
     localChange: boolean,
-    value: string,
+    value: ?string
 };
 
 class SelectInput extends React.Component<Props, States> {
     state = {
         localChange: false,
-        value: '',
+        value: ''
     };
     static defaultProps = {
         options: [],
         multi: false,
         delimiter: ',',
-        defaultValue: '',
+        defaultValue: ''
     };
 
     constructor(props: Props) {
@@ -40,7 +40,7 @@ class SelectInput extends React.Component<Props, States> {
         if (prevState.localChange) {
             return {
                 localChange: false
-            }
+            };
         }
         return {
             value: defaultValue ? defaultValue : '',
@@ -48,13 +48,14 @@ class SelectInput extends React.Component<Props, States> {
         };
     }
 
-    handleChange = (result:any) => {
+    handleChange = (result: any) => {
+        const {multi} = this.props;
         const localChange = true;
-        if (result.length) {
+        if (multi && result.length) {
             const value = result.map(item => item.value).join(this.props.delimiter);
             this.setState({value, localChange});
         } else {
-            this.setState({value: result.value, localChange});
+            this.setState({value: result ? result.value : null, localChange});
         }
     };
 
