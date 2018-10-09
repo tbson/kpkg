@@ -10,7 +10,7 @@ services:
         container_name: kpkg_client
         build:
             context: ./
-        command: bash -c "yarn start"
+        command: yarn start
         working_dir: /code
         ports:
             - "4004:4004"

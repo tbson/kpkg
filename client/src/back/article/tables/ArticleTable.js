@@ -31,7 +31,6 @@ type States = {
 };
 
 export class ArticleTable extends React.Component<Props, States> {
-    getList: Function;
     static defaultProps = {
         searchForm: true
     };
@@ -95,7 +94,7 @@ export class ArticleTable extends React.Component<Props, States> {
         this.setState(state);
     };
 
-    async getList(url: string = '', params: Object = {}, defaultParams: Object = {}) {
+    getList = async (url: string = '', params: Object = {}, defaultParams: Object = {}) => {
         params = {...params, ...defaultParams};
         const result = await Tools.getList(url ? url : apiUrls.crud, params);
         if (result) {

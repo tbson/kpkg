@@ -28,8 +28,6 @@ type States = {
 
 export class ArticleEdit extends React.Component<Props, States> {
     navigateTo: Function;
-    setInitData: Function;
-
     state = {
         dataLoaded: false,
         id: null,
@@ -43,7 +41,6 @@ export class ArticleEdit extends React.Component<Props, States> {
     constructor(props: Props) {
         super(props);
         this.navigateTo = Tools.navigateTo.bind(undefined, this.props.history);
-        this.setInitData = this.setInitData.bind(this);
     }
 
     componentDidMount() {
@@ -65,7 +62,7 @@ export class ArticleEdit extends React.Component<Props, States> {
         }
     }
 
-    async setInitData() {
+    setInitData = async () => {
         const {parent, id} = this.props;
         const {uuid} = this.state;
         const initData = {...defaultFormValues, uuid};
@@ -82,7 +79,7 @@ export class ArticleEdit extends React.Component<Props, States> {
             state = {...state, tagSource};
         }
         this.setState(state);
-    }
+    };
 
     getCategoryId = async (id: number): Promise<?number> => {
         const result = await Tools.getItem(apiUrls.crud, id);

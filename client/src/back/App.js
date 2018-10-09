@@ -5,9 +5,13 @@ import {withRouter, Switch, Route} from 'react-router-dom';
 // $FlowFixMe: do not complain about importing node_modules
 import 'bootstrap/dist/css/bootstrap.min.css';
 // $FlowFixMe: do not complain about importing node_modules
-import 'open-iconic/font/css/open-iconic-bootstrap.min.css';
+import(/* webpackPreload: true */ 'open-iconic/font/css/open-iconic-bootstrap.min.css');
 // $FlowFixMe: do not complain about importing node_modules
 import {ToastContainer} from 'react-toastify';
+// $FlowFixMe: do not complain about importing node_modules
+import(/* webpackPreload: true */ 'rummernote/build/bs4/style.css');
+// $FlowFixMe: do not complain about importing node_modules
+import(/* webpackPreload: true */ 'bootstrap/dist/js/bootstrap');
 
 import 'src/utils/styles/main-back.css';
 import Spinner from 'src/utils/components/Spinner';

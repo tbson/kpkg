@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Tools from 'src/utils/helpers/Tools';
-import RichTextInputMedium from 'src/utils/components/RichTextInputMedium';
+import RichTextInput from 'src/utils/components/RichTextInput';
 import type {FormValues} from '../_data';
 import {defaultFormValues} from '../_data';
 
@@ -85,7 +85,7 @@ export default class ArticleTranslationForm extends React.Component<Props, State
 
                 <div className="form-group description-field">
                     <label htmlFor="description">Description</label>
-                    <RichTextInputMedium
+                    <RichTextInput
                         parentUUID={this.props.parentUUID}
                         defaultValue={this.state.formValues.description}
                         name="description"
@@ -95,7 +95,7 @@ export default class ArticleTranslationForm extends React.Component<Props, State
 
                 <div className="form-group content-field">
                     <label htmlFor="content">Content</label>
-                    <RichTextInputMedium
+                    <RichTextInput
                         parentUUID={this.props.parentUUID}
                         defaultValue={this.state.formValues.content}
                         name="content"

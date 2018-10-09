@@ -1,108 +1,73 @@
 // @flow
 import * as React from 'react';
 // $FlowFixMe: do not complain about importing node_modules
-import {EditorState, convertToRaw, ContentState} from 'draft-js';
-// $FlowFixMe: do not complain about importing node_modules
-import {Editor} from 'react-draft-wysiwyg';
-// $FlowFixMe: do not complain about importing node_modules
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-// $FlowFixMe: do not complain about importing node_modules
-import draftToHtml from 'draftjs-to-html';
-// $FlowFixMe: do not complain about importing node_modules
-import htmlToDraft from 'html-to-draftjs';
-
+import Loadable from 'react-loadable';
 import Tools from '../helpers/Tools';
+
+const Rummernote = Loadable({
+    // $FlowFixMe: do not complain about importing node_modules
+    loader: () => import('rummernote/build/bs4'),
+    loading: () => <div>Loading richtext editor...</div>
+});
 
 const rawApiUrls: Array<Object> = [
     {
         controller: 'attach',
         endpoints: {
-            crud: '',
-        },
-    },
+            crud: ''
+        }
+    }
 ];
 
 export const apiUrls = Tools.getApiUrls(rawApiUrls);
 
 type Props = {
-    parent_uuid?: string,
+    parentUUID?: string,
     name: string,
-    defaultValue: string,
+    defaultValue: string
 };
 
 type States = {
-    value: string,
-    editorState: ?Object,
+    value: string
 };
 
 class RichTextInput extends React.Component<Props, States> {
     state = {
-        value: '',
-        editorState: null,
+        value: ''
     };
 
-    constructor(props: Props) {
-        super(props);
-    }
-
-    static getDerivedStateFromProps(nextProps: Props, prevState: States) {
-        const {defaultValue} = nextProps;
-        const blocksFromHtml = htmlToDraft(defaultValue);
-        const {contentBlocks, entityMap} = blocksFromHtml;
-        const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-        const editorState = EditorState.createWithContent(contentState);
-        return {
-            value: defaultValue,
-            editorState,
-        };
-    }
-
-    onChange = (editorState: Object) => {
-        const rawContentState = convertToRaw(editorState.getCurrentContent());
-        const value = draftToHtml(rawContentState);
-        this.setState({
-            value,
-            editorState,
-        });
+    onChange = (value: string) => {
+        this.setState({value});
     };
 
-    uploadImageCallBack = async (file: Blob): Promise<*> => {
-        const response = {
-            data: {
-                link: '',
-            },
-        };
+    uploadImageCallBack = async (file: File, insertImage: Function) => {
         if (file.type.indexOf('image/') === 0) {
             const params = {
                 attachment: file,
-                parent_uuid: this.props.parent_uuid,
-                richtext_image: true,
+                parent_uuid: this.props.parentUUID,
+                richtext_image: true
             };
             const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
             if (result.success) {
-                response.data.link = result.data.attachment;
-                return new Promise((resolve, reject) => resolve(response));
+                insertImage(result.data.attachment, image => {
+                    if (image.width() <= 400) {
+                        image.css('width', image.width());
+                    } else {
+                        image.css('width', '100%');
+                    }
+                });
             }
-            return new Promise((resolve, reject) => reject(''));
         }
-        return new Promise((resolve, reject) => reject(''));
     };
 
     render() {
         return (
-            <div style={{position: 'relative'}}>
+            <div>
                 <input type="hidden" name={this.props.name} defaultValue={this.state.value} />
-                <Editor
-                    editorState={this.state.editorState}
-                    onEditorStateChange={this.onChange}
-                    toolbar={{
-                        image: {
-                            previewImage: true,
-                            inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,image/webp',
-                            uploadCallback: this.uploadImageCallBack,
-                            alt: {present: true, mandatory: false},
-                        },
-                    }}
+                <Rummernote
+                    value={this.props.defaultValue}
+                    onImageUpload={this.uploadImageCallBack}
+                    onChange={this.onChange}
                 />
             </div>
         );

@@ -17,25 +17,20 @@ type Props = {};
 type State = {
     preview: boolean,
     previewItems: Array<Object>,
-    gallery: { [number]: galleryItem },
-    dataLoaded: boolean,
+    gallery: {[number]: galleryItem},
+    dataLoaded: boolean
 };
 
 export default class Gallery extends React.Component<Props, State> {
-    renderPreview: Function;
-    togglePreview: Function;
-
     static defaultProps = {};
     state: State = {
         preview: true,
         previewItems: [],
         gallery: {},
-        dataLoaded: false,
+        dataLoaded: false
     };
     constructor(props: Props) {
         super(props);
-        this.renderPreview = this.renderPreview.bind(this);
-        this.togglePreview = this.togglePreview.bind(this);
     }
 
     async componentDidMount() {
@@ -43,12 +38,12 @@ export default class Gallery extends React.Component<Props, State> {
         if (gallery) {
             return this.setState({
                 gallery: gallery,
-                dataLoaded: true,
+                dataLoaded: true
             });
         }
 
         const params = {
-            category__type: 'gallery',
+            category__type: 'gallery'
         };
         const result = await Tools.apiCall(apiUrls.banner, 'GET', params, false, false);
         if (result.success) {
@@ -60,7 +55,7 @@ export default class Gallery extends React.Component<Props, State> {
                         id: item.category,
                         title: item.category_title,
                         image: item.image,
-                        items: [item],
+                        items: [item]
                     };
                 } else {
                     galleryDict[item.category].items.push(item);
@@ -69,20 +64,20 @@ export default class Gallery extends React.Component<Props, State> {
 
             this.setState({
                 gallery: galleryDict,
-                dataLoaded: true,
+                dataLoaded: true
             });
             Tools.setGlobalState('gallery', galleryDict);
         }
     }
 
-    togglePreview(preview: boolean, previewItems: Array<Object> = []) {
+    togglePreview = (preview: boolean, previewItems: Array<Object> = []) => {
         this.setState({
             preview: true,
-            previewItems,
+            previewItems
         });
-    }
+    };
 
-    renderPreview() {
+    renderPreview = () => {
         const {previewItems} = this.state;
         if (!this.state.preview || !previewItems.length) return null;
         return (
@@ -95,7 +90,7 @@ export default class Gallery extends React.Component<Props, State> {
                 <Carousel listItem={previewItems} />
             </CustomModal>
         );
-    }
+    };
 
     render() {
         const gallery = [];
@@ -113,7 +108,7 @@ export default class Gallery extends React.Component<Props, State> {
                 <div className="row">
                     {gallery.map(item => (
                         <LazyLoad height={200} key={item.id}>
-                            <GalleryItem item={item} togglePreview={this.togglePreview}/>
+                            <GalleryItem item={item} togglePreview={this.togglePreview} />
                         </LazyLoad>
                     ))}
                 </div>
@@ -124,12 +119,12 @@ export default class Gallery extends React.Component<Props, State> {
 
 type ItemProps = {
     item: Object,
-    togglePreview: Function,
+    togglePreview: Function
 };
 type ItemState = {};
 class GalleryItem extends React.Component<ItemProps, ItemState> {
     static defaultProps = {
-        item: {},
+        item: {}
     };
     state: ItemState = {};
     constructor(props: ItemProps) {
@@ -140,10 +135,8 @@ class GalleryItem extends React.Component<ItemProps, ItemState> {
         const {item} = this.props;
         return (
             <div className="col-md-4">
-                <div
-                    className="thumbnail gallery-thumbnail"
-                    onClick={() => this.props.togglePreview(true, item.items)}>
-                    <img src={item.image} width="100%" title={item.title} alt={item.title}/>
+                <div className="thumbnail gallery-thumbnail" onClick={() => this.props.togglePreview(true, item.items)}>
+                    <img src={item.image} width="100%" title={item.title} alt={item.title} />
                     <div className="caption">{item.title}</div>
                 </div>
             </div>
