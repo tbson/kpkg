@@ -1,7 +1,7 @@
 server {
     listen 80;
-    server_name 6thmay.com;
-    root /resource/public/6thmay;
+    server_name my.domain;
+    root /resource/public/__app_name__;
     index index.html;
     location ~ /.well-known {
         allow all;
