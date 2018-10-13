@@ -68,7 +68,8 @@ export type FormValues = {
     attaches?: Array<AttachType>,
     same_tag_articles?: Array<Object>,
     related_articles?: Array<Object>,
-    tag_list?: Array<Object>
+    tag_list?: Array<Object>,
+    category?: Object
 };
 
 export const defaultFormValues: FormValues = {

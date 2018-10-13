@@ -12,6 +12,7 @@ def file_destination(instance, filename):
     filename = "%s.%s" % (uuid.uuid4(), 'jpg')
     return os.path.join('attach', filename)
 
+
 class AttachManager(models.Manager):
     def removeByUUID(self, parent_uuid):
         listItem = self.filter(parent_uuid=parent_uuid)
@@ -19,6 +20,8 @@ class AttachManager(models.Manager):
             item.delete()
 
 # Create your models here.
+
+
 class Attach(models.Model):
     parent_uuid = models.CharField(max_length=36)
     richtext_image = models.BooleanField(default=True)
@@ -54,9 +57,8 @@ class Attach(models.Model):
             imageRatio = settings.IMAGE_RATIO
             if self.richtext_image:
                 imageRatio = 0
-            Tools.scaleImage(settings.IMAGE_RATIO, self.attachment.path)
+            Tools.scaleImage(imageRatio, self.attachment.path)
             Tools.createThumbnail(settings.IMAGE_THUMBNAIL_WIDTH, self.attachment.path)
-
 
     def delete(self, *args, **kwargs):
         removeThumbnail = False
@@ -73,6 +75,7 @@ class Attach(models.Model):
             ("retrieve_attach", "Can retrieve attach"),
             ("delete_list_attach", "Can delete list attach"),
         )
+
 
 '''
 def after_save(sender, instance, **kwargs):

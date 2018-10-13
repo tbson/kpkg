@@ -250,6 +250,14 @@ class ArticleDetail extends React.Component<Props, State> {
         return listItem.map(this.renderOtherItem);
     };
 
+    renderTags = (article: ArticleType) => {
+        if (!article || !article.category) return null;
+        if (!['tin-tuc', 'kien-thuc'].includes(article.category.uid)) return null;
+        const tagList = article.tag_list || [];
+        const usedTags = article.tags || [];
+        return <Tags list={tagList.filter(tag => usedTags.includes(tag.id))} />;
+    }
+
     renderContent = (article: ArticleType) => {
         if (!article) {
             return (
@@ -261,11 +269,11 @@ class ArticleDetail extends React.Component<Props, State> {
         return (
             <div>
                 <div className="content-container">
-                    <h1>{article.title}</h1>
+                    <h1 className="article-title">{article.title}</h1>
                     <hr />
                     {this.renderBanner(article)}
-                    <div dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
-                    <Tags list={article.tag_list || []} />
+                    <div className="article-content" dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
+                    {this.renderTags(article)}
                 </div>
                 <div className="row">{this.renderRelatedArticle(article)}</div>
                 {this.renderStaff()}

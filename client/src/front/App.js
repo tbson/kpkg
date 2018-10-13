@@ -21,6 +21,7 @@ import ArticleDetail from './article/ArticleDetail';
 import ArticlesFromTag from './article/ArticlesFromTag';
 import NewsSection from './article/NewsSection';
 import KnowledgeSection from './article/KnowledgeSection';
+import CommunityConnectionSection from './article/CommunityConnectionSection';
 import Tools from 'src/utils/helpers/Tools';
 import Trans from 'src/utils/helpers/Trans';
 import translations from 'src/utils/translations.json';
@@ -61,6 +62,7 @@ class App extends React.Component<Props> {
                         render={props => <ArticleDetail {...props} key={props.match.params.id} />}
                     />
                     <Route exact path="/tin-tuc" component={NewsSection} />
+                    <Route exact path="/ket-noi-cong-dong" component={CommunityConnectionSection} />
                     <Route exact path="/kien-thuc" component={KnowledgeSection} />
                 </Switch>
             </div>

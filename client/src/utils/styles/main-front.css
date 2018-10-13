@@ -94,3 +94,7 @@ h2 {
 .breadcrumb-item+.breadcrumb-item::before {
     content: "|"
 }
+
+.article-title, .article-content {
+    margin: 15px;
+}

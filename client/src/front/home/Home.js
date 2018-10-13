@@ -31,10 +31,14 @@ export default class Home extends React.Component<Props, State> {
                 <div className="row">
                     <div className="col-lg-8 no-padding-right">
                         <News />
-                        <Gallery />
                     </div>
                     <div className="col-lg-4">
                         <Calendar />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Gallery />
                     </div>
                 </div>
             </Wrapper>

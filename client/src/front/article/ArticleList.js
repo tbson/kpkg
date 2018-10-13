@@ -20,12 +20,12 @@ type Props = {
     resourceUrl: string,
     resourceParams: Object,
     match: Object,
-    location: Object,
+    location: Object
 };
 type State = {
     listItem: Array<ArticleType>,
     dataLoaded: boolean,
-    pathname: ?string,
+    pathname: ?string
 };
 
 class ArticleList extends React.Component<Props, State> {
@@ -34,12 +34,12 @@ class ArticleList extends React.Component<Props, State> {
     list: Function;
 
     static defaultProps = {
-        alwaysFirst: false,
+        alwaysFirst: false
     };
     state: State = {
         pathname: null,
         listItem: [],
-        dataLoaded: false,
+        dataLoaded: false
     };
     constructor(props: Props) {
         super(props);
@@ -72,7 +72,7 @@ class ArticleList extends React.Component<Props, State> {
                 document.title = 'Kiến thức';
                 break;
         }
-    }
+    };
 
     async setInitData(initData, uid) {
         this.nextUrl = initData.links.next;
@@ -86,13 +86,13 @@ class ArticleList extends React.Component<Props, State> {
         if (listItemCached) {
             return this.setState({
                 listItem: listItemCached,
-                dataLoaded: true,
+                dataLoaded: true
             });
         }
 
         this.setState({
             listItem: initData.items,
-            dataLoaded: true,
+            dataLoaded: true
         });
         Tools.setGlobalState(pathname, initData.items);
     }
@@ -101,7 +101,7 @@ class ArticleList extends React.Component<Props, State> {
         const {pathname} = this.props.location;
         const {uid} = this.props.match.params;
         let params = {
-            category__uid: uid,
+            category__uid: uid
         };
         let result = {};
 
@@ -116,7 +116,7 @@ class ArticleList extends React.Component<Props, State> {
             return result;
         }
         return result;
-    }
+    };
 
     renderThumbnail = (item: ArticleType) => {
         if (!item.image) return null;
@@ -143,7 +143,7 @@ class ArticleList extends React.Component<Props, State> {
                 </div>
             </div>
         );
-    }
+    };
 
     renderOtherItem = (item: ArticleType) => {
         if (this.props.alwaysFirst) return this.renderFirstItem(item);
@@ -167,16 +167,29 @@ class ArticleList extends React.Component<Props, State> {
                 </div>
             </div>
         );
-    }
+    };
+
+    renderContent = (listItem: Array<ArticleType>) => {
+        if (!listItem.length) {
+            return (
+                <div className="content-container">
+                    <div className="col-xl-12">
+                        <h2>Chưa có bài viết nào</h2>
+                    </div>
+                </div>
+            );
+        }
+        return this.state.listItem.map((item, index) => {
+            if (!index) return this.renderFirstItem(item);
+            return this.renderOtherItem(item);
+        });
+    };
 
     render() {
         const {listItem} = this.state;
         return (
             <div>
-                {this.state.listItem.map((item, index) => {
-                    if (!index) return this.renderFirstItem(item);
-                    return this.renderOtherItem(item);
-                })}
+                {this.renderContent(listItem)}
                 <FrontPagination next={this.nextUrl} prev={this.prevUrl} onNavigate={url => this.list({}, url)} />
                 <br />
             </div>

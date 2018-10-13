@@ -40,7 +40,7 @@ export default class MainMenu extends React.Component<Props, State> {
                         <NavLink exact className="menu-item col-xl-1" to="/kien-thuc">
                             Kiến thức
                         </NavLink>
-                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/ket-noi-cong-dong">
+                        <NavLink exact className="menu-item col-xl-2" to="/ket-noi-cong-dong">
                             Kết nối cộng đồng
                         </NavLink>
                         <NavLink exact className="menu-item col-xl-1" to="/lien-he">
