@@ -17,14 +17,12 @@ type Props = {
 type State = {
     article: Object,
     dataLoaded: boolean,
-    pathname: ?string,
     listStaff: Array<Object>
 };
 
 class ArticleDetail extends React.Component<Props, State> {
     static defaultProps = {};
     state: State = {
-        pathname: null,
         article: {},
         dataLoaded: false,
         listStaff: []
@@ -33,18 +31,8 @@ class ArticleDetail extends React.Component<Props, State> {
         super(props);
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.location.pathname !== prevState.pathname) {
-            return {pathname: nextProps.location.pathname};
-        }
-        return null;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const {pathname} = this.props.location;
-        if (prevProps.location.pathname != pathname) {
-            this.setInitData();
-        }
+    async componentDidMount() {
+        this.setInitData();
         const {article} = this.state;
         if (article) {
             const widthRatio = article.category ? article.category.width_ratio : 100;
@@ -57,10 +45,6 @@ class ArticleDetail extends React.Component<Props, State> {
                 }
             }
         }
-    }
-
-    async componentDidMount() {
-        this.setInitData();
         if (this.props.match.url == '/bai-viet/ket-noi-cong-dong') {
             this.getListStaff();
         }
@@ -266,22 +250,32 @@ class ArticleDetail extends React.Component<Props, State> {
         return listItem.map(this.renderOtherItem);
     };
 
-    render() {
-        const {article} = this.state;
-        if (Tools.isEmpty(article)) return null;
+    renderContent = (article: ArticleType) => {
+        if (!article) {
+            return (
+                <div className="content-container">
+                    <h2>Không tìm thấy bài viết</h2>
+                </div>
+            );
+        }
         return (
-            <Wrapper>
+            <div>
                 <div className="content-container">
                     <h1>{article.title}</h1>
                     <hr />
                     {this.renderBanner(article)}
                     <div dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
-                    <Tags list={article.tag_list} />
+                    <Tags list={article.tag_list || []} />
                 </div>
                 <div className="row">{this.renderRelatedArticle(article)}</div>
                 {this.renderStaff()}
-            </Wrapper>
+            </div>
         );
+    };
+
+    render() {
+        const {article} = this.state;
+        return <Wrapper>{this.renderContent(article)}</Wrapper>;
     }
 }
 

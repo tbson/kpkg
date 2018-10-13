@@ -25,7 +25,6 @@ import Tools from 'src/utils/helpers/Tools';
 import Trans from 'src/utils/helpers/Trans';
 import translations from 'src/utils/translations.json';
 
-
 type Props = {};
 
 class App extends React.Component<Props> {
@@ -50,9 +49,17 @@ class App extends React.Component<Props> {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/lien-he" component={Contact} />
-                    <Route exact path="/bai-viet/:uid" component={ArticleDetail} />
+                    <Route
+                        exact
+                        path="/bai-viet/:uid"
+                        render={props => <ArticleDetail {...props} key={props.match.params.uid} />}
+                    />
                     <Route exact path="/tag/:id/:uid" component={ArticlesFromTag} />
-                    <Route exact path="/bai-viet/:id/:slug" component={ArticleDetail} />
+                    <Route
+                        exact
+                        path="/bai-viet/:id/:slug"
+                        render={props => <ArticleDetail {...props} key={props.match.params.id} />}
+                    />
                     <Route exact path="/tin-tuc" component={NewsSection} />
                     <Route exact path="/kien-thuc" component={KnowledgeSection} />
                 </Switch>
