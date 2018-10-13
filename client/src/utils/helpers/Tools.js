@@ -337,7 +337,7 @@ export default class Tools {
             let response = await fetch(url, requestConfig);
             let data = {};
             try {
-                if ([204, 502].indexOf(response.status) === -1) {
+                if (![204, 502].includes(response.status)) {
                     data = await response.json();
                 }
             } catch (error) {

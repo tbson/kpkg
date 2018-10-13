@@ -66,6 +66,7 @@ export class Profile extends React.Component<Props, States> {
         const result = await Tools.apiCall(apiUrls.changePassword, 'POST', data);
         if (result.success) {
             this.toggleModal('changePasswordModal');
+            Tools.popMessage('Your password has been changed successfully!');
         } else {
             const errorMessage = result.data;
             this.setState({errorMessage});

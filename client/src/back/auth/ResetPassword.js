@@ -30,16 +30,17 @@ class ResetPassword extends React.Component<Props, States> {
     async componentDidMount() {
         const result = await Tools.apiCall(apiUrls.resetPassword, 'GET', this.props.match.params);
         if (result.success) {
+            Tools.popMessage('Reset password success! Please login again.');
             this.logout();
         } else {
             const message = ['Wrong token or token expired', 'Login page comming in 4 seconds.'].join('. ');
             this.setState({
                 message
             });
-            setTimeout(() => {
-                this.navigateTo('/login');
-            }, 4000);
         }
+        setTimeout(() => {
+            this.navigateTo('/login');
+        }, 4000);
     }
 
     render() {

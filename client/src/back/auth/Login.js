@@ -59,7 +59,12 @@ export class Login extends React.Component<Props, States> {
         event.preventDefault();
         const data = Tools.formDataToObj(new FormData(event.target));
         const result = await Tools.apiCall(apiUrls.resetPassword, 'POST', data);
-        this.toggleModal();
+        if (result.success) {
+            this.toggleModal();
+            Tools.popMessage('Reset password sent. Please checking your email to confirm new password.');
+        } else {
+            Tools.popMessage('Reset password fail. Please try again later.', 'error');
+        }
     };
 
     render() {

@@ -100,7 +100,7 @@ class ProfileView(APIView):
         administrator = self.get_object().administrator
         serializer = AdministratorUpdateSerializer(administrator, data=params, partial=True)
         if serializer.is_valid() is True:
-            serializer.save();
+            serializer.save()
             return Response(serializer.data)
         else:
             raise ValidationError(serializer.errors)
@@ -135,7 +135,7 @@ class ResetPasswordView(APIView):
         item.reset_password_created = None
         user.save()
         item.save()
-        return Response()
+        return Response({})
 
     # Reset password
     def post(self, request, format=None):
@@ -155,7 +155,8 @@ class ResetPasswordView(APIView):
         to = user.email
 
         Tools.sendEmailAsync(subject, body, to)
-        return Response({"url": url})
+        return Response({})
+
 
 class ChangePasswordView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -175,7 +176,7 @@ class ChangePasswordView(APIView):
         user.password = make_password(params["password"])
         user.save()
 
-        return Response()
+        return Response({})
 
 
 class BaseEndPoint(BaseManageView):
