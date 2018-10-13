@@ -28,9 +28,6 @@ export default class MainMenu extends React.Component<Props, State> {
                         <NavLink exact className="menu-item col-xl-1" to="/bai-viet/gioi-thieu">
                             Giới thiệu
                         </NavLink>
-                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/ai-thien-van">
-                            Đài thiên văn
-                        </NavLink>
                         <NavLink exact className="menu-item col-xl-2" to="/bai-viet/nha-chieu-hinh">
                             Nhà chiếu hình
                         </NavLink>
@@ -42,6 +39,9 @@ export default class MainMenu extends React.Component<Props, State> {
                         </NavLink>
                         <NavLink exact className="menu-item col-xl-1" to="/kien-thuc">
                             Kiến thức
+                        </NavLink>
+                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/ket-noi-cong-dong">
+                            Kết nối cộng đồng
                         </NavLink>
                         <NavLink exact className="menu-item col-xl-1" to="/lien-he">
                             Liên hệ

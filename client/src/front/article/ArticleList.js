@@ -43,7 +43,6 @@ class ArticleList extends React.Component<Props, State> {
     };
     constructor(props: Props) {
         super(props);
-        this.list = this.list.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -98,7 +97,7 @@ class ArticleList extends React.Component<Props, State> {
         Tools.setGlobalState(pathname, initData.items);
     }
 
-    async list(outerParams: Object = {}, url: ?string = null) {
+    list = async (outerParams: Object = {}, url: ?string = null) => {
         const {pathname} = this.props.location;
         const {uid} = this.props.match.params;
         let params = {

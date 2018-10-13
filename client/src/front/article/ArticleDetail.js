@@ -46,20 +46,22 @@ class ArticleDetail extends React.Component<Props, State> {
             this.setInitData();
         }
         const {article} = this.state;
-        const widthRatio = article.category ? article.category.width_ratio : 100;
-        const imgs = document.querySelectorAll('.content-container figure img');
+        if (article) {
+            const widthRatio = article.category ? article.category.width_ratio : 100;
+            const imgs = document.querySelectorAll('.content-container figure img');
 
-        if (imgs.length) {
-            for (let i = 0; i < imgs.length; i++) {
-                const img = imgs[i];
-                img.style.width = widthRatio + '%';
+            if (imgs.length) {
+                for (let i = 0; i < imgs.length; i++) {
+                    const img = imgs[i];
+                    img.style.width = widthRatio + '%';
+                }
             }
         }
     }
 
     async componentDidMount() {
         this.setInitData();
-        if (this.props.match.url == '/bai-viet/ai-thien-van') {
+        if (this.props.match.url == '/bai-viet/ket-noi-cong-dong') {
             this.getListStaff();
         }
     }
@@ -69,8 +71,8 @@ class ArticleDetail extends React.Component<Props, State> {
             case 'gioi-thieu':
                 document.title = 'Giới thiệu';
                 break;
-            case 'ai-thien-van':
-                document.title = 'Đài thiên văn';
+            case 'ket-noi-cong-dong':
+                document.title = 'Kết nối cộng đồng';
                 break;
             case 'nha-chieu-hinh':
                 document.title = 'Nhà chiếu hình';
@@ -87,11 +89,11 @@ class ArticleDetail extends React.Component<Props, State> {
         const {id, slug, uid} = this.props.match.params;
         const {pathname} = this.props.location;
         const article = Tools.getGlobalState(pathname);
-        if (typeof id == 'undefined') {
-            this.setTitle(slug);
+        if (id === undefined) {
+            this.setTitle(uid);
         }
         if (article) {
-            if (typeof id != 'undefined') {
+            if (id !== undefined) {
                 this.setTitle(article.title);
             }
             return this.setState({
@@ -100,7 +102,7 @@ class ArticleDetail extends React.Component<Props, State> {
             });
         }
 
-        if (typeof id != 'undefined' && typeof slug != 'undefined') {
+        if (id !== undefined && slug !== undefined) {
             this.getArticleFromId(id);
         } else {
             this.getArticleFromCategoryUid(uid);
@@ -176,7 +178,7 @@ class ArticleDetail extends React.Component<Props, State> {
     };
 
     renderStaff = () => {
-        if (this.props.match.url != '/bai-viet/ai-thien-van') return null;
+        if (this.props.match.url != '/bai-viet/ket-noi-cong-dong') return null;
         return (
             <div className="row">
                 {this.state.listStaff.map(staff => (
