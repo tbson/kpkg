@@ -6,10 +6,9 @@ networks:
             name: common_proxy
 
 services:
-    kpkg_client:
-        container_name: kpkg_client
-        build:
-            context: ./
+    __app_name___client:
+        container_name: __app_name___client
+        build: .
         command: yarn start
         working_dir: /code
         ports:
@@ -19,4 +18,5 @@ services:
             - /code/node_modules
         networks:
             - proxy
+        tty: true
 

@@ -1,0 +1,30 @@
+# setup appname newdomain.com pro
+# setup appname newdomain.com dev
+
+NGINX_CONFIG=nginx.conf
+DJANGO_CONFIG_PATH=api/core/
+DJANGO_CONFIG="${DJANGO_CONFIG_PATH}env.py"
+DJANGO_SECRET_KEY=`openssl rand -base64 32`
+
+# Config nginx
+cp "nginx.conf.$3" $NGINX_CONFIG
+sed -i -e 's/my\.domain/'"$2"'/g' $NGINX_CONFIG
+sed -i -e 's/__app_name__/'"$1"'/g' $NGINX_CONFIG
+rm -f "${NGINX_CONFIG}-e"
+
+# Config django
+cp "${DJANGO_CONFIG_PATH}env.default.py" $DJANGO_CONFIG
+sed -i -e 's/my\.domain/'"$2"'/g' $DJANGO_CONFIG
+sed -i -e 's/__app_name__/'"$1"'/g' $DJANGO_CONFIG
+sed -i -e 's/__app_secret__/'"$DJANGO_SECRET_KEY"'/g' $DJANGO_CONFIG
+rm -f "${DJANGO_CONFIG}-e"
+
+# Config docker compose for api
+cp api/docker-compose.default.yml api/docker-compose.yml
+sed -i -e 's/__app_name__/'"$1"'/g' api/docker-compose.yml
+rm -f api/docker-compose.yml-e
+
+# Config docker compose for client
+cp client/docker-compose.default.yml client/docker-compose.yml
+sed -i -e 's/__app_name__/'"$1"'/g' client/docker-compose.yml
+rm -f client/docker-compose.yml-e

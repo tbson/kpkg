@@ -6,8 +6,8 @@ networks:
             name: common_proxy
 
 services:
-    kpkg_db:
-        container_name: kpkg_db
+    __app_name___db:
+        container_name: __app_name___db
         image: "postgres:10.1"
         environment:
             - POSTGRES_USER=docker
@@ -17,11 +17,12 @@ services:
             - "5433:5432"
         volumes:
             - ./dbdata:/var/lib/postgresql/data/:cached
+            # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
             - proxy
 
-    kpkg_api:
-        container_name: kpkg_api
+    __app_name___api:
+        container_name: __app_name___api
         build:
             context: ./
 #       command: bash -c "./wait-for-it.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
@@ -31,6 +32,6 @@ services:
         ports:
             - "8001:8001"
         depends_on:
-            - "kpkg_db"
+            - "__app_name___db"
         networks:
             - proxy

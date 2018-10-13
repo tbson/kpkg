@@ -1,9 +1,10 @@
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'tgwj=)h$kaiooy@im=wg!^9!em3s$$egzhsx^wuloszonc06t_'
+SECRET_KEY = '__app_secret__'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-APP_NAME = 'APP_NAME'
+APP_TITLE = 'APP_TITLE'
+APP_DESCRTIPTION = 'APP_DESCRTIPTION'
 PROTOCOL = 'https'
 DOMAIN = 'my.domain'
 ALLOWED_HOSTS = [DOMAIN, '127.0.0.1']
@@ -20,7 +21,7 @@ DATABASES = {
         'NAME': 'docker',
         'USER': 'docker',
         'PASSWORD': 'docker',
-        'HOST': 'db_service',
+        'HOST': '__app_name___db',
         'PORT': '5432',
         'TEST': {
             'NAME': 'docker_test',
@@ -41,7 +42,7 @@ TEST_FINGERPRINT = 'test-fingerprint'
 
 SLACK_WEBHOOK_URL = ''
 
-DEFAULT_FROM_EMAIL = '"APP_NAME"<admin@gmail.com>'
+DEFAULT_FROM_EMAIL = '"{}"<admin@gmail.com>'.format(APP_TITLE)
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # 587 - 465 for SSL
 EMAIL_HOST_USER = 'admin@gmail.com'
