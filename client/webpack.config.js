@@ -94,6 +94,7 @@ if (['build-back', 'build-front'].indexOf(TARGET) !== -1) {
         mode: 'production',
         plugins: [
             new HtmlWebpackPlugin({
+                inject: false,
                 version: new Date().getTime(),
                 template: './src/index.html'
             })
