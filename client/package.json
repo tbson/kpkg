@@ -99,7 +99,7 @@
         "react-slick": "^0.23.1",
         "react-toastify": "^3.4.3",
         "react-visibility-sensor": "^3.14.0",
-        "rummernote": "^1.0.9",
+        "rummernote": "^1.1.2",
         "slick-carousel": "^1.8.1"
     }
 }

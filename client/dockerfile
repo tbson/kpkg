@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM node:carbon-jessie
 
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
