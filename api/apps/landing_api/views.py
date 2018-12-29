@@ -34,12 +34,13 @@ class BannerListView(ListAPIView):
     serializer_class = BannerTranslationListSerializer
     filter_fields = ('category__uid', 'category__type', )
 
+
 class HomeArticleListView(ListAPIView):
     supportCategories = (
         'tin-hoat-ong',
         'tin-khoa-hoc',
         'kien-thuc',
-        'su-kien-thien-van',
+        # 'su-kien-thien-van',
     )
     permission_classes = (AllowAny, )
     queryset = Article.objects.filter(category__uid__in=supportCategories)
@@ -47,16 +48,20 @@ class HomeArticleListView(ListAPIView):
     filter_fields = ('category__uid', )
     pagination_class = CustomLimitOffsetPagination
 
+
 class ArticleListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = Article.objects.all()
     serializer_class = ArticleLandingSerializer
     filter_fields = ('category__uid', 'pin', 'tags')
+    pagination_class = CustomLimitOffsetPagination
+
 
 class ArticleNewsListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = Article.objects.filter(Q(category__uid='tin-tuc') | Q(category__uid='kien-thuc'))
     serializer_class = ArticleLandingSerializer
+
 
 class ArticleRetrieveSingleView(ListAPIView):
     permission_classes = (AllowAny, )
@@ -64,16 +69,19 @@ class ArticleRetrieveSingleView(ListAPIView):
     serializer_class = ArticleLandingRetrieveSerializer
     filter_fields = ('category__uid', )
 
+
 class ArticleRetrieveView(RetrieveAPIView):
     permission_classes = (AllowAny, )
     queryset = Article.objects.all()
     serializer_class = ArticleLandingRetrieveSerializer
+
 
 class CCalendarListView(ListAPIView):
     permission_classes = (AllowAny, )
     queryset = CCalendar.objects.all()
     serializer_class = CCalendarBaseSerializer
     pagination_class = None
+
 
 class StaffListView(ListAPIView):
     permission_classes = (AllowAny, )

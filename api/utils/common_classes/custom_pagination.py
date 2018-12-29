@@ -1,10 +1,10 @@
-from rest_framework import pagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.response import Response
 from math import ceil
 from django.conf import settings
 
 
-class CustomPagination(pagination.PageNumberPagination):
+class CustomPagination(PageNumberPagination):
 
     def get_paginated_response(self, data):
         next_link = self.get_next_link()
@@ -27,7 +27,9 @@ class CustomPagination(pagination.PageNumberPagination):
             'items': data
         })
 
-class CustomLimitOffsetPagination(pagination.LimitOffsetPagination):
+
+class CustomLimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 5
 
     def get_paginated_response(self, data):
         next_link = self.get_next_link()
@@ -44,8 +46,5 @@ class CustomLimitOffsetPagination(pagination.LimitOffsetPagination):
                 'next': next_link,
                 'previous': previous_link
             },
-            # 'count': self.page.paginator.count,
-            # 'pages': ceil(self.page.paginator.count / self.page_size),
-            # 'page_size': self.page_size,
             'items': data
         })
