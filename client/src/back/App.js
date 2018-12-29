@@ -48,6 +48,15 @@ class App extends React.Component<Props> {
         body.style.backgroundImage = 'none';
     }
 
+    setUpProps = (props: Object): Object => {
+        const {parentType, parentId, id} = props.match.params;
+        const parent = {type: parentType, id: parentId};
+        if (!parent.id) {
+            parent.id = 0;
+        }
+        return {...props, parent, id};
+    };
+
     render() {
         return (
             <div>
@@ -68,7 +77,10 @@ class App extends React.Component<Props> {
                     <Route path="/banners/:categoryId" component={Banner} />
                     <Route path="/gallerys/:categoryId" component={Banner} />
                     <Route path="/articles/:parentId" component={Article} />
-                    <Route path="/article/:parentType/:parentId/:id?" component={ArticleEditWrapper} />
+                    <Route
+                        path="/article/:parentType/:parentId/:id?"
+                        render={props => <ArticleEditWrapper {...this.setUpProps(props)} />}
+                    />
                 </Switch>
             </div>
         );

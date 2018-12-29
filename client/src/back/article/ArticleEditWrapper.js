@@ -1,16 +1,12 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe: do not complain about importing node_modules
-import {withRouter} from 'react-router-dom';
-import {apiUrls} from './_data';
-import type {ParamsType} from './_data';
 import NavWrapper from 'src/utils/components/NavWrapper';
 import ArticleEdit from './ArticleEdit';
+import Tools from 'src/utils/helpers/Tools';
 
 type Props = {
-    match: {
-        params: ParamsType
-    }
+    parent: Object,
+    id: number
 };
 
 type States = {};
@@ -19,14 +15,11 @@ export default class ArticleEditWrapper extends React.Component<Props, States> {
     state = {};
 
     render() {
-        const {parentType, parentId, id} = this.props.match.params;
-        const parent = {type: parentType, id: parentId};
-        if (!parent.id) {
-            parent.id = 0;
-        }
+        const {parent, id} = this.props;
+        const index = id || Tools.uuid4();
         return (
             <NavWrapper>
-                <ArticleEdit parent={parent} id={id} />
+                <ArticleEdit parent={parent} id={id} key={index}/>
             </NavWrapper>
         )
     }
