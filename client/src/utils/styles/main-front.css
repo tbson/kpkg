@@ -91,10 +91,19 @@ h2 {
     padding-right: 0;
 }
 
-.breadcrumb-item+.breadcrumb-item::before {
-    content: "|"
+.breadcrumb-item + .breadcrumb-item::before {
+    content: '|';
 }
 
-.article-title, .article-content {
+.article-title,
+.article-content {
     margin: 15px;
+}
+
+@media only screen and (min-width: 991px) {
+    .article-title,
+    .article-content {
+        margin-left: 99px;
+        margin-right: 99px;
+    }
 }
