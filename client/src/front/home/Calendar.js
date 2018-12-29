@@ -27,6 +27,8 @@ type State = {
     pathname: ?string
 };
 
+const localizer = BigCalendar.momentLocalizer(moment) 
+
 class Calendar extends React.Component<Props, State> {
     static defaultProps = {};
     state: State = {
@@ -38,7 +40,6 @@ class Calendar extends React.Component<Props, State> {
     };
     constructor(props: Props) {
         super(props);
-        BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -125,8 +126,9 @@ class Calendar extends React.Component<Props, State> {
                     <div style={{height: 400, paddingTop: 15}}>
                         <BigCalendar
                             selectable
+                            localizer={localizer}
                             views={['month']}
-                            toolbar={false}
+                            toolbar={true}
                             defaultView="month"
                             events={this.state.events}
                             onSelectEvent={this.selectDateHandle}
