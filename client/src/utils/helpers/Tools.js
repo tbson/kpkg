@@ -298,6 +298,10 @@ export default class Tools {
         this.emitter.emit('TOGGLE_SPINNER', spinning);
     }
 
+    static emitEmitter(key: string, value: any): void {
+        this.emitter.emit(key, value);
+    }
+
     static async apiCall(
         url: string,
         method: string = 'GET',

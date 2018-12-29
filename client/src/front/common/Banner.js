@@ -6,6 +6,7 @@ import Tools from 'src/utils/helpers/Tools';
 type Props = {};
 type State = {
     banner: Object,
+    show: boolean,
     dataLoaded: boolean
 };
 
@@ -13,10 +14,15 @@ export default class Banner extends React.Component<Props, State> {
     static defaultProps = {};
     state: State = {
         banner: {},
+        show: true,
         dataLoaded: false
-    }
+    };
+
     constructor(props: Props) {
         super(props);
+        Tools.emitter.addListener('SHOW_BANNER', show => {
+            this.setState({show});
+        });
     }
 
     async componentDidMount() {
@@ -29,7 +35,7 @@ export default class Banner extends React.Component<Props, State> {
         }
 
         const params = {
-            category__uid: 'main-banner',
+            category__uid: 'main-banner'
         };
         const result = await Tools.apiCall(apiUrls.banner, 'GET', params, false, false);
         if (result.success) {
@@ -42,11 +48,11 @@ export default class Banner extends React.Component<Props, State> {
     }
 
     render() {
-        if (!this.state.dataLoaded) return null;
+        if (!this.state.dataLoaded || !this.state.show) return null;
         const {banner} = this.state;
         return (
-            <div style={{position: "relative"}} className="d-none d-lg-block">
-                <img src={banner.image} width="100%" alt={banner.title} title={banner.title}/>
+            <div style={{position: 'relative'}} className="d-none d-lg-block">
+                <img src={banner.image} width="100%" alt={banner.title} title={banner.title} />
                 <div style={styles.titleBackground}>{banner.title}</div>
             </div>
         );
@@ -55,19 +61,19 @@ export default class Banner extends React.Component<Props, State> {
 
 const styles = {
     titleBackground: {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        color: "white",
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        color: 'white',
         fontSize: 55,
-        fontWeight: "bold",
-        fontFamily: "Times New Roman",
-        textAlign: "center",
+        fontWeight: 'bold',
+        fontFamily: 'Times New Roman',
+        textAlign: 'center',
         top: 0,
         left: 0,
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 };

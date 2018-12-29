@@ -48,6 +48,10 @@ class ArticleDetail extends React.Component<Props, State> {
         if (this.props.match.url == '/bai-viet/ket-noi-cong-dong') {
             this.getListStaff();
         }
+
+        if (['/bai-viet/nha-chieu-hinh', '/bai-viet/chuong-trinh-tham-quan'].includes(this.props.match.url)) {
+            Tools.emitEmitter('SHOW_BANNER', false);
+        }
     }
 
     setTitle = (slug: string) => {
@@ -256,7 +260,7 @@ class ArticleDetail extends React.Component<Props, State> {
         const tagList = article.tag_list || [];
         const usedTags = article.tags || [];
         return <Tags list={tagList.filter(tag => usedTags.includes(tag.id))} />;
-    }
+    };
 
     renderContent = (article: ArticleType) => {
         if (!article) {
@@ -272,7 +276,10 @@ class ArticleDetail extends React.Component<Props, State> {
                     <h1 className="article-title">{article.title}</h1>
                     <hr />
                     {this.renderBanner(article)}
-                    <div className="article-content" dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}} />
+                    <div
+                        className="article-content"
+                        dangerouslySetInnerHTML={{__html: Tools.addAlt(article.content, article.title)}}
+                    />
                     {this.renderTags(article)}
                 </div>
                 <div className="row">{this.renderRelatedArticle(article)}</div>
