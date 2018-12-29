@@ -48,7 +48,18 @@ const common = {
                 loader: 'babel-loader'
             }
         ]
-    }
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            inject: false,
+            version: new Date().getTime(),
+            template: './src/index.html'
+        }),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery'
+        })
+    ]
 };
 
 if (TARGET === 'start' || !TARGET) {
@@ -75,14 +86,7 @@ if (TARGET === 'start' || !TARGET) {
                 ca: fs.readFileSync('/code/ssl/localca.pem')
             }
         },
-        plugins: [
-            new ErrorOverlayPlugin(),
-            new webpack.NamedModulesPlugin(),
-            new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery'
-            })
-        ]
+        plugins: [new ErrorOverlayPlugin(), new webpack.NamedModulesPlugin()]
     });
 }
 
@@ -91,13 +95,6 @@ if (['build-back', 'build-front'].indexOf(TARGET) !== -1) {
         entry: {
             app: PATHS.app + '/' + TARGET.split('-')[1] + '/index.js'
         },
-        mode: 'production',
-        plugins: [
-            new HtmlWebpackPlugin({
-                inject: false,
-                version: new Date().getTime(),
-                template: './src/index.html'
-            })
-        ]
+        mode: 'production'
     });
 }
