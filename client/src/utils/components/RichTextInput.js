@@ -49,7 +49,8 @@ class RichTextInput extends React.Component<Props, States> {
             };
             const result = await Tools.apiCall(apiUrls.crud, 'POST', params);
             if (result.success) {
-                insertImage(result.data.attachment, image => {
+                const url = result.data.attachment.replace(/^.*\/\/[^\/]+/, '');
+                insertImage(url, image => {
                     if (image.width() <= 400) {
                         image.css('width', image.width());
                     } else {
