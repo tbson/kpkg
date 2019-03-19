@@ -22,26 +22,20 @@ export default class MainMenu extends React.Component<Props, State> {
                 <input type="checkbox" id="menu-checkbox"/>
                 <div id="main-menu" className="container-fluid">
                     <div className="row">
-                        <NavLink exact className="menu-item col-xl-1" to="/">
+                        <NavLink exact className="menu-item col-xl-2" to="/">
                             Trang chủ
                         </NavLink>
-                        <NavLink exact className="menu-item col-xl-1" to="/bai-viet/gioi-thieu">
+                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/gioi-thieu">
                             Giới thiệu
-                        </NavLink>
-                        <NavLink exact className="menu-item col-xl-2" to="/bai-viet/nha-chieu-hinh">
-                            Nhà chiếu hình
-                        </NavLink>
+                        </NavLink> 
                         <NavLink exact className="menu-item col-xl-3" to="/bai-viet/chuong-trinh-tham-quan">
-                            Chương trình tham quan
+                            Chương trình - Sự kiện
                         </NavLink>
-                        <NavLink exact className="menu-item col-xl-1" to="/tin-tuc">
+                        <NavLink exact className="menu-item col-xl-2" to="/tin-tuc">
                             Tin tức
                         </NavLink>
-                        <NavLink exact className="menu-item col-xl-1" to="/kien-thuc">
+                        <NavLink exact className="menu-item col-xl-2" to="/kien-thuc">
                             Kiến thức
-                        </NavLink>
-                        <NavLink exact className="menu-item col-xl-2" to="/ket-noi-cong-dong">
-                            Kết nối cộng đồng
                         </NavLink>
                         <NavLink exact className="menu-item col-xl-1" to="/lien-he">
                             Liên hệ

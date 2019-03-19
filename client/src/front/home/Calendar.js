@@ -165,7 +165,6 @@ class Calendar extends React.Component<Props, State> {
     render() {
         return (
             <React.Fragment>
-                {this.renderCalendar()}
                 <div>{this.renderOtherEvents()}</div>
             </React.Fragment>
         );

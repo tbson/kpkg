@@ -40,7 +40,7 @@ class HomeArticleListView(ListAPIView):
         'tin-hoat-ong',
         'tin-khoa-hoc',
         'kien-thuc',
-        # 'su-kien-thien-van',
+        'su-kien-thien-van',
     )
     permission_classes = (AllowAny, )
     queryset = Article.objects.filter(category__uid__in=supportCategories)
