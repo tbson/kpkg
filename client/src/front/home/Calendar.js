@@ -27,7 +27,7 @@ type State = {
     pathname: ?string
 };
 
-const localizer = BigCalendar.momentLocalizer(moment) 
+const localizer = BigCalendar.momentLocalizer(moment);
 
 class Calendar extends React.Component<Props, State> {
     static defaultProps = {};
@@ -165,6 +165,9 @@ class Calendar extends React.Component<Props, State> {
     render() {
         return (
             <React.Fragment>
+                <div className="content-container">
+                    <h1>Sự kiện thiên văn</h1>
+                </div>
                 <div>{this.renderOtherEvents()}</div>
             </React.Fragment>
         );
